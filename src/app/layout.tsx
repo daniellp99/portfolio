@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} bg-gray-50 dark:bg-gray-950`}
+        className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-100 dark:bg-zinc-950`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <NavBar />

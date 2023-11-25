@@ -8,10 +8,10 @@ const TABS = [
 
 export default function NavItems() {
   return (
-    <div className="flex flex-row justify-evenly rounded-full border-2 bg-transparent p-1 dark:border-gray-700">
+    <div className="flex flex-row justify-evenly rounded-full border-2 bg-zinc-200 p-1 dark:border-gray-700 dark:bg-transparent">
       {TABS.map((tab) => (
         <button
-          className="h-10 rounded-full px-5 text-xl hover:text-gray-500 active:bg-gray-500"
+          className="rounded-full px-3 text-xl hover:text-gray-500 active:bg-gray-50 dark:active:bg-gray-500"
           key={tab.key}
         >
           {tab.name}
