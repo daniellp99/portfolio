@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * {
+    @apply rounded-3xl;
+  }
+}
+.react-grid-item.react-grid-placeholder {
+  @apply bg-zinc-400;
+}

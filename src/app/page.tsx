@@ -1,9 +1,9 @@
-import Image from "next/image";
+import GridContainer from "@/components/GridContainer";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-black dark:text-white">Portfolio</h1>
+    <main className="mx-auto block w-[375px] md:w-[800px] xl:w-[1200px]">
+      <GridContainer />
     </main>
   );
 }
