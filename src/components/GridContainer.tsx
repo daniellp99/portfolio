@@ -3,9 +3,6 @@
 import { Responsive, WidthProvider } from "react-grid-layout";
 import ThemeToggle from "./ThemeToggle";
 
-const GRID_ITEMS_CLASSNAMES =
-  "w-full h-full border-2 bg-white dark:bg-zinc-900 dark:border-zinc-700 select-none hover:cursor-grab active:cursor-grabbing";
-
 const LAYOUTS = {
   fourColumnsLg: [
     { i: "me", x: 0, y: 0, w: 2, h: 1.645, isResizable: false },
@@ -54,22 +51,22 @@ export default function GridContainer() {
       margin={[15.7, 15.7]}
       // isBounded={true}
     >
-      <div className={GRID_ITEMS_CLASSNAMES} key="me">
+      <div className="grid-item" key="me">
         <p>Me</p>
       </div>
-      <div className={GRID_ITEMS_CLASSNAMES} key="toggle-theme">
+      <div className="grid-item" key="toggle-theme">
         <ThemeToggle />
       </div>
-      <div className={GRID_ITEMS_CLASSNAMES} key="social-links">
+      <div className="grid-item" key="social-links">
         <p>social-links</p>
       </div>
-      <div className={GRID_ITEMS_CLASSNAMES} key="project-1">
+      <div className="grid-item" key="project-1">
         <p>project-1</p>
       </div>
-      <div className={GRID_ITEMS_CLASSNAMES} key="project-2">
+      <div className="grid-item" key="project-2">
         <p>project-2</p>
       </div>
-      <div className={GRID_ITEMS_CLASSNAMES} key="project-3">
+      <div className="grid-item" key="project-3">
         <p>project-3</p>
       </div>
     </ResponsiveGridLayout>
