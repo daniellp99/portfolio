@@ -51,22 +51,22 @@ export default function GridContainer() {
       margin={[15.7, 15.7]}
       // isBounded={true}
     >
-      <div className="grid-item" key="me">
+      <div className="grid-item-container" key="me">
         <p>Me</p>
       </div>
-      <div className="grid-item" key="toggle-theme">
+      <div className="grid-item-container" key="toggle-theme">
         <ThemeToggle />
       </div>
-      <div className="grid-item" key="social-links">
+      <div className="grid-item-container" key="social-links">
         <p>social-links</p>
       </div>
-      <div className="grid-item" key="project-1">
+      <div className="grid-item-container" key="project-1">
         <p>project-1</p>
       </div>
-      <div className="grid-item" key="project-2">
+      <div className="grid-item-container" key="project-2">
         <p>project-2</p>
       </div>
-      <div className="grid-item" key="project-3">
+      <div className="grid-item-container" key="project-3">
         <p>project-3</p>
       </div>
     </ResponsiveGridLayout>

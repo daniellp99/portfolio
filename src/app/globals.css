@@ -10,8 +10,9 @@
 .react-grid-item.react-grid-placeholder {
   @apply bg-zinc-400;
 }
+
 @layer components {
-  .grid-item {
+  .grid-item-container {
     @apply h-full w-full select-none border-2 bg-white hover:cursor-grab active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-900;
   }
 }
