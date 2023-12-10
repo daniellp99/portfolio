@@ -9,7 +9,7 @@ import NavBar from "@/components/NavBar";
 
 export const metadata: Metadata = {
   title: "Daniel's Portfolio",
-  description: "Developer from Cuban.",
+  description: "Developer from Cuba.",
 };
 
 export default function RootLayout({
