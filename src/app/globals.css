@@ -3,16 +3,15 @@
 @tailwind utilities;
 
 @layer base {
-  * {
+  div {
     @apply rounded-3xl;
+  }
+}
+@layer components {
+  .grid-item-container {
+    @apply select-none rounded-3xl border-2 bg-white hover:cursor-grab active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-900;
   }
 }
 .react-grid-item.react-grid-placeholder {
   @apply bg-zinc-400;
-}
-
-@layer components {
-  .grid-item-container {
-    @apply h-full w-full select-none border-2 bg-white hover:cursor-grab active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-900;
-  }
 }
