@@ -11,14 +11,18 @@
   "dependencies": {
     "clsx": "^2.0.0",
     "geist": "^1.1.0",
+    "leaflet": "^1.9.4",
+    "leaflet-defaulticon-compatibility": "^0.1.2",
     "next": "14.0.3",
     "next-themes": "^0.2.1",
     "react": "^18",
     "react-dom": "^18",
     "react-grid-layout": "^1.4.4",
+    "react-leaflet": "^4.2.1",
     "tailwind-merge": "^2.1.0"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
