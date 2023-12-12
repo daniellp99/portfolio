@@ -3,10 +3,26 @@
 @tailwind utilities;
 
 @layer base {
-  * {
+  div {
     @apply rounded-3xl;
+  }
+}
+@layer components {
+  .grid-item-container {
+    @apply select-none rounded-3xl border-2 bg-white hover:cursor-grab active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-900;
   }
 }
 .react-grid-item.react-grid-placeholder {
   @apply bg-zinc-400;
+}
+
+.leaflet-tile {
+  @apply filter-none dark:brightness-75 dark:contrast-150 dark:hue-rotate-[200deg] dark:invert dark:saturate-50;
+}
+.leaflet-container {
+  @apply dark:bg-zinc-800;
+}
+
+.leaflet-zoom-animated {
+  @apply duration-100 ease-linear;
 }
