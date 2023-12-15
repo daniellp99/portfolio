@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, systemTheme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    systemTheme && setTheme(systemTheme);
+  }, [systemTheme, setTheme]);
 
   if (!mounted) {
     return null;
@@ -18,14 +19,14 @@ export default function ThemeToggle() {
   return (
     <div className="flex h-full w-full items-center justify-items-center">
       <button
-        value={theme}
+        value={resolvedTheme}
         className="cancelDrag mx-auto h-12 w-[82px] rounded-full bg-zinc-200 p-1 dark:border-2 dark:border-zinc-700 dark:bg-zinc-600"
         onClick={() => {
-          setTheme(theme === "light" ? "dark" : "light");
+          setTheme(resolvedTheme === "light" ? "dark" : "light");
         }}
       >
         <div className="h-9 w-9 -translate-x-0 transform bg-zinc-950 p-1 text-orange-300 transition duration-500 dark:translate-x-full">
-          {theme === "light" ? (
+          {resolvedTheme === "light" ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
