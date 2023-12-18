@@ -1,12 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-const DynamicMap = dynamic(() => import("@/components/Map"), {
-  ssr: false,
-});
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import ThemeToggle from "./ThemeToggle";
+import { useEffect, useState } from "react";
 
 const LAYOUTS = {
   fourColumnsLg: [
@@ -40,6 +38,10 @@ const LAYOUTS = {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+const DynamicMap = dynamic(() => import("@/components/Map"), {
+  ssr: false,
+});
+
 export default function GridContainer() {
   const layouts = {
     lg: LAYOUTS.fourColumnsLg,
@@ -50,14 +52,24 @@ export default function GridContainer() {
   return (
     <ResponsiveGridLayout
       draggableCancel=".cancelDrag"
-      className="layout "
+      className="layout animate-fade-in"
       layouts={layouts}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 4, md: 4, sm: 4, xs: 2, xxs: 2 }}
       rowHeight={164}
-      width={1200}
-      margin={[15.7, 15.7]}
-      // isBounded={true}
+      containerPadding={{
+        xxs: [15.5, 15.5],
+        xs: [15.5, 15.5],
+        sm: [16, 16],
+        md: [16, 16],
+      }}
+      margin={{
+        xxs: [15.5, 15.5],
+        xs: [15.5, 15.5],
+        sm: [16, 16],
+        md: [16, 16],
+      }}
+      isBounded={true}
     >
       <div className="grid-item-container" key="me">
         <p>Me</p>
