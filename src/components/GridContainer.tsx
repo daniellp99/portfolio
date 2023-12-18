@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import ThemeToggle from "./ThemeToggle";
-import { useEffect, useState } from "react";
 
 const LAYOUTS = {
   fourColumnsLg: [
@@ -39,6 +38,9 @@ const LAYOUTS = {
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
+  loading: () => (
+    <div className="h-full w-full animate-pulse bg-zinc-200 dark:bg-zinc-600" />
+  ),
   ssr: false,
 });
 
