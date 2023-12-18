@@ -38,6 +38,9 @@ const LAYOUTS = {
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
+  loading: () => (
+    <div className="h-full w-full animate-pulse bg-zinc-200 dark:bg-zinc-600" />
+  ),
   ssr: false,
 });
 
