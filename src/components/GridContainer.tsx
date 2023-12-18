@@ -4,7 +4,6 @@ import dynamic from "next/dynamic";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
 import ThemeToggle from "./ThemeToggle";
-import { useEffect, useState } from "react";
 
 const LAYOUTS = {
   fourColumnsLg: [
