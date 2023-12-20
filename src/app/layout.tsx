@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "@/../../node_modules/react-grid-layout/css/styles.css";
+import "./../../node_modules/react-grid-layout/css/styles.css";
 import "./globals.css";
 
 import { GeistSans } from "geist/font/sans";
