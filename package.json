@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@keystatic/core": "^0.2.9",
+    "@keystatic/next": "^2.0.1",
     "clsx": "^2.0.0",
     "geist": "^1.1.0",
     "leaflet": "^1.9.4",
