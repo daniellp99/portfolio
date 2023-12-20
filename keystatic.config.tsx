@@ -1,11 +1,25 @@
-import { config, fields, collection } from "@keystatic/core";
+import {
+  CloudConfig,
+  LocalConfig,
+  collection,
+  config,
+  fields,
+} from "@keystatic/core";
+
+const isProd = process.env.NODE_ENV === "production";
+
+const localMode: LocalConfig["storage"] = {
+  kind: "local",
+};
+
+const remoteMode: CloudConfig["storage"] = {
+  kind: "cloud",
+};
 
 export default config({
-  storage: {
-    kind: "cloud",
-  },
+  storage: isProd ? remoteMode : localMode,
   cloud: {
-    project: "daniellp-portfolio/keystatic-portfolio",
+    project: "daniellp-portfolio/portfolio",
   },
   collections: {
     posts: collection({
