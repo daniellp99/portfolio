@@ -71,7 +71,7 @@ export default function GridContainer() {
         sm: [16, 16],
         md: [16, 16],
       }}
-      isBounded={true}
+      // isBounded={true}
     >
       <div className="grid-item-container" key="me">
         <p>Me</p>

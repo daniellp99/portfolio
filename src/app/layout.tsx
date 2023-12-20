@@ -1,16 +1,5 @@
-import type { Metadata } from "next";
-import "./../../node_modules/react-grid-layout/css/styles.css";
-import "./globals.css";
-
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
-import { ThemeProvider } from "@/components/Providers";
-import NavBar from "@/components/NavBar";
-
-export const metadata: Metadata = {
-  title: "Daniel's Portfolio",
-  description: "Developer from Cuba.",
-};
 
 export default function RootLayout({
   children,
@@ -22,10 +11,7 @@ export default function RootLayout({
       <body
         className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-100 dark:bg-zinc-950`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <NavBar />
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
