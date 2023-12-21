@@ -4,6 +4,7 @@ import {
   collection,
   config,
   fields,
+  singleton,
 } from "@keystatic/core";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -35,6 +36,26 @@ export default config({
           dividers: true,
           links: true,
           images: true,
+        }),
+      },
+    }),
+  },
+  singletons: {
+    socialLinks: singleton({
+      label: "Social Links",
+      path: "src/content/social-links",
+      schema: {
+        github: fields.text({
+          label: "GitHub",
+          description: "The GitHub username (not full URL!)",
+        }),
+        X: fields.text({
+          label: "X",
+          description: "The X handle (not full URL!)",
+        }),
+        linkedIn: fields.text({
+          label: "LinkedIn",
+          description: "The LinkedIn ID (not full URL!)",
         }),
       },
     }),
