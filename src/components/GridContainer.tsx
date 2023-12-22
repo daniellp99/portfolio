@@ -3,7 +3,9 @@
 import dynamic from "next/dynamic";
 import { Responsive, WidthProvider } from "react-grid-layout";
 
+import SocialLinksContainer from "./SocialLinkContainer";
 import ThemeToggle from "./ThemeToggle";
+import { SocialLinks } from "@/types/socialLinks";
 
 const LAYOUTS = {
   fourColumnsLg: [
@@ -44,7 +46,11 @@ const DynamicMap = dynamic(() => import("@/components/Map"), {
   ssr: false,
 });
 
-export default function GridContainer() {
+export default function GridContainer({
+  links,
+}: {
+  links: SocialLinks | null;
+}) {
   const layouts = {
     lg: LAYOUTS.fourColumnsLg,
     md: LAYOUTS.fourColumnsLg,
@@ -83,7 +89,7 @@ export default function GridContainer() {
         <DynamicMap />
       </div>
       <div className="grid-item-container" key="social-links">
-        <p>social-links</p>
+        <SocialLinksContainer links={links} />
       </div>
       <div className="grid-item-container" key="project-1">
         <p>project-1</p>
