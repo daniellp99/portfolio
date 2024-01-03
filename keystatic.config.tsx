@@ -23,6 +23,60 @@ export default config({
     project: "daniellp-portfolio/portfolio",
   },
   collections: {
+    projects: collection({
+      label: "Projects",
+      slugField: "name",
+      path: "src/content/projects/*",
+      format: { contentField: "content" },
+      schema: {
+        name: fields.slug({
+          name: { label: "Name", validation: { length: { min: 1 } } },
+        }),
+        description: fields.text({ label: "Description", multiline: true }),
+        status: fields.select({
+          label: "Status",
+          options: [
+            { label: "Active", value: "Active" },
+            { label: "Under Development", value: "Development" },
+          ],
+          defaultValue: "Development",
+        }),
+        content: fields.document({
+          label: "Content",
+          formatting: true,
+          dividers: true,
+          links: true,
+          images: true,
+          tables: true,
+        }),
+        images: fields.array(
+          fields.object({
+            alt: fields.text({
+              label: "Alt Text",
+              validation: { length: { min: 1 } },
+            }),
+            image: fields.image({
+              label: "Project Image",
+              description: "A screenshot of the project",
+              directory: "public/images/projects",
+              publicPath: "images/projects",
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: "Images",
+            itemLabel: (props) => props.fields.alt.value,
+          },
+        ),
+        links: fields.array(
+          fields.object({
+            name: fields.text({ label: "Name" }),
+            url: fields.url({ label: "URL" }),
+          }),
+          { label: "Links", itemLabel: (props) => props.fields.name.value },
+        ),
+      },
+    }),
     posts: collection({
       label: "Posts",
       slugField: "title",
