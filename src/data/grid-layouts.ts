@@ -7,7 +7,7 @@ async function generateLayout(size: "lg" | "sm" | "xs") {
   const projectSlots = {
     lg: [
       { x: 3, y: 0, w: 1, h: 2 },
-      { x: 0, y: 1, w: 1, h: 2 },
+      { x: 0, y: 1, w: 2, h: 1 },
       { x: 2, y: 1, w: 1, h: 2 },
     ],
     sm: [
@@ -17,8 +17,8 @@ async function generateLayout(size: "lg" | "sm" | "xs") {
     ],
     xs: [
       { x: 1, y: 3, w: 1, h: 2 },
-      { x: 0, y: 4, w: 1, h: 2 },
       { x: 0, y: 6, w: 2, h: 1 },
+      { x: 0, y: 4, w: 1, h: 2 },
     ],
   }[size];
 
