@@ -62,6 +62,12 @@ export default config({
               publicPath: "images/projects",
               validation: { isRequired: true },
             }),
+            bg: fields.image({
+              label: "Background Image",
+              description: "Will be render only in the Project Card",
+              directory: "public/images/projects",
+              publicPath: "images/projects",
+            }),
           }),
           {
             label: "Images",
