@@ -6,6 +6,8 @@ import { Layouts, Responsive, WidthProvider } from "react-grid-layout";
 import { SocialLinks } from "@/types/socialLinks";
 import SocialLinksContainer from "./SocialLinkContainer";
 import ThemeToggle from "./ThemeToggle";
+import ProjectCard from "./ProjectCard";
+import { Project } from "@/data/project-dto";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -22,7 +24,7 @@ export default function GridContainer({
   layouts,
 }: {
   links: SocialLinks | null;
-  projects: string[];
+  projects: Project[];
   layouts: Layouts;
 }) {
   return (
@@ -59,9 +61,12 @@ export default function GridContainer({
       <div className="grid-item-container" key="social-links">
         <SocialLinksContainer links={links} />
       </div>
-      {projects.map((project) => (
-        <div className="grid-item-container" key={project}>
-          <p>{project}</p>
+      {projects.map((project, index) => (
+        <div className="grid-item-container" key={project.slug}>
+          <ProjectCard
+            project={project}
+            isHorizontal={index === 1 ? true : false}
+          />
         </div>
       ))}
     </ResponsiveGridLayout>
