@@ -6,7 +6,9 @@ import Image from "next/image";
 export default function NavBar() {
   return (
     <nav className="mt-10 flex h-32 flex-col items-center justify-between sm:mx-10 sm:mt-0 sm:flex-row">
-      <Image src="/logo.svg" width={124} height={24} alt="daniellp" />
+      <h1 className="font-sans text-5xl font-extrabold text-gray-800 dark:text-gray-300">
+        daniellp
+      </h1>
       <NavItems />
       <Link
         className="hidden text-lg hover:text-zinc-500 sm:block"
