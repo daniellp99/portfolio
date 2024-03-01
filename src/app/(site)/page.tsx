@@ -8,7 +8,7 @@ export default async function Home() {
   const projects = await getProjectsDTO();
   const layouts = await generateLayouts();
   return (
-    <main className="mx-auto block w-[375px] md:w-[800px] xl:w-[1200px]">
+    <main className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
       <GridContainer
         links={socialLinks}
         projects={projects}
