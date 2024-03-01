@@ -1,7 +1,6 @@
-import React from "react";
-import NavItems from "./NavItems";
 import Link from "next/link";
-import Image from "next/image";
+
+import NavItems from "./NavItems";
 
 export default function NavBar() {
   return (
