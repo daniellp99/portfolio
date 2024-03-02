@@ -30,7 +30,7 @@ export default function GridContainer({
   return (
     <ResponsiveGridLayout
       draggableCancel=".cancelDrag"
-      className="layout animate-fade-in"
+      className="layout animate-in fade-in duration-1000"
       layouts={layouts}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 4, md: 4, sm: 4, xs: 2, xxs: 2 }}
