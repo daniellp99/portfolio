@@ -3,18 +3,19 @@
 import dynamic from "next/dynamic";
 import { Layouts, Responsive, WidthProvider } from "react-grid-layout";
 
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { Project } from "@/data/project-dto";
 import { SocialLinks } from "@/types/socialLinks";
+import ProjectCard from "./ProjectCard";
 import SocialLinksContainer from "./SocialLinkContainer";
 import ThemeToggle from "./ThemeToggle";
-import ProjectCard from "./ProjectCard";
-import { Project } from "@/data/project-dto";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
-  loading: () => (
-    <div className="h-full w-full animate-pulse bg-zinc-200 dark:bg-zinc-600" />
-  ),
+  loading: () => <Skeleton className="h-full w-full" />,
   ssr: false,
 });
 
@@ -49,25 +50,25 @@ export default function GridContainer({
       }}
       // isBounded={true}
     >
-      <div className="grid-item-container" key="me">
+      <Card variant="item" key="me">
         <p>Me</p>
-      </div>
-      <div className="grid-item-container" key="toggle-theme">
+      </Card>
+      <Card variant="item" key="toggle-theme">
         <ThemeToggle />
-      </div>
-      <div className="grid-item-container" key="maps">
+      </Card>
+      <Card variant="item" key="maps">
         <DynamicMap />
-      </div>
-      <div className="grid-item-container" key="social-links">
+      </Card>
+      <Card variant="item" key="social-links">
         <SocialLinksContainer links={links} />
-      </div>
+      </Card>
       {projects.map((project, index) => (
-        <div className="grid-item-container" key={project.slug}>
+        <Card variant="item" key={project.slug}>
           <ProjectCard
             project={project}
             isHorizontal={index === 1 ? true : false}
           />
-        </div>
+        </Card>
       ))}
     </ResponsiveGridLayout>
   );
