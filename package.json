@@ -11,6 +11,7 @@
   "dependencies": {
     "@keystatic/core": "^0.2.9",
     "@keystatic/next": "^2.0.1",
+    "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
