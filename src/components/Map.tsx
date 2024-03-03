@@ -2,6 +2,7 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+
 import ZoomHandler from "./ZoomHandler";
 
 export default function Map() {
@@ -15,7 +16,7 @@ export default function Map() {
       center={[20.89689, -76.26652]}
       zoom={16}
       maxZoom={16}
-      className="h-full w-full rounded-lg"
+      className="h-full w-full"
     >
       <ZoomHandler />
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

@@ -56,14 +56,14 @@ export default function GridContainer({
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
       </Card>
-      <Card variant="item" key="maps">
+      <Card variant="item" key="maps" className="overflow-hidden">
         <DynamicMap />
       </Card>
       <Card variant="item" key="social-links">
         <SocialLinksContainer links={links} />
       </Card>
       {projects.map((project, index) => (
-        <Card variant="item" key={project.slug}>
+        <Card variant="item" key={project.slug} className="overflow-hidden">
           <ProjectCard
             project={project}
             isHorizontal={index === 1 ? true : false}
