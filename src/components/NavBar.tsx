@@ -1,7 +1,8 @@
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+
 import NavItems from "./NavItems";
-import { Button } from "./ui/button";
 
 export default function NavBar() {
   return (
