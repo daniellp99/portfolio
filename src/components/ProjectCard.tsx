@@ -41,7 +41,7 @@ export default function ProjectCard({
       <Button
         asChild
         variant="projectLink"
-        className="cancelDrag absolute bottom-3 left-3 flex items-center p-2"
+        className="cancelDrag absolute bottom-3 left-3 flex items-center p-2 transition duration-150 ease-linear"
         size="icon"
       >
         <Link href="#" className="w-fit overflow-hidden">
