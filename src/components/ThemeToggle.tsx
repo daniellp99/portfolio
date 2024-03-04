@@ -32,7 +32,7 @@ export default function ThemeToggle() {
           setTheme(resolvedTheme === "light" ? "dark" : "light");
         }}
       >
-        <div className="bg-card size-9 -translate-x-4 transform rounded-full p-1 text-orange-300 transition duration-500 dark:translate-x-4">
+        <div className="size-9 -translate-x-4 rounded-full bg-card p-1 text-orange-300 transition duration-300 ease-linear dark:translate-x-4">
           <ThemeIcon className="size-7" />
         </div>
       </Button>
