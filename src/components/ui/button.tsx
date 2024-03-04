@@ -18,9 +18,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        projectLink: "border-input bg-background rounded-full border-2",
+        projectLink:
+          "border-border bg-background rounded-full border-2 ring-border hover:ring-2",
         themeToggle:
-          "rounded-full border-input bg-muted-foreground/25 dark:border-2 dark:bg-zinc-600",
+          "rounded-full border-border bg-muted-foreground/25 dark:border-2 dark:bg-zinc-600",
       },
       size: {
         default: "h-10 px-4 py-2",
