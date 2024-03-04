@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import { useState } from "react";
+
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const TABS = [
   { key: "all", name: "All" },
@@ -7,16 +11,29 @@ const TABS = [
 ];
 
 export default function NavItems() {
+  const [tab, setTab] = useState(TABS[0].key);
+
+  const onTabChange = (value: string) => {
+    setTab(value);
+  };
   return (
-    <div className="flex flex-row justify-evenly rounded-full border-2 bg-zinc-200 p-1 dark:border-gray-700 dark:bg-transparent">
-      {TABS.map((tab) => (
-        <button
-          className="rounded-full px-3 text-xl hover:text-gray-500 active:bg-gray-50 dark:active:bg-gray-500"
-          key={tab.key}
-        >
-          {tab.name}
-        </button>
-      ))}
-    </div>
+    <Tabs
+      value={tab}
+      onValueChange={onTabChange}
+      defaultValue={TABS[0].key}
+      className="flex w-full flex-col items-center"
+    >
+      <TabsList className="ring-border text-secondary-foreground h-12 w-fit rounded-full ring-2">
+        {TABS.map((tab) => (
+          <TabsTrigger
+            key={tab.key}
+            value={tab.key}
+            className="rounded-full text-xl"
+          >
+            {tab.name}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
 }

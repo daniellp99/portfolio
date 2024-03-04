@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-100 dark:bg-zinc-950`}
+        className={`${GeistSans.variable} ${GeistMono.variable} dark:bg-background bg-zinc-100`}
       >
         {children}
       </body>
