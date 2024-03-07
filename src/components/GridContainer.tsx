@@ -11,6 +11,7 @@ import { OwnerData } from "@/types/ownerData";
 import ProjectCard from "./ProjectCard";
 import GithubCard from "./GithubCard";
 import ThemeToggle from "./ThemeToggle";
+import { useLayoutsContext } from "./LayoutsContext";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -22,12 +23,11 @@ const DynamicMap = dynamic(() => import("@/components/Map"), {
 export default function GridContainer({
   ownerData,
   projects,
-  layouts,
 }: {
   ownerData: OwnerData | null;
   projects: Project[];
-  layouts: Layouts;
 }) {
+  const { layouts } = useLayoutsContext();
   return (
     <ResponsiveGridLayout
       draggableCancel=".cancelDrag"
