@@ -7,9 +7,9 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Project } from "@/data/project-dto";
-import { SocialLinks } from "@/types/socialLinks";
+import { OwnerData } from "@/types/ownerData";
 import ProjectCard from "./ProjectCard";
-import SocialLinksContainer from "./SocialLinkContainer";
+import GithubCard from "./GithubCard";
 import ThemeToggle from "./ThemeToggle";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -20,18 +20,18 @@ const DynamicMap = dynamic(() => import("@/components/Map"), {
 });
 
 export default function GridContainer({
-  links,
+  ownerData,
   projects,
   layouts,
 }: {
-  links: SocialLinks | null;
+  ownerData: OwnerData | null;
   projects: Project[];
   layouts: Layouts;
 }) {
   return (
     <ResponsiveGridLayout
       draggableCancel=".cancelDrag"
-      className="layout animate-in fade-in duration-1000"
+      className="layout duration-1000 animate-in fade-in"
       layouts={layouts}
       breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
       cols={{ lg: 4, md: 4, sm: 4, xs: 2, xxs: 2 }}
@@ -51,7 +51,7 @@ export default function GridContainer({
       // isBounded={true}
     >
       <Card variant="item" key="me">
-        <p>Me</p>
+        <p>{ownerData?.aboutMe}</p>
       </Card>
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
@@ -60,7 +60,7 @@ export default function GridContainer({
         <DynamicMap />
       </Card>
       <Card variant="item" key="social-links">
-        <SocialLinksContainer links={links} />
+        <GithubCard githubUser={ownerData?.githubUser} />
       </Card>
       {projects.map((project, index) => (
         <Card variant="item" key={project.slug} className="overflow-hidden">
