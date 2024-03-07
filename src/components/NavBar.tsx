@@ -1,7 +1,8 @@
-import React from "react";
-import NavItems from "./NavItems";
 import Link from "next/link";
-import Image from "next/image";
+
+import { Button } from "@/components/ui/button";
+
+import NavItems from "./NavItems";
 
 export default function NavBar() {
   return (
@@ -10,12 +11,11 @@ export default function NavBar() {
         daniellp
       </h1>
       <NavItems />
-      <Link
-        className="hidden text-lg hover:text-zinc-500 sm:block"
-        href="mailto:dalejandrolp99@gmail.com"
-      >
-        Contact
-      </Link>
+      <Button asChild variant="link" className="hidden sm:block">
+        <Link href="mailto:dalejandrolp99@gmail.com" className="text-xl">
+          Contact
+        </Link>
+      </Button>
     </nav>
   );
 }
