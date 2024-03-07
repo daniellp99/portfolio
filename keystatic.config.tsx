@@ -101,21 +101,22 @@ export default config({
     }),
   },
   singletons: {
-    socialLinks: singleton({
-      label: "Social Links",
-      path: "src/content/social-links",
+    ownerData: singleton({
+      label: "Portfolio Owner Data",
+      path: "src/content/owner-data",
       schema: {
-        github: fields.text({
+        name: fields.text({
+          label: "Name",
+          description: "For the portfolio logo",
+        }),
+        githubUser: fields.text({
           label: "GitHub",
           description: "The GitHub username (not full URL!)",
         }),
-        X: fields.text({
-          label: "X",
-          description: "The X handle (not full URL!)",
-        }),
-        linkedIn: fields.text({
-          label: "LinkedIn",
-          description: "The LinkedIn ID (not full URL!)",
+        aboutMe: fields.text({
+          multiline: true,
+          label: "About Me",
+          description: "For display the About Me grid item",
         }),
       },
     }),
