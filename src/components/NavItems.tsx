@@ -4,33 +4,30 @@ import { useState } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const TABS = [
-  { key: "all", name: "All" },
-  { key: "about", name: "About" },
-  { key: "projects", name: "Projects" },
-];
+import { generateLayouts } from "@/actions";
+import { TabsType, tabs } from "@/types/tabs";
+import { useLayoutsContext } from "./LayoutsContext";
 
 export default function NavItems() {
-  const [tab, setTab] = useState(TABS[0].key);
+  const [tab, setTab] = useState(tabs[0]);
+  const { setLayouts } = useLayoutsContext();
 
-  const onTabChange = (value: string) => {
-    setTab(value);
-  };
+  async function onTabChange(value: string) {
+    const layouts = await generateLayouts(value as TabsType);
+    setLayouts(layouts);
+    setTab(value as TabsType);
+  }
   return (
     <Tabs
       value={tab}
       onValueChange={onTabChange}
-      defaultValue={TABS[0].key}
+      defaultValue={tab}
       className="flex w-full flex-col items-center"
     >
-      <TabsList className="ring-border text-secondary-foreground h-12 w-fit rounded-full ring-2">
-        {TABS.map((tab) => (
-          <TabsTrigger
-            key={tab.key}
-            value={tab.key}
-            className="rounded-full text-xl"
-          >
-            {tab.name}
+      <TabsList className="h-12 w-fit rounded-full text-secondary-foreground ring-2 ring-border">
+        {tabs.map((tab) => (
+          <TabsTrigger key={tab} value={tab} className="rounded-full text-xl">
+            {tab}
           </TabsTrigger>
         ))}
       </TabsList>
