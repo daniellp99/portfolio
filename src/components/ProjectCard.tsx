@@ -44,7 +44,10 @@ export default function ProjectCard({
         className="cancelDrag absolute bottom-3 left-3 flex items-center p-2 transition duration-150 ease-linear"
         size="icon"
       >
-        <Link href="#" className="w-fit overflow-hidden">
+        <Link
+          href={`/project/${project.slug}`}
+          className="w-fit overflow-hidden"
+        >
           <p className="max-w-0 -translate-x-full truncate pr-5 text-sm font-bold opacity-0 transition-all delay-75 duration-300 ease-linear group-hover:max-w-[116px] group-hover:translate-x-0 group-hover:opacity-100 group-hover:md:max-w-[152px] group-hover:lg:max-w-[252px]">
             {project.name}
           </p>
