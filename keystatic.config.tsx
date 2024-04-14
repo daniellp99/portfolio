@@ -33,6 +33,20 @@ export default config({
           name: { label: "Name", validation: { length: { min: 1 } } },
         }),
         description: fields.text({ label: "Description", multiline: true }),
+        coverImage: fields.image({
+          label: "Project Cover Image",
+          description: "Displayed in the main grid",
+          directory: "public/images/projects",
+          publicPath: "images/projects",
+          validation: { isRequired: true },
+        }),
+        bgImage: fields.image({
+          label: "Project Background Image",
+          description: "Displayed in the main grid as background",
+          directory: "public/images/projects",
+          publicPath: "images/projects",
+          validation: { isRequired: true },
+        }),
         status: fields.select({
           label: "Status",
           options: [
@@ -62,18 +76,12 @@ export default config({
               label: "Alt Text",
               validation: { length: { min: 1 } },
             }),
-            image: fields.image({
+            src: fields.image({
               label: "Project Image",
               description: "A screenshot of the project",
               directory: "public/images/projects",
               publicPath: "images/projects",
               validation: { isRequired: true },
-            }),
-            bg: fields.image({
-              label: "Background Image",
-              description: "Will be render only in the Project Card",
-              directory: "public/images/projects",
-              publicPath: "images/projects",
             }),
           }),
           {

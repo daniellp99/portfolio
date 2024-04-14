@@ -18,12 +18,12 @@ export default function ProjectCard({
     <div
       style={
         {
-          "--image-url": `url(/${project.images[0].bg})`,
+          "--image-url": `url(/${project.bgImage})`,
         } as React.CSSProperties
       }
       className={cn(
         "group h-full w-full dark:bg-none",
-        !!project.images[0].bg && "bg-[image:var(--image-url)] bg-cover",
+        !!project.bgImage && "bg-[image:var(--image-url)] bg-cover",
       )}
     >
       <Image
@@ -33,8 +33,8 @@ export default function ProjectCard({
             ? "origin-top -rotate-[30deg]"
             : "origin-right -rotate-45",
         )}
-        alt={project.images[0].alt}
-        src={`/${project.images[0].image}`}
+        alt={project.name}
+        src={`/${project.coverImage}`}
         width={800}
         height={800}
       />

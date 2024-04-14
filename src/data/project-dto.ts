@@ -12,7 +12,8 @@ export async function getProjectsDTO() {
     return {
       slug: project.slug,
       name: project.entry.name,
-      images: project.entry.images,
+      coverImage: project.entry.coverImage,
+      bgImage: project.entry.bgImage,
     };
   });
 
