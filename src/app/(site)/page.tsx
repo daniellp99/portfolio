@@ -1,5 +1,5 @@
-import GridContainer from "@/components/GridContainer";
 import { LayoutsContextProvider } from "@/components/LayoutsContext";
+import MainGrid from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
 import { generateLayouts } from "@/actions";
@@ -15,7 +15,7 @@ export default async function Home() {
     <LayoutsContextProvider defaultLayouts={defaultLayouts}>
       <NavBar />
       <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-        <GridContainer ownerData={ownerData} projects={projects} />
+        <MainGrid ownerData={ownerData} projects={projects} />
       </section>
     </LayoutsContextProvider>
   );
