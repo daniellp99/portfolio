@@ -111,7 +111,7 @@ h6 {
 }
 
 .prose .anchor:after {
-  @apply text-neutral-300 dark:text-neutral-700;
+  @apply text-zinc-300 dark:text-zinc-700;
   content: "#";
 }
 
@@ -120,11 +120,11 @@ h6 {
 }
 
 .prose a {
-  @apply decoration-neutral-400 decoration-[0.1em] underline-offset-2 transition-all dark:decoration-neutral-600;
+  @apply decoration-zinc-400 decoration-[0.1em] underline-offset-2 transition-all dark:decoration-zinc-600;
 }
 
 .prose pre {
-  @apply overflow-x-auto rounded-lg border border-neutral-200 bg-neutral-50 dark:border-neutral-900 dark:bg-neutral-900;
+  @apply overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-900 dark:bg-zinc-900;
 }
 
 .prose code {
