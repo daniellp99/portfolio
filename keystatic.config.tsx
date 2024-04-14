@@ -41,13 +41,20 @@ export default config({
           ],
           defaultValue: "Development",
         }),
-        content: fields.document({
+        content: fields.mdx({
           label: "Content",
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: true,
-          tables: true,
+          options: {
+            divider: true,
+            heading: true,
+            bold: true,
+            italic: true,
+            link: true,
+            blockquote: true,
+            code: true,
+            codeBlock: true,
+            orderedList: true,
+            unorderedList: true,
+          },
         }),
         images: fields.array(
           fields.object({
