@@ -7,13 +7,13 @@ import {
 } from "./data/grid-layouts";
 import { TabsType } from "./types/tabs";
 
-export async function generateLayouts(tab: TabsType) {
-  const layoutFactories = {
-    All: new DefaultLayoutFactory(),
-    Projects: new ProjectsLayoutFactory(),
-    About: new AboutLayoutFactory(),
-  };
+const layoutFactories = {
+  All: new DefaultLayoutFactory(),
+  Projects: new ProjectsLayoutFactory(),
+  About: new AboutLayoutFactory(),
+};
 
+export async function generateLayouts(tab: TabsType) {
   const LayoutFactory = layoutFactories[tab] || new DefaultLayoutFactory();
 
   const lgLayout = await LayoutFactory.generateLayout("lg");
