@@ -76,6 +76,14 @@ export default config({
               label: "Alt Text",
               validation: { length: { min: 1 } },
             }),
+            width: fields.integer({
+              label: "Width",
+              validation: { isRequired: true },
+            }),
+            height: fields.integer({
+              label: "Height",
+              validation: { isRequired: true },
+            }),
             src: fields.image({
               label: "Project Image",
               description: "A screenshot of the project",
