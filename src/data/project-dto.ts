@@ -1,6 +1,7 @@
 import "server-only";
 
 import { reader } from "@/lib/reader";
+import { notFound } from "next/navigation";
 
 export async function getProjectSlugsDTO() {
   const projects = await reader.collections.projects.list();
@@ -20,4 +21,17 @@ export async function getProjectsDTO() {
   return projects;
 }
 
+export async function getProjectDetailsDTO(slug: string) {
+  const project = await reader.collections.projects.read(slug, {
+    resolveLinkedFiles: true,
+  });
+
+  if (!project) {
+    notFound();
+  }
+
+  return project;
+}
+
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];
+export type Images = Awaited<ReturnType<typeof getProjectDetailsDTO>>["images"];
