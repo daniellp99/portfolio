@@ -1,5 +1,6 @@
 import { Layout } from "react-grid-layout";
-import { getProjectSlugsDTO } from "./project-dto";
+import { Images, getProjectSlugsDTO } from "./project-dto";
+import { generateAspectRatio } from "@/lib/utils";
 
 interface LayoutFactory {
   generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]>;
@@ -222,5 +223,64 @@ export class ProjectsLayoutFactory implements LayoutFactory {
           })
         : [],
     );
+  }
+}
+
+export class ImageLayoutFactory implements LayoutFactory {
+  private images: Images;
+
+  constructor(images: Images) {
+    this.images = images;
+  }
+  async generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]> {
+    const sizeFactor = scaleFactor[size];
+    const colsNumber = size === "xs" ? 2 : 4;
+
+    if (this.images.length > 0) {
+      return Array.from(
+        this.images.map((image, index, array) => {
+          let aspectRatio = generateAspectRatio(image.width, image.height);
+          let x = 0, // 0,1,2,3
+            y = 0;
+          let prevImages = array.slice(0, index);
+
+          if (prevImages.length === 0) {
+            x = 0;
+            y = 0;
+          } else {
+            let totalW = 0;
+            prevImages.forEach((image) => {
+              let prevAspectRatio = generateAspectRatio(
+                image.width,
+                image.height,
+              );
+              totalW += prevAspectRatio.w;
+            });
+
+            if (totalW < colsNumber) {
+              x = totalW;
+              y = 0;
+            } else if (totalW === colsNumber) {
+              x = 0;
+              y = 1;
+            } else {
+              x = Math.ceil(totalW % colsNumber);
+              y = Math.floor(totalW / colsNumber);
+            }
+          }
+
+          return {
+            i: image.src,
+            x: x,
+            y: sizeFactor * y,
+            w: aspectRatio.w,
+            h: sizeFactor * aspectRatio.h,
+            isResizable,
+          };
+        }),
+      );
+    } else {
+      return [];
+    }
   }
 }

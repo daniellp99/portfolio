@@ -33,6 +33,20 @@ export default config({
           name: { label: "Name", validation: { length: { min: 1 } } },
         }),
         description: fields.text({ label: "Description", multiline: true }),
+        coverImage: fields.image({
+          label: "Project Cover Image",
+          description: "Displayed in the main grid",
+          directory: "public/images/projects",
+          publicPath: "images/projects",
+          validation: { isRequired: true },
+        }),
+        bgImage: fields.image({
+          label: "Project Background Image",
+          description: "Displayed in the main grid as background",
+          directory: "public/images/projects",
+          publicPath: "images/projects",
+          validation: { isRequired: true },
+        }),
         status: fields.select({
           label: "Status",
           options: [
@@ -41,13 +55,20 @@ export default config({
           ],
           defaultValue: "Development",
         }),
-        content: fields.document({
+        content: fields.mdx({
           label: "Content",
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: true,
-          tables: true,
+          options: {
+            divider: true,
+            heading: true,
+            bold: true,
+            italic: true,
+            link: true,
+            blockquote: true,
+            code: true,
+            codeBlock: true,
+            orderedList: true,
+            unorderedList: true,
+          },
         }),
         images: fields.array(
           fields.object({
@@ -55,18 +76,20 @@ export default config({
               label: "Alt Text",
               validation: { length: { min: 1 } },
             }),
-            image: fields.image({
+            width: fields.integer({
+              label: "Width",
+              validation: { isRequired: true },
+            }),
+            height: fields.integer({
+              label: "Height",
+              validation: { isRequired: true },
+            }),
+            src: fields.image({
               label: "Project Image",
               description: "A screenshot of the project",
               directory: "public/images/projects",
               publicPath: "images/projects",
               validation: { isRequired: true },
-            }),
-            bg: fields.image({
-              label: "Background Image",
-              description: "Will be render only in the Project Card",
-              directory: "public/images/projects",
-              publicPath: "images/projects",
             }),
           }),
           {
