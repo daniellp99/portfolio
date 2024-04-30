@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@/components/Providers";
 
 import "./globals.css";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function HomeLayout({
   children,
@@ -9,7 +10,9 @@ export default async function HomeLayout({
 }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <main className="min-h-screen w-full">{children}</main>
+      <ScrollArea className="h-screen">
+        <main className="w-full">{children}</main>
+      </ScrollArea>
     </ThemeProvider>
   );
 }
