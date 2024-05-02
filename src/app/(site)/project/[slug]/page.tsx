@@ -5,13 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import GoBackButton from "@/components/GoBackButton";
 import { CustomMDX } from "@/components/MdxRemote";
 
-import { getProjectDetailsDTO } from "@/data/project-dto";
-import GridContainer from "@/components/GridContainer";
-import Image from "next/image";
-import { generateImageLayouts, generateLayouts } from "@/actions";
-import { Card } from "@/components/ui/card";
-import ThemeToggle from "@/components/ThemeToggle";
+import { generateImageLayouts } from "@/actions";
 import ImageGrid from "@/components/ImageGrid";
+import { getProjectDetailsDTO } from "@/data/project-dto";
 
 export default async function ProjectPage({
   params,
