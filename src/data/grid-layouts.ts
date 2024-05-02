@@ -1,6 +1,5 @@
 import { Layout } from "react-grid-layout";
 import { Images, getProjectSlugsDTO } from "./project-dto";
-import { generateAspectRatio } from "@/lib/utils";
 
 interface LayoutFactory {
   generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]>;
@@ -239,7 +238,6 @@ export class ImageLayoutFactory implements LayoutFactory {
     if (this.images.length > 0) {
       return Array.from(
         this.images.map((image, index, array) => {
-          let aspectRatio = generateAspectRatio(image.width, image.height);
           let x = 0, // 0,1,2,3
             y = 0;
           let prevImages = array.slice(0, index);
@@ -250,11 +248,7 @@ export class ImageLayoutFactory implements LayoutFactory {
           } else {
             let totalW = 0;
             prevImages.forEach((image) => {
-              let prevAspectRatio = generateAspectRatio(
-                image.width,
-                image.height,
-              );
-              totalW += prevAspectRatio.w;
+              totalW += image.width;
             });
 
             if (totalW < colsNumber) {
@@ -273,8 +267,8 @@ export class ImageLayoutFactory implements LayoutFactory {
             i: image.src,
             x: x,
             y: sizeFactor * y,
-            w: aspectRatio.w,
-            h: sizeFactor * aspectRatio.h,
+            w: image.width,
+            h: sizeFactor * image.height,
             isResizable,
           };
         }),
