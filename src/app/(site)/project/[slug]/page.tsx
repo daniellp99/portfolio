@@ -5,9 +5,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import GoBackButton from "@/components/GoBackButton";
 import { CustomMDX } from "@/components/MdxRemote";
 
-import { generateImageLayouts } from "@/actions";
 import ImageGrid from "@/components/ImageGrid";
 import { getProjectDetailsDTO, getProjectSlugsDTO } from "@/data/project-dto";
+import { generateImageLayouts } from "@/utils/layout";
 
 export async function generateStaticParams() {
   const slugs = await getProjectSlugsDTO();
@@ -21,7 +21,7 @@ export default async function ProjectPage({
   params: { slug: string };
 }) {
   const project = await getProjectDetailsDTO(params.slug);
-  const layouts = await generateImageLayouts(project.images);
+  const layouts = generateImageLayouts(project.images);
 
   return (
     <div className="flex flex-col place-items-center gap-10 pt-10">

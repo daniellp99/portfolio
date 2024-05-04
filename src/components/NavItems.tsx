@@ -4,19 +4,19 @@ import { useState } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { generateLayouts } from "@/actions";
 import { TabsType, tabs } from "@/types/tabs";
 import { useLayoutsContext } from "./LayoutsContext";
+import { generateLayouts } from "@/utils/layout";
 
-export default function NavItems() {
+export default function NavItems({ projectKeys }: { projectKeys: string[] }) {
   const [tab, setTab] = useState(tabs[0]);
   const { setLayouts } = useLayoutsContext();
 
   return (
     <Tabs
       value={tab}
-      onValueChange={async (value) => {
-        const layouts = await generateLayouts(value as TabsType);
+      onValueChange={(value) => {
+        const layouts = generateLayouts(value as TabsType, projectKeys);
         setLayouts(layouts);
         setTab(value as TabsType);
       }}
