@@ -7,7 +7,13 @@ import { CustomMDX } from "@/components/MdxRemote";
 
 import { generateImageLayouts } from "@/actions";
 import ImageGrid from "@/components/ImageGrid";
-import { getProjectDetailsDTO } from "@/data/project-dto";
+import { getProjectDetailsDTO, getProjectSlugsDTO } from "@/data/project-dto";
+
+export async function generateStaticParams() {
+  const slugs = await getProjectSlugsDTO();
+
+  return [...slugs.map((slug) => ({ slug: slug }))];
+}
 
 export default async function ProjectPage({
   params,
