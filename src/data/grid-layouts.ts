@@ -1,17 +1,21 @@
 import { Layout } from "react-grid-layout";
-import { Images, getProjectSlugsDTO } from "./project-dto";
+import { Images } from "./project-dto";
 
 interface LayoutFactory {
-  generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]>;
+  generateLayout(size: "lg" | "sm" | "xs"): Layout[];
 }
 
 const scaleFactor = { lg: 1.645, sm: 1.09, xs: 1 };
 const isResizable = false;
 export class DefaultLayoutFactory implements LayoutFactory {
-  async generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]> {
+  private projectKeys: string[];
+
+  constructor(projectKeys: string[]) {
+    this.projectKeys = projectKeys;
+  }
+  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
     const sizeFactor = scaleFactor[size];
 
-    const projectKeys = await getProjectSlugsDTO();
     const projectSlots = {
       lg: [
         { x: 3, y: 0, w: 1, h: 2 },
@@ -64,8 +68,9 @@ export class DefaultLayoutFactory implements LayoutFactory {
         isResizable,
       },
     ].concat(
-      projectKeys.length > 0 && projectKeys.length <= projectSlots.length
-        ? projectKeys.map((key, index) => {
+      this.projectKeys.length > 0 &&
+        this.projectKeys.length <= projectSlots.length
+        ? this.projectKeys.map((key, index) => {
             return {
               i: key,
               x: projectSlots[index].x,
@@ -81,10 +86,14 @@ export class DefaultLayoutFactory implements LayoutFactory {
 }
 
 export class AboutLayoutFactory implements LayoutFactory {
-  async generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]> {
+  private projectKeys: string[];
+
+  constructor(projectKeys: string[]) {
+    this.projectKeys = projectKeys;
+  }
+  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
     const sizeFactor = scaleFactor[size];
 
-    const projectKeys = await getProjectSlugsDTO();
     const projectSlots = {
       lg: [
         { x: 3, y: 1, w: 1, h: 2 },
@@ -137,8 +146,9 @@ export class AboutLayoutFactory implements LayoutFactory {
         isResizable,
       },
     ].concat(
-      projectKeys.length > 0 && projectKeys.length <= projectSlots.length
-        ? projectKeys.map((key, index) => {
+      this.projectKeys.length > 0 &&
+        this.projectKeys.length <= projectSlots.length
+        ? this.projectKeys.map((key, index) => {
             return {
               i: key,
               x: projectSlots[index].x,
@@ -153,10 +163,14 @@ export class AboutLayoutFactory implements LayoutFactory {
   }
 }
 export class ProjectsLayoutFactory implements LayoutFactory {
-  async generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]> {
+  private projectKeys: string[];
+
+  constructor(projectKeys: string[]) {
+    this.projectKeys = projectKeys;
+  }
+  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
     const sizeFactor = scaleFactor[size];
 
-    const projectKeys = await getProjectSlugsDTO();
     const projectSlots = {
       lg: [
         { x: 2, y: 0, w: 1, h: 2 },
@@ -209,8 +223,9 @@ export class ProjectsLayoutFactory implements LayoutFactory {
         isResizable,
       },
     ].concat(
-      projectKeys.length > 0 && projectKeys.length <= projectSlots.length
-        ? projectKeys.map((key, index) => {
+      this.projectKeys.length > 0 &&
+        this.projectKeys.length <= projectSlots.length
+        ? this.projectKeys.map((key, index) => {
             return {
               i: key,
               x: projectSlots[index].x,
@@ -231,7 +246,7 @@ export class ImageLayoutFactory implements LayoutFactory {
   constructor(images: Images) {
     this.images = images;
   }
-  async generateLayout(size: "lg" | "sm" | "xs"): Promise<Layout[]> {
+  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
     const sizeFactor = scaleFactor[size];
     const colsNumber = size === "xs" ? 2 : 4;
 
