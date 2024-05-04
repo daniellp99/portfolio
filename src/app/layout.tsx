@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata } from "next";
@@ -17,9 +18,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${GeistSans.variable} ${GeistMono.variable} dark:bg-background bg-zinc-100`}
+        className={`${GeistSans.variable} ${GeistMono.variable} bg-zinc-100 dark:bg-background`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
