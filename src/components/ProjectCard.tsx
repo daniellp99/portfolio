@@ -35,8 +35,10 @@ export default function ProjectCard({
         )}
         alt={project.name}
         src={`/${project.coverImage}`}
-        width={800}
-        height={800}
+        fill
+        style={{
+          objectFit: "cover",
+        }}
       />
       <Button
         asChild
