@@ -14,6 +14,7 @@ export default function NavItems() {
 
   async function onTabChange(value: string) {
     const layouts = await generateLayouts(value as TabsType);
+    console.log("🚀 ~ onTabChange ~ layouts:", layouts.lg[4].h);
     setLayouts(layouts);
     setTab(value as TabsType);
   }
