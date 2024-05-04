@@ -12,15 +12,14 @@ export default function NavItems() {
   const [tab, setTab] = useState(tabs[0]);
   const { setLayouts } = useLayoutsContext();
 
-  async function onTabChange(value: string) {
-    const layouts = await generateLayouts(value as TabsType);
-    setLayouts(layouts);
-    setTab(value as TabsType);
-  }
   return (
     <Tabs
       value={tab}
-      onValueChange={onTabChange}
+      onValueChange={async (value) => {
+        const layouts = await generateLayouts(value as TabsType);
+        setLayouts(layouts);
+        setTab(value as TabsType);
+      }}
       defaultValue={tab}
       className="flex w-full flex-col items-center"
     >
