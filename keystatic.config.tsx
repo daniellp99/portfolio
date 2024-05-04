@@ -113,12 +113,20 @@ export default config({
       format: { contentField: "content" },
       schema: {
         title: fields.slug({ name: { label: "Title" } }),
-        content: fields.document({
+        content: fields.mdx({
           label: "Content",
-          formatting: true,
-          dividers: true,
-          links: true,
-          images: true,
+          options: {
+            link: true,
+            code: true,
+            codeBlock: true,
+            blockquote: true,
+            divider: true,
+            heading: true,
+            unorderedList: true,
+            orderedList: true,
+            bold: true,
+            italic: true,
+          },
         }),
       },
     }),
