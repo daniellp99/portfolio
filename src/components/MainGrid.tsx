@@ -12,6 +12,7 @@ import GridContainer from "./GridContainer";
 import { useLayoutsContext } from "./LayoutsContext";
 import ProjectCard from "./ProjectCard";
 import ThemeToggle from "./ThemeToggle";
+import AboutMe from "./AboutMe";
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
   loading: () => <Skeleton className="h-full w-full" />,
@@ -29,7 +30,7 @@ export default function MainGrid({
   return (
     <GridContainer layouts={layouts}>
       <Card variant="item" key="me">
-        <p>{ownerData?.aboutMe}</p>
+        <AboutMe name={ownerData?.name} description={ownerData?.aboutMe} />
       </Card>
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
