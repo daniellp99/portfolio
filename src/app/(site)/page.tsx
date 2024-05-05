@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <LayoutsContextProvider defaultLayouts={defaultLayouts}>
-      <NavBar projectKeys={projectKeys} />
+      <NavBar ownerName={ownerData?.name} projectKeys={projectKeys} />
       <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
         <MainGrid ownerData={ownerData} projects={projects} />
       </section>
