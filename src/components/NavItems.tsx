@@ -21,11 +21,15 @@ export default function NavItems({ projectKeys }: { projectKeys: string[] }) {
         setTab(value as TabsType);
       }}
       defaultValue={tab}
-      className="flex w-full flex-col items-center"
+      className="flex flex-col items-center"
     >
-      <TabsList className="h-12 w-fit rounded-full text-secondary-foreground ring-2 ring-border">
+      <TabsList className="h-12 w-fit rounded-full bg-card text-secondary-foreground ring-2 ring-border">
         {tabs.map((tab) => (
-          <TabsTrigger key={tab} value={tab} className="rounded-full text-xl">
+          <TabsTrigger
+            key={tab}
+            value={tab}
+            className="rounded-full text-xl data-[state=active]:bg-foreground data-[state=active]:text-background"
+          >
             {tab}
           </TabsTrigger>
         ))}
