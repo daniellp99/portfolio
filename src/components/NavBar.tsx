@@ -3,22 +3,23 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import NavItems from "./NavItems";
+import Logo from "./Logo";
 
 export default function NavBar({
   projectKeys,
-  ownerName,
+  lightLogo,
+  darkLogo,
 }: {
   projectKeys: string[];
-  ownerName: string | undefined;
+  lightLogo: string | undefined;
+  darkLogo: string | undefined;
 }) {
   return (
-    <nav className="mt-10 flex h-32 flex-col items-center justify-between sm:mx-10 sm:mt-0 sm:flex-row">
-      <h1 className="font-sans text-5xl font-extrabold text-gray-800 dark:text-gray-300">
-        {ownerName}
-      </h1>
+    <nav className=" mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row">
+      <Logo ownerLightLogo={lightLogo} ownerDarkLogo={darkLogo} />
       <NavItems projectKeys={projectKeys} />
       <Button asChild variant="link" className="hidden sm:block">
-        <Link href="mailto:dalejandrolp99@gmail.com" className="text-xl">
+        <Link href="mailto:dalejandrolp99@gmail.com" className="text-xl/6">
           Contact
         </Link>
       </Button>
