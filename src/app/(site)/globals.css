@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 240, 5%, 96%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -12,7 +12,7 @@
     --popover-foreground: 240 10% 3.9%;
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
+    --secondary: 240, 4%, 46%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -40,13 +40,13 @@
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 240, 6%, 10%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
+    --secondary: 240, 5%, 34%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
@@ -70,7 +70,7 @@
 }
 
 .react-grid-item.react-grid-placeholder {
-  @apply rounded-lg bg-zinc-400;
+  @apply rounded-lg bg-muted-foreground;
 }
 
 .leaflet-tile {
@@ -89,7 +89,7 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-medium tracking-tighter !important;
+  @apply font-medium tracking-tighter text-foreground !important;
 }
 
 .prose strong {
@@ -111,7 +111,7 @@ h6 {
 }
 
 .prose .anchor:after {
-  @apply text-zinc-300 dark:text-zinc-700;
+  @apply text-secondary;
   content: "#";
 }
 
@@ -129,6 +129,10 @@ h6 {
 
 .prose code {
   @apply rounded-lg px-1 py-0.5;
+}
+
+.prose li::marker {
+  @apply text-secondary;
 }
 
 .prose pre code {

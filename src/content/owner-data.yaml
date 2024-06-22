@@ -4,3 +4,5 @@ aboutMe: >-
   I'm daniellp, a web developer from Cuba. i'm interested in full-stack
   applications with React, Nextjs, Tailwind CSS, Shadcn UI, AuthJs and Drizzle
   ORM. Always passionate about solving problems.
+LightLogo: /LightLogo.svg
+DarkLogo: /DarkLogo.svg
