@@ -23,7 +23,7 @@ export default function ZoomHandler() {
   }
 
   return (
-    <div className="absolute bottom-2 z-[10000] w-full">
+    <div className="absolute bottom-2 z-10000 w-full">
       <div className="relative mx-2 flex">
         <Button
           variant="projectLink"
@@ -42,7 +42,7 @@ export default function ZoomHandler() {
           size="icon"
           onClick={() => handleZoomIn()}
           className={cn(
-            "cancelDrag invisible absolute bottom-0 right-0 transition duration-150 ease-linear",
+            "cancelDrag invisible absolute right-0 bottom-0 transition duration-150 ease-linear",
             zoomLevel !== map.getMaxZoom() && "visible",
           )}
         >

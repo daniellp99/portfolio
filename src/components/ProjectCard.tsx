@@ -50,7 +50,7 @@ export default function ProjectCard({
           href={`/project/${project.slug}`}
           className="w-fit overflow-hidden"
         >
-          <p className="max-w-0 -translate-x-full truncate pr-5 text-sm font-bold opacity-0 transition-all delay-75 duration-300 ease-linear group-hover:max-w-[116px] group-hover:translate-x-0 group-hover:opacity-100 group-hover:md:max-w-[152px] group-hover:lg:max-w-[252px]">
+          <p className="max-w-0 -translate-x-full truncate pr-5 text-sm font-bold opacity-0 transition-all delay-75 duration-300 ease-linear group-hover:max-w-[116px] group-hover:translate-x-0 group-hover:opacity-100 md:group-hover:max-w-[152px] lg:group-hover:max-w-[252px]">
             {project.name}
           </p>
           <ArrowUpRightIcon className="absolute right-2 size-5" />
