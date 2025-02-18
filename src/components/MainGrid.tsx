@@ -1,21 +1,22 @@
 "use client";
-
 import dynamic from "next/dynamic";
+import { use } from "react";
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+import AboutMe from "@/components/AboutMe";
+import GithubCard from "@/components/GithubCard";
+import GridContainer from "@/components/GridContainer";
+import { LayoutsContext } from "@/components/LayoutsContext";
+import ProjectCard from "@/components/ProjectCard";
+import ThemeToggle from "@/components/ThemeToggle";
+
 import { Project } from "@/data/project-dto";
 import { OwnerData } from "@/types/ownerData";
-import GithubCard from "./GithubCard";
-import GridContainer from "./GridContainer";
-import { LayoutsContext } from "./LayoutsContext";
-import ProjectCard from "./ProjectCard";
-import ThemeToggle from "./ThemeToggle";
-import AboutMe from "./AboutMe";
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
-  loading: () => <Skeleton className="h-full w-full" />,
+  loading: () => <Skeleton className="size-full" />,
   ssr: false,
 });
 
