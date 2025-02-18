@@ -1,6 +1,5 @@
 "use client";
 import { ArrowUpRightIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 import Image from "next/image";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -9,19 +8,23 @@ import { CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 const GitHubIcon = () => {
-  const { resolvedTheme } = useTheme();
-
   return (
-    <Image
-      src={
-        resolvedTheme === "light"
-          ? "/github-mark.png"
-          : "/github-mark-white.png"
-      }
-      width={98}
-      height={96}
-      alt="Picture of the github logo"
-    />
+    <>
+      <Image
+        width={98}
+        height={96}
+        alt="Picture of the github logo"
+        src="/github-mark.png"
+        className="block dark:hidden"
+      />
+      <Image
+        width={98}
+        height={96}
+        alt="Picture of the github logo"
+        src={"/github-mark-white.png"}
+        className="hidden dark:block"
+      />
+    </>
   );
 };
 
