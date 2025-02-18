@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { TabsType, tabs } from "@/types/tabs";
-import { useLayoutsContext } from "./LayoutsContext";
 import { generateLayouts } from "@/utils/layout";
+import { LayoutsContext } from "./LayoutsContext";
 
 export default function NavItems({ projectKeys }: { projectKeys: string[] }) {
   const [tab, setTab] = useState(tabs[0]);
-  const { setLayouts } = useLayoutsContext();
+  const { setLayouts } = use(LayoutsContext);
 
   return (
     <Tabs

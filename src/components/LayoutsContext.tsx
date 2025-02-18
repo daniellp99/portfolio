@@ -5,7 +5,6 @@ import {
   ReactNode,
   SetStateAction,
   createContext,
-  useContext,
   useState,
 } from "react";
 import { Layouts } from "react-grid-layout";
@@ -41,6 +40,4 @@ function LayoutsContextProvider({
   );
 }
 
-const useLayoutsContext: () => ContextProps = () => useContext(LayoutsContext);
-
-export { LayoutsContextProvider, useLayoutsContext };
+export { LayoutsContext, LayoutsContextProvider };

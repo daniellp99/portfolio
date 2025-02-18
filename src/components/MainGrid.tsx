@@ -9,7 +9,7 @@ import { Project } from "@/data/project-dto";
 import { OwnerData } from "@/types/ownerData";
 import GithubCard from "./GithubCard";
 import GridContainer from "./GridContainer";
-import { useLayoutsContext } from "./LayoutsContext";
+import { LayoutsContext } from "./LayoutsContext";
 import ProjectCard from "./ProjectCard";
 import ThemeToggle from "./ThemeToggle";
 import AboutMe from "./AboutMe";
@@ -26,7 +26,7 @@ export default function MainGrid({
   ownerData: OwnerData | null;
   projects: Project[];
 }) {
-  const { layouts } = useLayoutsContext();
+  const { layouts } = use(LayoutsContext);
   return (
     <GridContainer layouts={layouts}>
       <Card variant="item" key="me">
