@@ -1,26 +1,29 @@
 import Image from "next/image";
 
-export default function Logo({
-  ownerLightLogo,
-  ownerDarkLogo,
-}: {
-  ownerLightLogo: string | undefined;
-  ownerDarkLogo: string | undefined;
-}) {
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { getOwnerDataDTO } from "@/data/project-dto";
+
+export function LogoFallback() {
+  return <Skeleton className="size-20 rounded-full" />;
+}
+
+export default async function Logo() {
+  const ownerData = await getOwnerDataDTO();
   return (
     <>
-      {ownerLightLogo && (
+      {ownerData?.LightLogo && (
         <Image
-          src={ownerLightLogo}
+          src={ownerData.LightLogo}
           alt="Logo"
           width={100}
           height={100}
           className="size-20 rounded-full dark:hidden"
         />
       )}
-      {ownerDarkLogo && (
+      {ownerData?.DarkLogo && (
         <Image
-          src={ownerDarkLogo}
+          src={ownerData.DarkLogo}
           alt="Logo"
           width={100}
           height={100}

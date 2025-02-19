@@ -1,14 +1,15 @@
 import "server-only";
 
-import { reader } from "@/lib/reader";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 
-export async function getProjectSlugsDTO() {
-  const projects = await reader.collections.projects.list();
+import { reader } from "@/lib/reader";
 
-  return projects;
-}
-export async function getProjectsDTO() {
+export const getProjectSlugsDTO = cache(async () => {
+  return reader.collections.projects.list();
+});
+
+export const getProjectsDTO = cache(async () => {
   const projects = (await reader.collections.projects.all()).map((project) => {
     return {
       slug: project.slug,
@@ -19,9 +20,9 @@ export async function getProjectsDTO() {
   });
 
   return projects;
-}
+});
 
-export async function getProjectDetailsDTO(slug: string) {
+export const getProjectDetailsDTO = cache(async (slug: string) => {
   const project = await reader.collections.projects.read(slug, {
     resolveLinkedFiles: true,
   });
@@ -31,7 +32,13 @@ export async function getProjectDetailsDTO(slug: string) {
   }
 
   return project;
-}
+});
+
+export const getOwnerDataDTO = cache(async () => {
+  return reader.singletons.ownerData.read();
+});
 
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];
 export type Images = Awaited<ReturnType<typeof getProjectDetailsDTO>>["images"];
+export type OwnerData = Awaited<ReturnType<typeof getOwnerDataDTO>>;
+export type ProjectSlugs = Awaited<ReturnType<typeof getProjectSlugsDTO>>;

@@ -1,16 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { TabsType, tabs } from "@/types/tabs";
-import { useLayoutsContext } from "./LayoutsContext";
+import { LayoutsContext } from "@/components/LayoutsContext";
+
+import { ProjectSlugs } from "@/data/project-dto";
+import { tabs, TabsType } from "@/types/tabs";
 import { generateLayouts } from "@/utils/layout";
 
-export default function NavItems({ projectKeys }: { projectKeys: string[] }) {
+export function NavItemsFallback() {
+  return <Skeleton className="h-12 w-52" />;
+}
+
+export default function NavItems({
+  projectsSlugsPromise,
+}: {
+  projectsSlugsPromise: Promise<ProjectSlugs>;
+}) {
   const [tab, setTab] = useState(tabs[0]);
-  const { setLayouts } = useLayoutsContext();
+  const { setLayouts } = use(LayoutsContext);
+  const projectKeys = use(projectsSlugsPromise);
 
   return (
     <Tabs
