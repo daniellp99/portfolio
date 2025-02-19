@@ -255,7 +255,7 @@ export class ImageLayoutFactory implements LayoutFactory {
         this.images.map((image, index, array) => {
           let x = 0, // 0,1,2,3
             y = 0;
-          let prevImages = array.slice(0, index);
+          const prevImages = array.slice(0, index);
 
           if (prevImages.length === 0) {
             x = 0;
