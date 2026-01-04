@@ -1,9 +1,9 @@
 "use client";
+import { cn } from "@/lib/utils";
+import { MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useMap, useMapEvents } from "react-leaflet";
 import { Button } from "./ui/button";
-import { MinusIcon, PlusIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export default function ZoomHandler() {
   const map = useMap();
@@ -27,7 +27,7 @@ export default function ZoomHandler() {
       <div className="relative mx-2 flex">
         <Button
           variant="projectLink"
-          size="icon"
+          size="icon-lg"
           onClick={() => handleZoomOut()}
           className={cn(
             "cancelDrag invisible absolute bottom-0 left-0 transition duration-150 ease-linear",
@@ -39,7 +39,7 @@ export default function ZoomHandler() {
 
         <Button
           variant="projectLink"
-          size="icon"
+          size="icon-lg"
           onClick={() => handleZoomIn()}
           className={cn(
             "cancelDrag invisible absolute right-0 bottom-0 transition duration-150 ease-linear",

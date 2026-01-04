@@ -18,10 +18,13 @@ export default function NavBar() {
       <Suspense fallback={<NavItemsFallback />}>
         <NavItems projectsSlugsPromise={projectsSlugsPromise} />
       </Suspense>
-      <Button asChild variant="link" className="hidden sm:block">
-        <Link href="mailto:dalejandrolp99@gmail.com" className="text-xl/6">
-          Contact
-        </Link>
+      <Button
+        variant="link"
+        className="hidden text-xl/6 sm:block"
+        render={<Link href="mailto:dalejandrolp99@gmail.com" />}
+        nativeButton={false}
+      >
+        Contact
       </Button>
     </nav>
   );
