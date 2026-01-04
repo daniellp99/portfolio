@@ -10,12 +10,15 @@ export function LogoFallback() {
 
 export default async function Logo() {
   const ownerData = await getOwnerDataDTO();
+  const ownerName = ownerData?.name || "Portfolio";
+  const altText = `${ownerName} Logo`;
+
   return (
     <>
       {ownerData?.LightLogo && (
         <Image
           src={ownerData.LightLogo}
-          alt="Logo"
+          alt={altText}
           width={100}
           height={100}
           className="size-20 rounded-full dark:hidden"
@@ -24,7 +27,7 @@ export default async function Logo() {
       {ownerData?.DarkLogo && (
         <Image
           src={ownerData.DarkLogo}
-          alt="Logo"
+          alt={altText}
           width={100}
           height={100}
           className="hidden size-20 rounded-full dark:block"
