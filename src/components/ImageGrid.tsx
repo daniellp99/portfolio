@@ -28,7 +28,7 @@ export default function ImageGrid({
             style={{
               objectFit: "cover",
             }}
-            className=" rounded-lg"
+            className="rounded-lg"
           />
         </Card>
       ))}

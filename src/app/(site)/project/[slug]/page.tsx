@@ -15,11 +15,9 @@ export async function generateStaticParams() {
   return [...slugs.map((slug) => ({ slug: slug }))];
 }
 
-export default async function ProjectPage(
-  props: {
-    params: Promise<{ slug: string }>;
-  }
-) {
+export default async function ProjectPage(props: {
+  params: Promise<{ slug: string }>;
+}) {
   const params = await props.params;
   const project = await getProjectDetailsDTO(params.slug);
   const layouts = generateImageLayouts(project.images);
@@ -32,9 +30,9 @@ export default async function ProjectPage(
           <h1 className="font-sans text-6xl font-bold tracking-tight">
             {project.name}
           </h1>
-          <p className="text-pretty text-4xl">{project.description}</p>
+          <p className="text-4xl text-pretty">{project.description}</p>
         </section>
-        <section className="prose prose-zinc size-full max-w-none dark:prose-invert lg:prose-xl">
+        <section className="prose size-full max-w-none prose-zinc lg:prose-xl dark:prose-invert">
           <Suspense fallback={<Skeleton className="size-full" />}>
             <CustomMDX source={project.content} />
           </Suspense>

@@ -16,8 +16,7 @@ const cardVariants = cva("bg-card text-card-foreground rounded-lg shadow-sm", {
 });
 
 export interface CardProps
-  extends React.ComponentProps<"div">,
-    VariantProps<typeof cardVariants> {}
+  extends React.ComponentProps<"div">, VariantProps<typeof cardVariants> {}
 
 function Card({ className, variant, ...props }: CardProps) {
   return (
