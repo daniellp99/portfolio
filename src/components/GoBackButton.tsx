@@ -1,8 +1,8 @@
 "use client";
 
+import { XIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { XIcon } from "lucide-react";
 
 export default function GoBackButton() {
   const router = useRouter();
@@ -10,7 +10,7 @@ export default function GoBackButton() {
   return (
     <Button
       variant="projectLink"
-      size="icon"
+      size="icon-lg"
       type="button"
       onClick={() => router.back()}
       className="cancelDrag"

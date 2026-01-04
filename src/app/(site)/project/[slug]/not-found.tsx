@@ -23,10 +23,13 @@ export default function NotFound() {
           <FrownIcon className="size-16" />
         </CardContent>
         <CardFooter>
-          <Button variant="projectLink" size="icon" type="button" asChild>
-            <Link href="/">
-              <ChevronLeftIcon className="size-6" />
-            </Link>
+          <Button
+            variant="projectLink"
+            size="icon-lg"
+            render={<Link href="/" />}
+            nativeButton={false}
+          >
+            <ChevronLeftIcon className="size-6" />
           </Button>
         </CardFooter>
       </Card>

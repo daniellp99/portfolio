@@ -43,12 +43,12 @@ export default function GithubCard({
   }
 
   return (
-    <CardHeader className="relative size-full place-items-center justify-center space-y-0">
+    <CardHeader className="relative size-full place-content-center place-items-center space-y-0">
       <GitHubIcon />
       <a
         className={cn(
           "cancelDrag absolute bottom-2 left-2",
-          buttonVariants({ variant: "projectLink", size: "icon" }),
+          buttonVariants({ variant: "projectLink", size: "icon-lg" }),
           githubUser === " " && "pointer-events-none opacity-10",
         )}
         href={`https://github.com/${githubUser}`}

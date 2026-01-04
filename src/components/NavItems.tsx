@@ -37,11 +37,7 @@ export default function NavItems({
     >
       <TabsList className="h-12 w-fit rounded-full bg-card text-secondary-foreground ring-2 ring-border">
         {tabs.map((tab) => (
-          <TabsTrigger
-            key={tab}
-            value={tab}
-            className="rounded-full text-xl data-[state=active]:bg-foreground data-[state=active]:text-background"
-          >
+          <TabsTrigger key={tab} value={tab} className="rounded-full text-xl">
             {tab}
           </TabsTrigger>
         ))}

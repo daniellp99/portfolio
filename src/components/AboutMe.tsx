@@ -14,8 +14,8 @@ export default function AboutMe({
 
   const [firstPart, secondPart] = description.split(name);
   return (
-    <CardHeader className="size-full justify-center">
-      <p className="text-pretty text-xl leading-relaxed tracking-wide antialiased">
+    <CardHeader className="size-full content-center">
+      <p className="text-xl leading-relaxed tracking-wide text-pretty antialiased">
         {firstPart}
         <span className="font-sans text-4xl font-extrabold">{name}</span>
         {secondPart}

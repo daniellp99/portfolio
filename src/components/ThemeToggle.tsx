@@ -12,7 +12,7 @@ export default function ThemeToggle() {
     <div className="flex h-full w-full items-center justify-items-center">
       <Button
         variant="themeToggle"
-        size="icon"
+        size="icon-lg"
         className="cancelDrag mx-auto h-12 w-20 p-1"
         onClick={() => {
           setTheme(theme === "light" ? "dark" : "light");
