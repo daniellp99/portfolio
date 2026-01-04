@@ -2,7 +2,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 import "@/../node_modules/react-grid-layout/css/styles.css";
 import { getOwnerDataDTO } from "@/data/project-dto";
@@ -86,13 +86,14 @@ export const metadata: Promise<Metadata> = (async () => {
         "max-snippet": -1,
       },
     },
-    viewport: {
-      width: "device-width",
-      initialScale: 1,
-      maximumScale: 5,
-    },
   };
 })();
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 export default function RootLayout({
   children,
