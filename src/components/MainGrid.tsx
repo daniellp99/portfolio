@@ -47,14 +47,14 @@ export default function MainGrid({
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
       </Card>
-      <Card variant="item" key="maps" className="overflow-hidden">
+      <Card variant="item" key="maps">
         <DynamicMap />
       </Card>
       <Card variant="item" key="social-links">
         <GithubCard githubUser={ownerData?.githubUser} />
       </Card>
       {projects.map((project, index) => (
-        <Card variant="item" key={project.slug} className="overflow-hidden">
+        <Card variant="item" key={project.slug}>
           <ProjectCard
             project={project}
             isHorizontal={index === 1 ? true : false}
