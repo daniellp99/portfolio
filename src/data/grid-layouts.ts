@@ -2,7 +2,7 @@ import { Layout } from "react-grid-layout";
 import { Images } from "./project-dto";
 
 interface LayoutFactory {
-  generateLayout(size: "lg" | "sm" | "xs"): Layout[];
+  generateLayout(size: "lg" | "sm" | "xs"): Layout;
 }
 
 const scaleFactor = { lg: 1.645, sm: 1.09, xs: 1 };
@@ -13,7 +13,7 @@ export class DefaultLayoutFactory implements LayoutFactory {
   constructor(projectKeys: string[]) {
     this.projectKeys = projectKeys;
   }
-  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
+  generateLayout(size: "lg" | "sm" | "xs"): Layout {
     const sizeFactor = scaleFactor[size];
 
     const projectSlots = {
@@ -91,7 +91,7 @@ export class AboutLayoutFactory implements LayoutFactory {
   constructor(projectKeys: string[]) {
     this.projectKeys = projectKeys;
   }
-  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
+  generateLayout(size: "lg" | "sm" | "xs"): Layout {
     const sizeFactor = scaleFactor[size];
 
     const projectSlots = {
@@ -168,7 +168,7 @@ export class ProjectsLayoutFactory implements LayoutFactory {
   constructor(projectKeys: string[]) {
     this.projectKeys = projectKeys;
   }
-  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
+  generateLayout(size: "lg" | "sm" | "xs"): Layout {
     const sizeFactor = scaleFactor[size];
 
     const projectSlots = {
@@ -246,7 +246,7 @@ export class ImageLayoutFactory implements LayoutFactory {
   constructor(images: Images) {
     this.images = images;
   }
-  generateLayout(size: "lg" | "sm" | "xs"): Layout[] {
+  generateLayout(size: "lg" | "sm" | "xs"): Layout {
     const sizeFactor = scaleFactor[size];
     const colsNumber = size === "xs" ? 2 : 4;
 

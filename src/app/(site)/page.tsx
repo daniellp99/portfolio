@@ -1,16 +1,11 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-import { LayoutsContextProvider } from "@/components/LayoutsContext";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
-import {
-  getOwnerDataDTO,
-  getProjectSlugsDTO,
-  getProjectsDTO,
-} from "@/data/project-dto";
-import { generateLayouts } from "@/utils/layout";
+import { getLayouts } from "@/data/layouts-dto";
+import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -56,11 +51,9 @@ export default async function Home() {
     getOwnerDataDTO(),
     getProjectsDTO(),
   ]);
+  const layoutPromise = getLayouts();
 
-  const projectKeys = await getProjectSlugsDTO();
-  const defaultLayouts = generateLayouts("All", projectKeys);
-
-  const [ownerData] = await ownerDataAndProjectsPromises;
+  const ownerData = await getOwnerDataDTO();
   const ownerName = ownerData?.name || "Portfolio Owner";
   const homeUrl = getCanonicalUrl("");
   const profileImage = getAbsoluteImageUrl("/Avatar.webp");
@@ -84,16 +77,15 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LayoutsContextProvider defaultLayouts={defaultLayouts}>
-        <NavBar />
-        <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-          <Suspense fallback={<MainGridFallback />}>
-            <MainGrid
-              ownerDataAndProjectsPromises={ownerDataAndProjectsPromises}
-            />
-          </Suspense>
-        </section>
-      </LayoutsContextProvider>
+      <NavBar />
+      <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
+        <Suspense fallback={<MainGridFallback />}>
+          <MainGrid
+            ownerDataAndProjectsPromises={ownerDataAndProjectsPromises}
+            layoutPromise={layoutPromise}
+          />
+        </Suspense>
+      </section>
     </>
   );
 }
