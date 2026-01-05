@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { use } from "react";
+import { ResponsiveLayouts } from "react-grid-layout/react";
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -8,7 +9,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import AboutMe from "@/components/AboutMe";
 import GithubCard from "@/components/GithubCard";
 import GridContainer from "@/components/GridContainer";
-import { LayoutsContext } from "@/components/LayoutsContext";
 import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -33,11 +33,13 @@ export function MainGridFallback() {
 
 export default function MainGrid({
   ownerDataAndProjectsPromises,
+  layoutPromise,
 }: {
   ownerDataAndProjectsPromises: Promise<[OwnerData, Project[]]>;
+  layoutPromise: Promise<ResponsiveLayouts>;
 }) {
   const [ownerData, projects] = use(ownerDataAndProjectsPromises);
-  const { layouts } = use(LayoutsContext);
+  const layouts = use(layoutPromise);
 
   return (
     <GridContainer layouts={layouts}>

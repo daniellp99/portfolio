@@ -2,7 +2,7 @@
 
 import { Images } from "@/data/project-dto";
 import Image from "next/image";
-import { Layouts } from "react-grid-layout";
+import { ResponsiveLayouts } from "react-grid-layout";
 import GridContainer from "./GridContainer";
 import { Card } from "./ui/card";
 
@@ -10,7 +10,7 @@ export default function ImageGrid({
   layouts,
   images,
 }: {
-  layouts: Layouts;
+  layouts: ResponsiveLayouts;
   images: Images;
 }) {
   return (

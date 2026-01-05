@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next";
 
-import { getProjectSlugsDTO } from "@/data/project-dto";
+import { getProjectSlugs } from "@/server/projects";
 import { getCanonicalUrl } from "@/utils/metadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const projects = await getProjectSlugsDTO();
+  const projects = await getProjectSlugs();
 
   const projectUrls = projects.map((slug) => ({
     url: getCanonicalUrl(`/project/${slug}`),

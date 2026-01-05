@@ -1,13 +1,12 @@
 "use client";
 
-import { use, useState } from "react";
+import { startTransition, use, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { LayoutsContext } from "@/components/LayoutsContext";
-
 import { ProjectSlugs } from "@/data/project-dto";
+import { setLayouts } from "@/server/layouts";
 import { tabs, TabsType } from "@/types/tabs";
 import { generateLayouts } from "@/utils/layout";
 
@@ -21,7 +20,6 @@ export default function NavItems({
   projectsSlugsPromise: Promise<ProjectSlugs>;
 }) {
   const [tab, setTab] = useState(tabs[0]);
-  const { setLayouts } = use(LayoutsContext);
   const projectKeys = use(projectsSlugsPromise);
 
   return (
@@ -29,7 +27,9 @@ export default function NavItems({
       value={tab}
       onValueChange={(value) => {
         const layouts = generateLayouts(value as TabsType, projectKeys);
-        setLayouts(layouts);
+        startTransition(async () => {
+          await setLayouts(layouts);
+        });
         setTab(value as TabsType);
       }}
       defaultValue={tab}
