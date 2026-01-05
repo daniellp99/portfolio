@@ -1,6 +1,6 @@
 "use client";
 
-import { setLayouts } from "@/data/layouts-dto";
+import { setLayouts } from "@/server/layouts";
 import { ReactNode, startTransition, useOptimistic } from "react";
 import {
   Layout,

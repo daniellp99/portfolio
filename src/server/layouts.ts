@@ -1,10 +1,10 @@
 "use server";
 import { jsonToLayouts } from "@/schemas/layouts";
+import { getProjectSlugs } from "@/server/projects";
 import { COOKIE_MAX_AGE, LAYOUTS_COOKIE_KEY } from "@/utils/constants";
 import { generateLayouts } from "@/utils/layout";
 import { cookies } from "next/headers";
 import { ResponsiveLayouts } from "react-grid-layout";
-import { getProjectSlugsDTO } from "./project-dto";
 
 export async function getLayouts(): Promise<ResponsiveLayouts> {
   const cookieStore = await cookies();
@@ -17,7 +17,7 @@ export async function getLayouts(): Promise<ResponsiveLayouts> {
       return parsed.data;
     }
   }
-  const projectKeys = await getProjectSlugsDTO();
+  const projectKeys = await getProjectSlugs();
   const defaultLayouts = generateLayouts("All", projectKeys);
   return defaultLayouts;
 }

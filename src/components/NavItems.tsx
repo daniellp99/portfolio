@@ -5,8 +5,8 @@ import { startTransition, use, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { setLayouts } from "@/data/layouts-dto";
 import { ProjectSlugs } from "@/data/project-dto";
+import { setLayouts } from "@/server/layouts";
 import { tabs, TabsType } from "@/types/tabs";
 import { generateLayouts } from "@/utils/layout";
 

@@ -4,12 +4,13 @@ import { Suspense } from "react";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
-import { getLayouts } from "@/data/layouts-dto";
-import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
+import { getLayouts } from "@/server/layouts";
+import { getOwnerData } from "@/server/owner";
+import { getProjects } from "@/server/projects";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "";
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
@@ -48,12 +49,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const ownerDataAndProjectsPromises = Promise.all([
-    getOwnerDataDTO(),
-    getProjectsDTO(),
+    getOwnerData(),
+    getProjects(),
   ]);
   const layoutPromise = getLayouts();
 
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "Portfolio Owner";
   const homeUrl = getCanonicalUrl("");
   const profileImage = getAbsoluteImageUrl("/Avatar.webp");

@@ -7,11 +7,8 @@ import GoBackButton from "@/components/GoBackButton";
 import { CustomMDX } from "@/components/MdxRemote";
 
 import ImageGrid from "@/components/ImageGrid";
-import {
-  getOwnerDataDTO,
-  getProjectDetailsDTO,
-  getProjectSlugsDTO,
-} from "@/data/project-dto";
+import { getOwnerData } from "@/server/owner";
+import { getProjectDetails, getProjectSlugs } from "@/server/projects";
 import { generateImageLayouts } from "@/utils/layout";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
@@ -19,8 +16,8 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const project = await getProjectDetailsDTO(params.slug);
-  const ownerData = await getOwnerDataDTO();
+  const project = await getProjectDetails(params.slug);
+  const ownerData = await getOwnerData();
 
   const title = project.name;
   const description = project.description;
@@ -78,7 +75,7 @@ export async function generateMetadata(props: {
 }
 
 export async function generateStaticParams() {
-  const slugs = await getProjectSlugsDTO();
+  const slugs = await getProjectSlugs();
 
   return [...slugs.map((slug) => ({ slug: slug }))];
 }
@@ -87,8 +84,8 @@ export default async function ProjectPage(props: {
   params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
-  const project = await getProjectDetailsDTO(params.slug);
-  const ownerData = await getOwnerDataDTO();
+  const project = await getProjectDetails(params.slug);
+  const ownerData = await getOwnerData();
   const layouts = generateImageLayouts(project.images);
 
   const ownerName = ownerData?.name || "Daniel";
