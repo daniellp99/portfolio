@@ -1,17 +1,17 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 
+import HomeJsonLd from "@/components/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
 import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
 import { getLayouts } from "@/server/layouts";
-import { getOwnerData } from "@/server/owner";
 import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerData();
+  const ownerData = await getOwnerDataDTO();
   const ownerName = ownerData?.name || "";
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
@@ -48,37 +48,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Home() {
+export default function HomePage() {
   const ownerDataAndProjectsPromises = Promise.all([
     getOwnerDataDTO(),
     getProjectsDTO(),
   ]);
   const layoutPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
 
-  const ownerData = await getOwnerData();
-  const ownerName = ownerData?.name || "Portfolio Owner";
-  const homeUrl = getCanonicalUrl("");
-  const profileImage = getAbsoluteImageUrl("/Avatar.webp");
-
-  // JSON-LD structured data for SEO
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: ownerName,
-    description: ownerData?.aboutMe || `${ownerName}'s Portfolio`,
-    url: homeUrl,
-    image: profileImage,
-    ...(ownerData?.githubUser && {
-      sameAs: [`https://github.com/${ownerData.githubUser}`],
-    }),
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <HomeJsonLd />
       <NavBar />
       <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
         <Suspense fallback={<MainGridFallback />}>

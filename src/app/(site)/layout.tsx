@@ -1,7 +1,8 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { ThemeProvider } from "@/components/Providers";
 
 import "./globals.css";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default async function HomeLayout({
   children,

@@ -191,9 +191,9 @@
   @apply rounded-lg bg-muted-foreground;
 }
 
-.leaflet-tile {
+/* .leaflet-tile {
   @apply filter-none dark:brightness-75 dark:contrast-150 dark:hue-rotate-200 dark:invert dark:saturate-50;
-}
+} */
 
 .leaflet-container {
   @apply dark:bg-zinc-800;

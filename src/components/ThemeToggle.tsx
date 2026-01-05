@@ -9,7 +9,7 @@ export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex h-full w-full items-center justify-items-center">
+    <div className="flex size-full items-center justify-items-center">
       <Button
         variant="themeToggle"
         size="icon-lg"

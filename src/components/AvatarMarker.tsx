@@ -8,8 +8,9 @@ export function AvatarMarker() {
     iconUrl: "/Avatar.webp",
     iconSize: [60, 60],
     iconAnchor: [30, 60],
-    tooltipAnchor: [0, -60],
-    className: "cancelDrag",
+    tooltipAnchor: [3, -60],
+    className:
+      "cancelDrag dark:drop-shadow-[0px_0px_4px] dark:drop-shadow-foreground transition-all",
   });
   return (
     <Marker position={DEFAULT_CENTER} icon={avatarIcon}>
