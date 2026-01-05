@@ -2,14 +2,14 @@ import Image from "next/image";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { getOwnerData } from "@/server/owner";
+import { getOwnerDataDTO } from "@/data/project-dto";
 
 export function LogoFallback() {
   return <Skeleton className="size-20 rounded-full" />;
 }
 
 export default async function Logo() {
-  const ownerData = await getOwnerData();
+  const ownerData = await getOwnerDataDTO();
   const ownerName = ownerData?.name || "Portfolio";
   const altText = `${ownerName} Logo`;
 
@@ -21,6 +21,7 @@ export default async function Logo() {
           alt={altText}
           width={100}
           height={100}
+          loading="eager"
           className="size-20 rounded-full dark:hidden"
         />
       )}
@@ -30,6 +31,7 @@ export default async function Logo() {
           alt={altText}
           width={100}
           height={100}
+          loading="eager"
           className="hidden size-20 rounded-full dark:block"
         />
       )}

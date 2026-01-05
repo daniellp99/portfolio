@@ -22,7 +22,7 @@ export default function ProjectCard({
         } as React.CSSProperties
       }
       className={cn(
-        "group h-full w-full dark:bg-none",
+        "group relative h-full w-full dark:bg-none",
         !!project.bgImage && "bg-(image:--image-url) bg-cover",
       )}
     >
@@ -34,6 +34,7 @@ export default function ProjectCard({
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
+        sizes="50vw"
         style={{
           objectFit: "cover",
         }}

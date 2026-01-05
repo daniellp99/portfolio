@@ -13,8 +13,8 @@ import {
 
 export default function NotFound() {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center">
-      <Card>
+    <div className="grid h-screen w-full place-content-center place-items-center">
+      <Card className="min-w-xs">
         <CardHeader>
           <CardTitle className="text-3xl">Project Not Found</CardTitle>
           <CardDescription>Could not find requested project</CardDescription>

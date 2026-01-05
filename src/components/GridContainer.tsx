@@ -1,6 +1,7 @@
 "use client";
 
 import { setLayouts } from "@/server/layouts";
+import { LayoutKey } from "@/utils/constants";
 import { ReactNode, startTransition, useOptimistic } from "react";
 import {
   Layout,
@@ -12,9 +13,11 @@ import {
 export default function GridContainer({
   children,
   layouts,
+  layoutKey,
 }: {
   children: ReactNode;
   layouts: ResponsiveLayouts;
+  layoutKey: LayoutKey;
 }) {
   const [optimisticLayouts, addOptimisticLayouts] = useOptimistic(
     layouts,
@@ -28,7 +31,7 @@ export default function GridContainer({
     startTransition(() => {
       addOptimisticLayouts(layouts);
       startTransition(async () => {
-        await setLayouts(layouts);
+        await setLayouts(layouts, layoutKey);
       });
     });
   };

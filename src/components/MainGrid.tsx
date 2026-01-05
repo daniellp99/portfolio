@@ -13,6 +13,7 @@ import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
 import { OwnerData, Project } from "@/data/project-dto";
+import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
 
 const DynamicMap = dynamic(() => import("@/components/Map"), {
   loading: () => <Skeleton className="size-full" />,
@@ -42,7 +43,7 @@ export default function MainGrid({
   const layouts = use(layoutPromise);
 
   return (
-    <GridContainer layouts={layouts}>
+    <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
       <Card variant="item" key="me">
         <AboutMe name={ownerData?.name} description={ownerData?.aboutMe} />
       </Card>

@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import Logo, { LogoFallback } from "@/components/Logo";
 import NavItems, { NavItemsFallback } from "@/components/NavItems";
 
-import { getProjectSlugs } from "@/server/projects";
+import { getProjectSlugsDTO } from "@/data/project-dto";
 
 export default function NavBar() {
-  const projectsSlugsPromise = getProjectSlugs();
+  const projectsSlugsPromise = getProjectSlugsDTO();
   return (
     <nav className="mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row">
       <Suspense fallback={<LogoFallback />}>

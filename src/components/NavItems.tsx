@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProjectSlugs } from "@/data/project-dto";
 import { setLayouts } from "@/server/layouts";
 import { tabs, TabsType } from "@/types/tabs";
+import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
 import { generateLayouts } from "@/utils/layout";
 
 export function NavItemsFallback() {
@@ -28,7 +29,7 @@ export default function NavItems({
       onValueChange={(value) => {
         const layouts = generateLayouts(value as TabsType, projectKeys);
         startTransition(async () => {
-          await setLayouts(layouts);
+          await setLayouts(layouts, MAIN_LAYOUTS_KEY);
         });
         setTab(value as TabsType);
       }}

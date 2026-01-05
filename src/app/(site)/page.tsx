@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar";
 import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
 import { getLayouts } from "@/server/layouts";
 import { getOwnerData } from "@/server/owner";
+import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -52,7 +53,7 @@ export default async function Home() {
     getOwnerDataDTO(),
     getProjectsDTO(),
   ]);
-  const layoutPromise = getLayouts();
+  const layoutPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
 
   const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "Portfolio Owner";
