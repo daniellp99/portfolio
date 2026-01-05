@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
+import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
 import { getLayouts } from "@/server/layouts";
 import { getOwnerData } from "@/server/owner";
-import { getProjects } from "@/server/projects";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -49,8 +49,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const ownerDataAndProjectsPromises = Promise.all([
-    getOwnerData(),
-    getProjects(),
+    getOwnerDataDTO(),
+    getProjectsDTO(),
   ]);
   const layoutPromise = getLayouts();
 

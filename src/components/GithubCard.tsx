@@ -35,7 +35,7 @@ export default function GithubCard({
 }) {
   if (!githubUser) {
     return (
-      <CardHeader className="h-full place-items-center justify-evenly">
+      <CardHeader className="h-full place-content-center place-items-center justify-evenly">
         <CardTitle>No Github Username</CardTitle>
         <GitHubIcon />
       </CardHeader>
