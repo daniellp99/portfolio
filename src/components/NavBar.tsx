@@ -11,7 +11,7 @@ import { getProjectSlugsDTO } from "@/data/project-dto";
 export default function NavBar() {
   const projectsSlugsPromise = getProjectSlugsDTO();
   return (
-    <nav className="mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row">
+    <nav className="peer mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row">
       <Suspense fallback={<LogoFallback />}>
         <Logo />
       </Suspense>

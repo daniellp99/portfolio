@@ -60,7 +60,7 @@ export default function HomePage() {
     <>
       <HomeJsonLd />
       <NavBar />
-      <section className="mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
+      <section className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
         <Suspense fallback={<MainGridFallback />}>
           <MainGrid
             ownerDataAndProjectsPromises={ownerDataAndProjectsPromises}

@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, use, useState } from "react";
+import { use, useState, useTransition } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,11 +20,13 @@ export default function NavItems({
 }: {
   projectsSlugsPromise: Promise<ProjectSlugs>;
 }) {
+  const [pending, startTransition] = useTransition();
   const [tab, setTab] = useState(tabs[0]);
   const projectKeys = use(projectsSlugsPromise);
 
   return (
     <Tabs
+      data-pending={pending}
       value={tab}
       onValueChange={(value) => {
         const layouts = generateLayouts(value as TabsType, projectKeys);
