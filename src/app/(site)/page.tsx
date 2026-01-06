@@ -5,10 +5,7 @@ import HomeJsonLd from "@/components/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
-import { getOwnerDataDTO, getProjectsDTO } from "@/data/project-dto";
-import { getLayouts } from "@/server/layouts";
-import { getOwnerData } from "@/server/owner";
-import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
+import { getOwnerDataDTO } from "@/data/project-dto";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -50,22 +47,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function HomePage() {
-  const ownerDataAndProjectsPromises = Promise.all([
-    getOwnerData(),
-    getProjectsDTO(),
-  ]);
-  const layoutPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-
   return (
     <>
       <HomeJsonLd />
       <NavBar />
       <section className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
         <Suspense fallback={<MainGridFallback />}>
-          <MainGrid
-            ownerDataAndProjectsPromises={ownerDataAndProjectsPromises}
-            layoutPromise={layoutPromise}
-          />
+          <MainGrid />
         </Suspense>
       </section>
     </>

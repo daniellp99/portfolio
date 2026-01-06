@@ -1,18 +1,14 @@
 import { CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getOwnerData } from "@/server/owner";
 
-export default function AboutMe({
-  description,
-  name,
-}: {
-  description: string | undefined;
-  name: string | undefined;
-}) {
-  if (!description || !name) {
+export default async function AboutMe() {
+  const ownerData = await getOwnerData();
+  if (!ownerData) {
     return <Skeleton className="size-full" />;
   }
-
-  const [firstPart, secondPart] = description.split(name);
+  const { aboutMe, name } = ownerData;
+  const [firstPart, secondPart] = aboutMe.split(name);
   return (
     <CardHeader className="size-full content-center">
       <p className="text-xl leading-relaxed tracking-wide text-pretty antialiased">

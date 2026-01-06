@@ -3,7 +3,7 @@ import { DEFAULT_CENTER } from "@/utils/constants";
 import { icon } from "leaflet";
 import { Marker, Tooltip } from "react-leaflet";
 
-export function AvatarMarker() {
+export default function AvatarMarker() {
   const avatarIcon = icon({
     iconUrl: "/Avatar.webp",
     iconSize: [60, 60],
