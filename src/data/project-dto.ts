@@ -6,36 +6,60 @@ import { cache } from "react";
 import { reader } from "@/lib/reader";
 
 export const getProjectSlugsDTO = cache(async () => {
-  return reader.collections.projects.list();
+  try {
+    return await reader.collections.projects.list();
+  } catch (error) {
+    console.error("Failed to fetch project slugs in DTO:", error);
+    return [];
+  }
 });
 
 export const getProjectsDTO = cache(async () => {
-  const projects = (await reader.collections.projects.all()).map((project) => {
-    return {
-      slug: project.slug,
-      name: project.entry.name,
-      coverImage: project.entry.coverImage,
-      bgImage: project.entry.bgImage,
-    };
-  });
+  try {
+    const projects = (await reader.collections.projects.all()).map(
+      (project) => {
+        return {
+          slug: project.slug,
+          name: project.entry.name,
+          coverImage: project.entry.coverImage,
+          bgImage: project.entry.bgImage,
+        };
+      },
+    );
 
-  return projects;
+    return projects;
+  } catch (error) {
+    console.error("Failed to fetch projects in DTO:", error);
+    return [];
+  }
 });
 
 export const getProjectDetailsDTO = cache(async (slug: string) => {
-  const project = await reader.collections.projects.read(slug, {
-    resolveLinkedFiles: true,
-  });
+  try {
+    const project = await reader.collections.projects.read(slug, {
+      resolveLinkedFiles: true,
+    });
 
-  if (!project) {
+    if (!project) {
+      notFound();
+    }
+
+    return project;
+  } catch (error) {
+    console.error("Failed to fetch project details in DTO:", error);
     notFound();
   }
-
-  return project;
 });
 
 export const getOwnerDataDTO = cache(async () => {
-  return reader.singletons.ownerData.read();
+  let ownerData;
+  try {
+    ownerData = await reader.singletons.ownerData.read();
+  } catch (error) {
+    console.warn("Failed to fetch owner data in DTO:", error);
+    ownerData = null;
+  }
+  return ownerData;
 });
 
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];

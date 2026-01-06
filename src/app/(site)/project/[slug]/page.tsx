@@ -13,6 +13,7 @@ import {
   getProjectSlugsDTO,
 } from "@/data/project-dto";
 import { getLayouts } from "@/server/layouts";
+import { getOwnerData } from "@/server/owner";
 import { IMAGE_LAYOUTS_KEY } from "@/utils/constants";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
@@ -89,7 +90,7 @@ export default async function ProjectPage(props: {
 }) {
   const params = await props.params;
   const project = await getProjectDetailsDTO(params.slug);
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
 
   const layouts = await getLayouts({
     layoutKey: IMAGE_LAYOUTS_KEY,
