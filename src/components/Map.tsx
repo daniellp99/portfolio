@@ -1,19 +1,33 @@
 "use client";
 import "leaflet/dist/leaflet.css";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { MapContainer, TileLayer } from "react-leaflet";
 
 import { DEFAULT_CENTER } from "@/utils/constants";
 import { useTheme } from "next-themes";
-import { AvatarMarker } from "./AvatarMarker";
-import ZoomHandler from "./ZoomHandler";
 
+const LeafletMapContainer = dynamic(
+  async () => (await import("react-leaflet")).MapContainer,
+  { ssr: false },
+);
+const LeafletTileLayer = dynamic(
+  async () => (await import("react-leaflet")).TileLayer,
+  { ssr: false },
+);
+
+const ZoomHandler = dynamic(() => import("@/components/ZoomHandler"), {
+  ssr: false,
+});
+
+const AvatarMarker = dynamic(() => import("@/components/AvatarMarker"), {
+  ssr: false,
+});
 export default function Map() {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
 
   return (
-    <MapContainer
+    <LeafletMapContainer
       // Use the pathname as the key to force a re-render when the pathname changes
       key={pathname}
       attributionControl={false}
@@ -27,7 +41,7 @@ export default function Map() {
       className="h-full w-full"
     >
       <ZoomHandler />
-      <TileLayer
+      <LeafletTileLayer
         url={
           resolvedTheme === "dark"
             ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -35,6 +49,6 @@ export default function Map() {
         }
       />
       <AvatarMarker />
-    </MapContainer>
+    </LeafletMapContainer>
   );
 }

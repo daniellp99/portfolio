@@ -7,14 +7,13 @@ import GoBackButton from "@/components/GoBackButton";
 import { CustomMDX } from "@/components/MdxRemote";
 
 import ImageGrid from "@/components/ImageGrid";
+import ProjectJsonLd from "@/components/ProjectJsonLd";
 import {
   getOwnerDataDTO,
   getProjectDetailsDTO,
   getProjectSlugsDTO,
 } from "@/data/project-dto";
-import { getLayouts } from "@/server/layouts";
-import { getOwnerData } from "@/server/owner";
-import { IMAGE_LAYOUTS_KEY } from "@/utils/constants";
+import { getProjectDetails } from "@/server/projects";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
 
 export async function generateMetadata(props: {
@@ -88,49 +87,12 @@ export async function generateStaticParams() {
 export default async function ProjectPage(props: {
   params: Promise<{ slug: string }>;
 }) {
-  const params = await props.params;
-  const project = await getProjectDetailsDTO(params.slug);
-  const ownerData = await getOwnerData();
-
-  const layouts = await getLayouts({
-    layoutKey: IMAGE_LAYOUTS_KEY,
-    images: project.images,
-  });
-
-  const ownerName = ownerData?.name || "Daniel";
-  const projectUrl = getCanonicalUrl(`/project/${params.slug}`);
-  // Ensure coverImage path has leading slash for consistency
-  const coverImagePath = project.coverImage
-    ? project.coverImage.startsWith("/")
-      ? project.coverImage
-      : `/${project.coverImage}`
-    : "/LightLogo.svg";
-  const projectImage = getAbsoluteImageUrl(coverImagePath);
-
-  // JSON-LD structured data for SEO
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CreativeWork",
-    name: project.name,
-    description:
-      project.description || `${project.name} - A project by ${ownerName}`,
-    image: projectImage,
-    url: projectUrl,
-    author: {
-      "@type": "Person",
-      name: ownerName,
-    },
-    ...(project.status && {
-      creativeWorkStatus: project.status,
-    }),
-  };
+  const { slug } = await props.params;
+  const project = await getProjectDetails(slug);
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <ProjectJsonLd slug={slug} />
       <div className="flex flex-col place-items-center gap-10 pt-10">
         <GoBackButton />
         <article className="container mx-auto flex size-full flex-col gap-4 sm:flex-row">
@@ -147,7 +109,9 @@ export default async function ProjectPage(props: {
           </section>
         </article>
         <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-          <ImageGrid layouts={layouts} images={project.images} />
+          <Suspense fallback={<Skeleton className="size-full" />}>
+            <ImageGrid images={project.images} />
+          </Suspense>
         </section>
       </div>
     </>

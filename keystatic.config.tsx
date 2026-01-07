@@ -6,6 +6,7 @@ import {
   fields,
   singleton,
 } from "@keystatic/core";
+import Image from "next/image";
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -18,6 +19,14 @@ const remoteMode: CloudConfig["storage"] = {
 };
 
 export default config({
+  ui: {
+    brand: {
+      name: "daniellp99's Portfolio",
+      mark: () => (
+        <Image src="/Avatar.webp" alt="Logo" width={40} height={40} />
+      ),
+    },
+  },
   storage: isProd ? remoteMode : localMode,
   cloud: {
     project: "daniellp-portfolio/portfolio",
@@ -27,6 +36,7 @@ export default config({
       label: "Projects",
       slugField: "name",
       path: "src/content/projects/*",
+      entryLayout: "content",
       format: { contentField: "content" },
       schema: {
         name: fields.slug({

@@ -1,24 +1,16 @@
-"use client";
-import dynamic from "next/dynamic";
-import { use } from "react";
-import { ResponsiveLayouts } from "react-grid-layout/react";
-
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import AboutMe from "@/components/AboutMe";
 import GithubCard from "@/components/GithubCard";
 import GridContainer from "@/components/GridContainer";
+import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { OwnerData, Project } from "@/data/project-dto";
+import { getLayouts } from "@/server/layouts";
+import { getProjects } from "@/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
-
-const DynamicMap = dynamic(() => import("@/components/Map"), {
-  loading: () => <Skeleton className="size-full" />,
-  ssr: false,
-});
 
 export function MainGridFallback() {
   return (
@@ -32,29 +24,23 @@ export function MainGridFallback() {
   );
 }
 
-export default function MainGrid({
-  ownerDataAndProjectsPromises,
-  layoutPromise,
-}: {
-  ownerDataAndProjectsPromises: Promise<[OwnerData, Project[]]>;
-  layoutPromise: Promise<ResponsiveLayouts>;
-}) {
-  const [ownerData, projects] = use(ownerDataAndProjectsPromises);
-  const layouts = use(layoutPromise);
+export default async function MainGrid() {
+  const projects = await getProjects();
+  const layouts = await getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
 
   return (
     <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
       <Card variant="item" key="me">
-        <AboutMe name={ownerData?.name} description={ownerData?.aboutMe} />
+        <AboutMe />
       </Card>
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
       </Card>
       <Card variant="item" key="maps">
-        <DynamicMap />
+        <Map />
       </Card>
       <Card variant="item" key="social-links">
-        <GithubCard githubUser={ownerData?.githubUser} />
+        <GithubCard />
       </Card>
       {projects.map((project, index) => (
         <Card variant="item" key={project.slug}>

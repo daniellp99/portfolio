@@ -1,4 +1,3 @@
-"use client";
 import { ArrowUpRightIcon } from "lucide-react";
 import Image from "next/image";
 
@@ -6,6 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
+import { getOwnerData } from "@/server/owner";
 
 const GitHubIcon = () => {
   return (
@@ -28,12 +28,9 @@ const GitHubIcon = () => {
   );
 };
 
-export default function GithubCard({
-  githubUser,
-}: {
-  githubUser: string | undefined;
-}) {
-  if (!githubUser) {
+export default async function GithubCard() {
+  const ownerData = await getOwnerData();
+  if (!ownerData) {
     return (
       <CardHeader className="h-full place-content-center place-items-center justify-evenly">
         <CardTitle>No Github Username</CardTitle>
@@ -49,9 +46,9 @@ export default function GithubCard({
         className={cn(
           "cancelDrag absolute bottom-2 left-2",
           buttonVariants({ variant: "projectLink", size: "icon-lg" }),
-          githubUser === " " && "pointer-events-none opacity-10",
+          ownerData.githubUser === " " && "pointer-events-none opacity-10",
         )}
-        href={`https://github.com/${githubUser}`}
+        href={`https://github.com/${ownerData.githubUser}`}
       >
         <ArrowUpRightIcon className="size-6" />
       </a>

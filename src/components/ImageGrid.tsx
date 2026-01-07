@@ -1,19 +1,15 @@
-"use client";
-
 import { Images } from "@/data/project-dto";
+import { getLayouts } from "@/server/layouts";
 import { IMAGE_LAYOUTS_KEY } from "@/utils/constants";
 import Image from "next/image";
-import { ResponsiveLayouts } from "react-grid-layout";
 import GridContainer from "./GridContainer";
 import { Card } from "./ui/card";
 
-export default function ImageGrid({
-  layouts,
-  images,
-}: {
-  layouts: ResponsiveLayouts;
-  images: Images;
-}) {
+export default async function ImageGrid({ images }: { images: Images }) {
+  const layouts = await getLayouts({
+    layoutKey: IMAGE_LAYOUTS_KEY,
+    images: images,
+  });
   return (
     <GridContainer layouts={layouts} layoutKey={IMAGE_LAYOUTS_KEY}>
       {images.map((image) => (
