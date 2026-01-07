@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
   const homeUrl = getCanonicalUrl("");
-  const ogImage = getAbsoluteImageUrl("/Avatar.webp");
+  const ogImage = getAbsoluteImageUrl(ownerData?.avatar || "/Avatar.webp");
 
   return {
     description,

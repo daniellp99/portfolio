@@ -16,7 +16,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     theme_color: "#000000",
     icons: [
       {
-        src: "/Avatar.webp",
+        src: ownerData?.avatar || "/Avatar.webp",
         sizes: "any",
         type: "image/webp",
       },

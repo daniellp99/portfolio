@@ -62,7 +62,20 @@ export const getOwnerDataDTO = cache(async () => {
   return ownerData;
 });
 
+export const getMapMarkerInfoDTO = cache(async () => {
+  const ownerData = await getOwnerDataDTO();
+  if (!ownerData) {
+    return null;
+  }
+  return {
+    avatarMarker: ownerData.avatarMarker,
+    avatarMarkerHover: ownerData.avatarMarkerHover,
+    avatarMarkerTooltip: ownerData.avatarMarkerTooltip,
+  };
+});
+
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];
 export type Images = Awaited<ReturnType<typeof getProjectDetailsDTO>>["images"];
 export type OwnerData = Awaited<ReturnType<typeof getOwnerDataDTO>>;
 export type ProjectSlugs = Awaited<ReturnType<typeof getProjectSlugsDTO>>;
+export type MapMarkerInfo = Awaited<ReturnType<typeof getMapMarkerInfoDTO>>;

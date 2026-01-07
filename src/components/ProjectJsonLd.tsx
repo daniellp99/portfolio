@@ -13,7 +13,7 @@ export default async function ProjectJsonLd({ slug }: { slug: string }) {
     ? project.coverImage.startsWith("/")
       ? project.coverImage
       : `/${project.coverImage}`
-    : "/LightLogo.svg";
+    : "/Avatar.webp";
   const projectImage = getAbsoluteImageUrl(coverImagePath);
 
   // JSON-LD structured data for SEO

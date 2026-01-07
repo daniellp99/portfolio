@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
+import { MapMarkerInfo } from "@/data/project-dto";
 import { DEFAULT_CENTER } from "@/utils/constants";
 import { useTheme } from "next-themes";
 
@@ -22,7 +23,11 @@ const ZoomHandler = dynamic(() => import("@/components/ZoomHandler"), {
 const AvatarMarker = dynamic(() => import("@/components/AvatarMarker"), {
   ssr: false,
 });
-export default function Map() {
+export default function Map({
+  mapMarkerInfoPromise,
+}: {
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+}) {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
 
@@ -48,7 +53,7 @@ export default function Map() {
             : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         }
       />
-      <AvatarMarker />
+      <AvatarMarker mapMarkerInfoPromise={mapMarkerInfoPromise} />
     </LeafletMapContainer>
   );
 }

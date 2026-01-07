@@ -9,6 +9,7 @@ import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
 import { getLayouts } from "@/server/layouts";
+import { getMapMarkerInfo } from "@/server/owner";
 import { getProjects } from "@/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
 
@@ -27,7 +28,7 @@ export function MainGridFallback() {
 export default async function MainGrid() {
   const projects = await getProjects();
   const layouts = await getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-
+  const mapMarkerInfoPromise = getMapMarkerInfo();
   return (
     <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
       <Card variant="item" key="me">
@@ -37,7 +38,7 @@ export default async function MainGrid() {
         <ThemeToggle />
       </Card>
       <Card variant="item" key="maps">
-        <Map />
+        <Map mapMarkerInfoPromise={mapMarkerInfoPromise} />
       </Card>
       <Card variant="item" key="social-links">
         <GithubCard />

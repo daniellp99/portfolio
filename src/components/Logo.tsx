@@ -13,28 +13,18 @@ export default async function Logo() {
   const ownerName = ownerData?.name || "Portfolio";
   const altText = `${ownerName} Logo`;
 
+  if (!ownerData) {
+    return null;
+  }
+
   return (
-    <>
-      {ownerData?.LightLogo && (
-        <Image
-          src={ownerData.LightLogo}
-          alt={altText}
-          width={100}
-          height={100}
-          loading="eager"
-          className="size-20 rounded-full dark:hidden"
-        />
-      )}
-      {ownerData?.DarkLogo && (
-        <Image
-          src={ownerData.DarkLogo}
-          alt={altText}
-          width={100}
-          height={100}
-          loading="eager"
-          className="hidden size-20 rounded-full dark:block"
-        />
-      )}
-    </>
+    <Image
+      src={ownerData.avatar}
+      alt={altText}
+      width={80}
+      height={80}
+      loading="eager"
+      className="size-20 drop-shadow-[0px_0px_4px] drop-shadow-foreground transition-all"
+    />
   );
 }

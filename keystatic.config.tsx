@@ -159,18 +159,30 @@ export default config({
           label: "About Me",
           description: "For display the About Me grid item",
         }),
-        LightLogo: fields.image({
-          label: "Light variant of the logo",
-          description: "For the light variant of the logo",
+        avatar: fields.image({
+          label: "Avatar",
+          description: "Image for the portfolio logo",
           directory: "public/",
           publicPath: "/",
           validation: { isRequired: true },
         }),
-        DarkLogo: fields.image({
-          label: "Dark variant of the logo",
-          description: "For the dark variant of the logo",
+        avatarMarker: fields.image({
+          label: "Map Marker",
+          description: "Image for the map marker",
           directory: "public/",
           publicPath: "/",
+          validation: { isRequired: true },
+        }),
+        avatarMarkerHover: fields.image({
+          label: "Map Marker Hover",
+          description: "Image for the map marker when hovered",
+          directory: "public/",
+          publicPath: "/",
+          validation: { isRequired: true },
+        }),
+        avatarMarkerTooltip: fields.text({
+          label: "Map Marker Tooltip",
+          description: "Tooltip for the map marker",
           validation: { isRequired: true },
         }),
       },
