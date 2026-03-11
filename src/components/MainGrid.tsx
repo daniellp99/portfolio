@@ -43,12 +43,9 @@ export default async function MainGrid() {
       <Card variant="item" key="social-links">
         <GithubCard />
       </Card>
-      {projects.map((project, index) => (
+      {projects.map((project) => (
         <Card variant="item" key={project.slug}>
-          <ProjectCard
-            project={project}
-            isHorizontal={index === 1 ? true : false}
-          />
+          <ProjectCard project={project} />
         </Card>
       ))}
     </GridContainer>
