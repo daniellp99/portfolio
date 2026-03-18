@@ -22,7 +22,6 @@ export const getProjectsDTO = cache(async () => {
           slug: project.slug,
           name: project.entry.name,
           coverImage: project.entry.coverImage,
-          bgImage: project.entry.bgImage,
         };
       },
     );
