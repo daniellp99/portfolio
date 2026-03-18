@@ -173,12 +173,12 @@ export class ProjectsLayoutFactory implements LayoutFactory {
 
     const projectSlots = {
       lg: [
-        { x: 2, y: 0, w: 1, h: 1 },
+        { x: 1, y: 0, w: 1, h: 1 },
         { x: 0, y: 0, w: 1, h: 1 },
         { x: 3, y: 0, w: 1, h: 1 },
       ],
       sm: [
-        { x: 2, y: 0, w: 1, h: 1 },
+        { x: 1, y: 0, w: 1, h: 1 },
         { x: 0, y: 0, w: 1, h: 1 },
         { x: 3, y: 0, w: 1, h: 1 },
       ],
