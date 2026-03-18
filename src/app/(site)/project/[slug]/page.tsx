@@ -110,7 +110,7 @@ export default async function ProjectPage(props: {
         </article>
         <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
           <Suspense fallback={<Skeleton className="size-full" />}>
-            <ImageGrid images={project.images} />
+            <ImageGrid slug={slug} images={project.images} />
           </Suspense>
         </section>
       </div>

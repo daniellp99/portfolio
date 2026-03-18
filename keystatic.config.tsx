@@ -50,13 +50,6 @@ export default config({
           publicPath: "images/projects",
           validation: { isRequired: true },
         }),
-        bgImage: fields.image({
-          label: "Project Background Image",
-          description: "Displayed in the main grid as background",
-          directory: "public/images/projects",
-          publicPath: "images/projects",
-          validation: { isRequired: true },
-        }),
         status: fields.select({
           label: "Status",
           options: [

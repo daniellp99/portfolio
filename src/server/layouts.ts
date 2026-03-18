@@ -3,6 +3,7 @@ import { getProjectSlugsDTO, Images } from "@/data/project-dto";
 import { jsonToLayouts } from "@/schemas/layouts";
 import {
   COOKIE_MAX_AGE,
+  imageLayoutsKeyForSlug,
   IMAGE_LAYOUTS_KEY,
   LayoutKey,
   MAIN_LAYOUTS_KEY,
@@ -14,16 +15,28 @@ import { ResponsiveLayouts } from "react-grid-layout";
 type GetMainLayoutsParams = { layoutKey: typeof MAIN_LAYOUTS_KEY };
 type GetImageLayoutsParams = {
   layoutKey: typeof IMAGE_LAYOUTS_KEY;
+  /** Route slug; may be missing in some RSC edge cases—key falls back to image srcs */
+  projectSlug: string | undefined | null;
   images: Images;
 };
 
 type GetLayoutsParams = GetMainLayoutsParams | GetImageLayoutsParams;
 
+function layoutsCookieName(params: GetLayoutsParams): string {
+  if (params.layoutKey === MAIN_LAYOUTS_KEY) {
+    return MAIN_LAYOUTS_KEY;
+  }
+  return imageLayoutsKeyForSlug(
+    params.projectSlug,
+    params.images.map((img) => img.src),
+  );
+}
+
 export async function getLayouts(
   params: GetLayoutsParams,
 ): Promise<ResponsiveLayouts> {
   const cookieStore = await cookies();
-  const layoutsCookie = cookieStore.get(params.layoutKey);
+  const layoutsCookie = cookieStore.get(layoutsCookieName(params));
 
   if (layoutsCookie?.value) {
     const parsed = jsonToLayouts.safeDecode(layoutsCookie.value);

@@ -1,17 +1,27 @@
 import { Images } from "@/data/project-dto";
 import { getLayouts } from "@/server/layouts";
-import { IMAGE_LAYOUTS_KEY } from "@/utils/constants";
+import { imageLayoutsKeyForSlug, IMAGE_LAYOUTS_KEY } from "@/utils/constants";
 import Image from "next/image";
 import GridContainer from "./GridContainer";
 import { Card } from "./ui/card";
 
-export default async function ImageGrid({ images }: { images: Images }) {
+export default async function ImageGrid({
+  slug,
+  images,
+}: {
+  slug: string | undefined;
+  images: Images;
+}) {
+  const imageSrcs = images.map((img) => img.src);
   const layouts = await getLayouts({
     layoutKey: IMAGE_LAYOUTS_KEY,
-    images: images,
+    projectSlug: slug,
+    images,
   });
+  const layoutKey = imageLayoutsKeyForSlug(slug, imageSrcs);
+
   return (
-    <GridContainer layouts={layouts} layoutKey={IMAGE_LAYOUTS_KEY}>
+    <GridContainer layouts={layouts} layoutKey={layoutKey}>
       {images.map((image) => (
         <Card
           key={image.src}

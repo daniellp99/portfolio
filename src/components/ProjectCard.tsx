@@ -7,36 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Project } from "@/data/project-dto";
 import { cn } from "@/lib/utils";
 
-export default function ProjectCard({
-  project,
-  isHorizontal,
-}: {
-  project: Project;
-  isHorizontal: boolean;
-}) {
+export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <div
-      style={
-        {
-          "--image-url": `url(/${project.bgImage})`,
-        } as React.CSSProperties
-      }
-      className={cn(
-        "group relative size-full dark:bg-none",
-        !!project.bgImage && "bg-(image:--image-url) bg-cover",
-      )}
-    >
+    <div className="group relative size-full">
       <Image
-        className={cn(
-          "rounded-lg shadow-2xl",
-          isHorizontal ? "origin-top -rotate-30" : "origin-right -rotate-45",
-        )}
+        className={cn("rounded-lg shadow-2xl")}
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
         sizes="50vw"
         style={{
-          objectFit: "cover",
+          objectFit: "contain",
         }}
       />
       <Button
