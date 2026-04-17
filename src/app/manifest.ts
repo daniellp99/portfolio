@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 
 import { getOwnerDataDTO } from "@/data/project-dto";
+import { getOwnerAvatarPath } from "@/utils/metadata";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const ownerData = await getOwnerDataDTO();
@@ -16,7 +17,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     theme_color: "#000000",
     icons: [
       {
-        src: ownerData?.avatar || "/Avatar.webp",
+        src: getOwnerAvatarPath(ownerData?.avatar),
         sizes: "any",
         type: "image/webp",
       },

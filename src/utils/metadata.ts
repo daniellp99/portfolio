@@ -3,16 +3,21 @@
  */
 
 /**
- * Get the base URL for the site
- * Uses NEXT_PUBLIC_SITE_URL environment variable if available,
- * otherwise falls back to relative URLs
+ * Public avatar path for OG, icons, and JSON-LD (leading slash, under /public).
+ */
+export function getOwnerAvatarPath(
+  avatar: string | null | undefined,
+): string {
+  const raw = avatar || "/Avatar.webp";
+  return raw.startsWith("/") ? raw : `/${raw}`;
+}
+
+/**
+ * Canonical origin for absolute URLs (canonical tags, OG, JSON-LD).
+ * Matches {@link getMetadataBase} resolution so strings stay consistent with Next metadata.
  */
 export function getBaseUrl(): string {
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  // Fallback for development or when env var is not set
-  return "";
+  return getMetadataBase().origin;
 }
 
 /**
@@ -20,26 +25,18 @@ export function getBaseUrl(): string {
  * Social platforms require absolute URLs for images
  */
 export function getAbsoluteImageUrl(imagePath: string): string {
-  const baseUrl = getBaseUrl();
-  if (!baseUrl) {
-    // If no base URL, return the path as-is (Next.js will handle it)
-    return imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-  }
-  // Remove leading slash if baseUrl already ends with one or path starts with one
+  const baseUrl = getBaseUrl().replace(/\/$/, "");
   const cleanPath = imagePath.startsWith("/") ? imagePath : `/${imagePath}`;
-  return `${baseUrl.replace(/\/$/, "")}${cleanPath}`;
+  return `${baseUrl}${cleanPath}`;
 }
 
 /**
  * Generate a canonical URL for a given path
  */
 export function getCanonicalUrl(path: string = ""): string {
-  const baseUrl = getBaseUrl();
-  if (!baseUrl) {
-    return path.startsWith("/") ? path : `/${path}`;
-  }
+  const baseUrl = getBaseUrl().replace(/\/$/, "");
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
-  return `${baseUrl.replace(/\/$/, "")}${cleanPath}`;
+  return `${baseUrl}${cleanPath}`;
 }
 
 /**

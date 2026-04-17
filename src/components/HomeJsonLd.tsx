@@ -1,23 +1,45 @@
-// src/components/JsonLd.tsx
 import { getOwnerData } from "@/server/owner";
-import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
+import {
+  getAbsoluteImageUrl,
+  getCanonicalUrl,
+  getOwnerAvatarPath,
+} from "@/utils/metadata";
 
 export default async function HomeJsonLd() {
   const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "Portfolio Owner";
   const homeUrl = getCanonicalUrl("");
-  const profileImage = getAbsoluteImageUrl("/Avatar.webp");
+  const brandName = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
+  const profileImage = getAbsoluteImageUrl(
+    getOwnerAvatarPath(ownerData?.avatar),
+  );
+
+  const personId = `${homeUrl}#person`;
+  const websiteId = `${homeUrl}#website`;
 
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    name: ownerName,
-    description: ownerData?.aboutMe || `${ownerName}'s Portfolio`,
-    url: homeUrl,
-    image: profileImage,
-    ...(ownerData?.githubUser && {
-      sameAs: [`https://github.com/${ownerData.githubUser}`],
-    }),
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": personId,
+        name: ownerName,
+        description: ownerData?.aboutMe || brandName,
+        url: homeUrl,
+        image: profileImage,
+        ...(ownerData?.githubUser && {
+          sameAs: [`https://github.com/${ownerData.githubUser}`],
+        }),
+      },
+      {
+        "@type": "WebSite",
+        "@id": websiteId,
+        url: homeUrl,
+        name: brandName,
+        description: ownerData?.aboutMe || brandName,
+        publisher: { "@id": personId },
+      },
+    ],
   };
 
   return (

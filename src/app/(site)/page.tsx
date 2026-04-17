@@ -6,7 +6,11 @@ import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
 import { getOwnerDataDTO } from "@/data/project-dto";
-import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
+import {
+  getAbsoluteImageUrl,
+  getCanonicalUrl,
+  getOwnerAvatarPath,
+} from "@/utils/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerDataDTO();
@@ -14,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
   const homeUrl = getCanonicalUrl("");
-  const ogImage = getAbsoluteImageUrl(ownerData?.avatar || "/Avatar.webp");
+  const ogImage = getAbsoluteImageUrl(getOwnerAvatarPath(ownerData?.avatar));
 
   return {
     description,
