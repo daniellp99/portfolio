@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Project } from "@/data/project-dto";
 import { cn } from "@/lib/utils";
 
-export default function ProjectCard({ project }: { project: Project }) {
+export default function ProjectCard({
+  project,
+  priority = false,
+}: {
+  project: Project;
+  priority?: boolean;
+}) {
   return (
     <div className="group relative size-full">
       <Image
@@ -15,6 +21,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
+        priority={priority}
         sizes="50vw"
         style={{
           objectFit: "contain",
