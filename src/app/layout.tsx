@@ -10,28 +10,32 @@ import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
   getMetadataBase,
+  getOwnerAvatarPath,
 } from "@/utils/metadata";
 
-export const metadata: Promise<Metadata> = (async () => {
+export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerDataDTO();
 
-  const title = ownerData?.name ? `${ownerData.name}'s Portfolio` : "";
+  const ownerName = ownerData?.name || "";
+  const brandTitle = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
 
-  // Use owner's logo or fallback to default logo
-  const ogImage = getAbsoluteImageUrl("/Avatar.webp");
-
-  const ownerName = ownerData?.name || "";
+  const avatarPath = getOwnerAvatarPath(ownerData?.avatar);
+  const ogImage = getAbsoluteImageUrl(avatarPath);
 
   const homeUrl = getCanonicalUrl("");
 
   return {
     metadataBase: getMetadataBase(),
     title: {
-      default: title,
-      template: `${title} | %s`,
+      default: brandTitle,
+      template: `%s | ${brandTitle}`,
     },
     description,
+    icons: {
+      icon: avatarPath,
+      apple: avatarPath,
+    },
     keywords: [
       "web developer",
       "full-stack developer",
@@ -48,7 +52,7 @@ export const metadata: Promise<Metadata> = (async () => {
     ],
     authors: [{ name: ownerName }],
     creator: ownerName,
-    applicationName: `${ownerName}'s Portfolio`,
+    applicationName: brandTitle,
     category: "Portfolio",
     alternates: {
       canonical: homeUrl,
@@ -56,8 +60,8 @@ export const metadata: Promise<Metadata> = (async () => {
     openGraph: {
       type: "website",
       locale: "en_US",
-      siteName: `${ownerName}'s Portfolio`,
-      title,
+      siteName: brandTitle,
+      title: brandTitle,
       description,
       url: homeUrl,
       images: [
@@ -65,13 +69,13 @@ export const metadata: Promise<Metadata> = (async () => {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: title,
+          alt: brandTitle,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: brandTitle,
       description,
       images: [ogImage],
     },
@@ -87,7 +91,7 @@ export const metadata: Promise<Metadata> = (async () => {
       },
     },
   };
-})();
+}
 
 export const viewport: Viewport = {
   width: "device-width",
