@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { getOwnerData } from "@/server/owner";
+import { getOwnerData } from "@/lib/server/owner";
 
 export function LogoFallback() {
   return <Skeleton className="size-20 rounded-full" />;

@@ -5,11 +5,11 @@ import { useState, useTransition } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { ProjectSlugs } from "@/data/project-dto";
-import { setLayouts } from "@/server/layouts";
-import { tabs, TabsType } from "@/types/tabs";
-import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
-import { generateLayouts } from "@/utils/layout";
+import { ProjectSlugs } from "@/lib/server/project-dto";
+import { setLayouts } from "@/lib/server/layouts";
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { generateLayouts } from "@/lib/site/layout";
+import { tabs, TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
   return <Skeleton className="h-12 w-52" />;

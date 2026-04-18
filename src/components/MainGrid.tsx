@@ -8,10 +8,10 @@ import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { getLayouts } from "@/server/layouts";
-import { getMapMarkerInfo } from "@/server/owner";
-import { getProjects } from "@/server/projects";
-import { MAIN_LAYOUTS_KEY } from "@/utils/constants";
+import { getLayouts } from "@/lib/server/layouts";
+import { getMapMarkerInfo } from "@/lib/server/owner";
+import { getProjects } from "@/lib/server/projects";
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 
 export function MainGridFallback() {
   return (

@@ -1,6 +1,6 @@
 import { CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getOwnerData } from "@/server/owner";
+import { getOwnerData } from "@/lib/server/owner";
 
 export default async function AboutMe() {
   const ownerData = await getOwnerData();

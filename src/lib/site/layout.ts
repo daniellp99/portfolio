@@ -3,9 +3,9 @@ import {
   DefaultLayoutFactory,
   ImageLayoutFactory,
   ProjectsLayoutFactory,
-} from "@/data/grid-layouts";
-import { Images } from "@/data/project-dto";
-import { TabsType } from "@/types/tabs";
+} from "@/lib/server/grid-layouts";
+import { Images } from "@/lib/server/project-dto";
+import { TabsType } from "./tabs";
 
 const layoutFactories = {
   All: DefaultLayoutFactory,

@@ -1,9 +1,9 @@
-import { getOwnerData } from "@/server/owner";
+import { getOwnerData } from "@/lib/server/owner";
 import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
   getOwnerAvatarPath,
-} from "@/utils/metadata";
+} from "@/lib/site/metadata";
 
 export default async function HomeJsonLd() {
   const ownerData = await getOwnerData();

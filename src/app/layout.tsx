@@ -7,13 +7,13 @@ import { Metadata, Viewport } from "next";
 import "@/../node_modules/react-grid-layout/css/styles.css";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getOwnerDataDTO } from "@/data/project-dto";
+import { getOwnerDataDTO } from "@/lib/server/project-dto";
 import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
   getMetadataBase,
   getOwnerAvatarPath,
-} from "@/utils/metadata";
+} from "@/lib/site/metadata";
 
 import "./globals.css";
 

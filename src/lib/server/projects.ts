@@ -4,7 +4,7 @@ import {
   getProjectDetailsDTO,
   getProjectsDTO,
   getProjectSlugsDTO,
-} from "@/data/project-dto";
+} from "@/lib/server/project-dto";
 import { cacheLife, cacheTag } from "next/cache";
 
 export async function getProjectDetails(slug: string) {

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import Logo, { LogoFallback } from "@/components/Logo";
 import NavItems, { NavItemsFallback } from "@/components/NavItems";
 
-import { getProjectSlugs } from "@/server/projects";
+import { getProjectSlugs } from "@/lib/server/projects";
 
 export default async function NavBar() {
   const projectsSlugs = await getProjectSlugs();

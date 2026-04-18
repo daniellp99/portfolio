@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
-import { Project } from "@/data/project-dto";
+import { Project } from "@/lib/server/project-dto";
 import { cn } from "@/lib/utils";
 
 export default function ProjectCard({

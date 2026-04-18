@@ -1,14 +1,14 @@
 "use server";
-import { getProjectSlugsDTO, Images } from "@/data/project-dto";
-import { jsonToLayouts } from "@/schemas/layouts";
+import { getProjectSlugsDTO, Images } from "@/lib/server/project-dto";
+import { jsonToLayouts } from "@/lib/schemas/layouts";
 import {
   COOKIE_MAX_AGE,
   imageLayoutsKeyForSlug,
   IMAGE_LAYOUTS_KEY,
   LayoutKey,
   MAIN_LAYOUTS_KEY,
-} from "@/utils/constants";
-import { generateImageLayouts, generateLayouts } from "@/utils/layout";
+} from "@/lib/site/constants";
+import { generateImageLayouts, generateLayouts } from "@/lib/site/layout";
 import { cookies } from "next/headers";
 import { ResponsiveLayouts } from "react-grid-layout";
 

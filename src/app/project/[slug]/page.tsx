@@ -12,9 +12,9 @@ import {
   getOwnerDataDTO,
   getProjectDetailsDTO,
   getProjectSlugsDTO,
-} from "@/data/project-dto";
-import { getProjectDetails } from "@/server/projects";
-import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
+} from "@/lib/server/project-dto";
+import { getProjectDetails } from "@/lib/server/projects";
+import { getAbsoluteImageUrl, getCanonicalUrl } from "@/lib/site/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;

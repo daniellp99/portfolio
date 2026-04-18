@@ -1,6 +1,6 @@
 "use client";
-import { MapMarkerInfo } from "@/data/project-dto";
-import { DEFAULT_CENTER } from "@/utils/constants";
+import { MapMarkerInfo } from "@/lib/server/project-dto";
+import { DEFAULT_CENTER } from "@/lib/site/constants";
 import { icon } from "leaflet";
 import { use, useState } from "react";
 import { Marker, Tooltip } from "react-leaflet";

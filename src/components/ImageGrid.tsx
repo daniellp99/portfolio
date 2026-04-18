@@ -1,6 +1,6 @@
-import { Images } from "@/data/project-dto";
-import { getLayouts } from "@/server/layouts";
-import { imageLayoutsKeyForSlug, IMAGE_LAYOUTS_KEY } from "@/utils/constants";
+import { Images } from "@/lib/server/project-dto";
+import { getLayouts } from "@/lib/server/layouts";
+import { imageLayoutsKeyForSlug, IMAGE_LAYOUTS_KEY } from "@/lib/site/constants";
 import Image from "next/image";
 import GridContainer from "./GridContainer";
 import { Card } from "./ui/card";

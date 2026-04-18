@@ -5,12 +5,12 @@ import HomeJsonLd from "@/components/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
-import { getOwnerDataDTO } from "@/data/project-dto";
+import { getOwnerDataDTO } from "@/lib/server/project-dto";
 import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
   getOwnerAvatarPath,
-} from "@/utils/metadata";
+} from "@/lib/site/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerDataDTO();

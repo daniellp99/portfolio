@@ -3,8 +3,8 @@ import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
-import { MapMarkerInfo } from "@/data/project-dto";
-import { DEFAULT_CENTER } from "@/utils/constants";
+import { MapMarkerInfo } from "@/lib/server/project-dto";
+import { DEFAULT_CENTER } from "@/lib/site/constants";
 import { useTheme } from "next-themes";
 
 const LeafletMapContainer = dynamic(

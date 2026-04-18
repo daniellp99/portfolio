@@ -1,6 +1,6 @@
 "use server";
 
-import { getMapMarkerInfoDTO, getOwnerDataDTO } from "@/data/project-dto";
+import { getMapMarkerInfoDTO, getOwnerDataDTO } from "@/lib/server/project-dto";
 import { cacheLife, cacheTag } from "next/cache";
 
 export async function getOwnerData() {

@@ -1,6 +1,6 @@
-import { getOwnerData } from "@/server/owner";
-import { getProjectDetails } from "@/server/projects";
-import { getAbsoluteImageUrl, getCanonicalUrl } from "@/utils/metadata";
+import { getOwnerData } from "@/lib/server/owner";
+import { getProjectDetails } from "@/lib/server/projects";
+import { getAbsoluteImageUrl, getCanonicalUrl } from "@/lib/site/metadata";
 
 export default async function ProjectJsonLd({ slug }: { slug: string }) {
   const project = await getProjectDetails(slug);
