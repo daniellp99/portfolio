@@ -5,6 +5,8 @@ import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
 
 import "@/../node_modules/react-grid-layout/css/styles.css";
+import { ThemeProvider } from "@/components/Providers";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getOwnerDataDTO } from "@/data/project-dto";
 import {
   getAbsoluteImageUrl,
@@ -12,6 +14,8 @@ import {
   getMetadataBase,
   getOwnerAvatarPath,
 } from "@/utils/metadata";
+
+import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerDataDTO();
@@ -107,7 +111,11 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ScrollArea className="h-screen">
+            <main className="w-full">{children}</main>
+          </ScrollArea>
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

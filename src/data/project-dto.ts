@@ -3,11 +3,21 @@ import "server-only";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 
-import { reader } from "@/lib/reader";
+import { readOwnerData } from "@/lib/content/owner";
+import {
+  listProjectSlugs,
+  readAllProjectSummaries,
+  readProject,
+} from "@/lib/content/projects";
+import { cacheLife, cacheTag } from "next/cache";
 
 export const getProjectSlugsDTO = cache(async () => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("project_slugs");
+
   try {
-    return await reader.collections.projects.list();
+    return await listProjectSlugs();
   } catch (error) {
     console.error("Failed to fetch project slugs in DTO:", error);
     return [];
@@ -16,17 +26,7 @@ export const getProjectSlugsDTO = cache(async () => {
 
 export const getProjectsDTO = cache(async () => {
   try {
-    const projects = (await reader.collections.projects.all()).map(
-      (project) => {
-        return {
-          slug: project.slug,
-          name: project.entry.name,
-          coverImage: project.entry.coverImage,
-        };
-      },
-    );
-
-    return projects;
+    return await readAllProjectSummaries();
   } catch (error) {
     console.error("Failed to fetch projects in DTO:", error);
     return [];
@@ -36,9 +36,7 @@ export const getProjectsDTO = cache(async () => {
 export const getProjectDetailsDTO = cache(async (slug: string) => {
   let project;
   try {
-    project = await reader.collections.projects.read(slug, {
-      resolveLinkedFiles: true,
-    });
+    project = await readProject(slug);
   } catch (error) {
     console.error("Failed to fetch project details in DTO:", error);
     notFound();
@@ -52,14 +50,15 @@ export const getProjectDetailsDTO = cache(async (slug: string) => {
 });
 
 export const getOwnerDataDTO = cache(async () => {
-  let ownerData;
+  "use cache";
+  cacheLife("hours");
+  cacheTag("owner_data");
   try {
-    ownerData = await reader.singletons.ownerData.read();
+    return await readOwnerData();
   } catch (error) {
     console.warn("Failed to fetch owner data in DTO:", error);
-    ownerData = null;
+    return null;
   }
-  return ownerData;
 });
 
 export const getMapMarkerInfoDTO = cache(async () => {
