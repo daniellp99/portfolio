@@ -34,20 +34,21 @@ export const getProjectsDTO = cache(async () => {
 });
 
 export const getProjectDetailsDTO = cache(async (slug: string) => {
+  let project;
   try {
-    const project = await reader.collections.projects.read(slug, {
+    project = await reader.collections.projects.read(slug, {
       resolveLinkedFiles: true,
     });
-
-    if (!project) {
-      notFound();
-    }
-
-    return project;
   } catch (error) {
     console.error("Failed to fetch project details in DTO:", error);
     notFound();
   }
+
+  if (!project) {
+    notFound();
+  }
+
+  return project;
 });
 
 export const getOwnerDataDTO = cache(async () => {
