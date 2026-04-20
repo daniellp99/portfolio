@@ -5,7 +5,11 @@ import HomeJsonLd from "@/components/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
+import { getLayouts } from "@/lib/server/layouts";
+import { getMapMarkerInfo } from "@/lib/server/owner";
 import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getProjects } from "@/lib/server/projects";
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
@@ -51,13 +55,21 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function HomePage() {
+  const projectsPromise = getProjects();
+  const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
+  const mapMarkerInfoPromise = getMapMarkerInfo();
+
   return (
     <>
       <HomeJsonLd />
       <NavBar />
       <section className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
         <Suspense fallback={<MainGridFallback />}>
-          <MainGrid />
+          <MainGrid
+            projectsPromise={projectsPromise}
+            layoutsPromise={layoutsPromise}
+            mapMarkerInfoPromise={mapMarkerInfoPromise}
+          />
         </Suspense>
       </section>
     </>

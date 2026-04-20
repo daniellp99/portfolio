@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import { useTheme } from "next-themes";
+import { Suspense } from "react";
 
 const LeafletMapContainer = dynamic(
   async () => (await import("react-leaflet")).MapContainer,
@@ -43,7 +44,7 @@ export default function Map({
       center={DEFAULT_CENTER}
       zoom={16}
       maxZoom={16}
-      className="h-full w-full"
+      className="size-full"
     >
       <ZoomHandler />
       <LeafletTileLayer
@@ -53,7 +54,9 @@ export default function Map({
             : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         }
       />
-      <AvatarMarker mapMarkerInfoPromise={mapMarkerInfoPromise} />
+      <Suspense>
+        <AvatarMarker mapMarkerInfoPromise={mapMarkerInfoPromise} />
+      </Suspense>
     </LeafletMapContainer>
   );
 }

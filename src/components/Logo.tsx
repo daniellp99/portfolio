@@ -23,7 +23,8 @@ export default async function Logo() {
       alt={altText}
       width={80}
       height={80}
-      loading="eager"
+      priority
+      sizes="80px"
       className="size-20 drop-shadow-[0px_0px_4px] drop-shadow-foreground transition-all"
     />
   );

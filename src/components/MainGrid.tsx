@@ -8,10 +8,10 @@ import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { getLayouts } from "@/lib/server/layouts";
-import { getMapMarkerInfo } from "@/lib/server/owner";
-import { getProjects } from "@/lib/server/projects";
+import { MapMarkerInfo, Project } from "@/lib/server/project-dto";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { use } from "react";
+import { ResponsiveLayouts } from "react-grid-layout";
 
 export function MainGridFallback() {
   return (
@@ -20,15 +20,23 @@ export function MainGridFallback() {
       <Skeleton className="col-span-2 h-40 sm:col-auto sm:h-45 xl:h-69" />
       <Skeleton className="row-span-2 h-full" />
       <Skeleton className="h-40 sm:h-45 xl:h-69" />
-      <Skeleton className="-col-end-1 h-40 sm:h-45 xl:h-69" />
+      <Skeleton className="h-40 sm:h-45 xl:h-69" />
     </div>
   );
 }
 
-export default async function MainGrid() {
-  const projects = await getProjects();
-  const layouts = await getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-  const mapMarkerInfoPromise = getMapMarkerInfo();
+export default function MainGrid({
+  projectsPromise,
+  layoutsPromise,
+  mapMarkerInfoPromise,
+}: {
+  projectsPromise: Promise<Project[]>;
+  layoutsPromise: Promise<ResponsiveLayouts>;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+}) {
+  const projects = use(projectsPromise);
+  const layouts = use(layoutsPromise);
+
   return (
     <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
       <Card variant="item" key="me">
