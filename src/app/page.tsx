@@ -10,11 +10,7 @@ import { getMapMarkerInfo } from "@/lib/server/owner";
 import { getOwnerDataDTO } from "@/lib/server/project-dto";
 import { getProjects } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import {
-  getAbsoluteImageUrl,
-  getCanonicalUrl,
-  getOwnerAvatarPath,
-} from "@/lib/site/metadata";
+import { getCanonicalUrl } from "@/lib/site/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerDataDTO();
@@ -22,7 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";
   const homeUrl = getCanonicalUrl("");
-  const ogImage = getAbsoluteImageUrl(getOwnerAvatarPath(ownerData?.avatar));
 
   return {
     description,
@@ -36,20 +31,11 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: `${ownerName}'s Portfolio`,
       title,
       description,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
     },
   };
 }

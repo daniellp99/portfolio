@@ -8,12 +8,7 @@ import "@/../node_modules/react-grid-layout/css/styles.css";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getOwnerDataDTO } from "@/lib/server/project-dto";
-import {
-  getAbsoluteImageUrl,
-  getCanonicalUrl,
-  getMetadataBase,
-  getOwnerAvatarPath,
-} from "@/lib/site/metadata";
+import { getCanonicalUrl, getMetadataBase, getOwnerAvatarPath } from "@/lib/site/metadata";
 
 import "./globals.css";
 
@@ -25,7 +20,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = ownerData?.aboutMe || "";
 
   const avatarPath = getOwnerAvatarPath(ownerData?.avatar);
-  const ogImage = getAbsoluteImageUrl(avatarPath);
 
   const homeUrl = getCanonicalUrl("");
 
@@ -68,20 +62,11 @@ export async function generateMetadata(): Promise<Metadata> {
       title: brandTitle,
       description,
       url: homeUrl,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: brandTitle,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: brandTitle,
       description,
-      images: [ogImage],
     },
     robots: {
       index: true,

@@ -14,7 +14,7 @@ import {
   getProjectSlugsDTO,
 } from "@/lib/server/project-dto";
 import { getProjectDetails } from "@/lib/server/projects";
-import { getAbsoluteImageUrl, getCanonicalUrl } from "@/lib/site/metadata";
+import { getCanonicalUrl } from "@/lib/site/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -26,12 +26,6 @@ export async function generateMetadata(props: {
   const title = project.name;
   const description = project.description;
   const ownerName = ownerData?.name || "";
-
-  // Ensure coverImage path has leading slash
-  const coverImagePath = project.coverImage.startsWith("/")
-    ? project.coverImage
-    : `/${project.coverImage}`;
-  const ogImage = getAbsoluteImageUrl(coverImagePath);
 
   const projectUrl = getCanonicalUrl(`/project/${params.slug}`);
 
@@ -54,20 +48,11 @@ export async function generateMetadata(props: {
       locale: "en_US",
       url: projectUrl,
       siteName: `${ownerName}'s Portfolio`,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: project.name,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
       ...(ownerData?.githubUser && {
         creator: `@${ownerData.githubUser}`,
       }),
