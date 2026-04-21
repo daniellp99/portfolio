@@ -8,22 +8,38 @@ export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;
 export type ImageLayoutsCookieKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
 
-/** Cookie-safe per-project key for image grid layouts */
+function imageLayoutDimensionHash(
+  images: readonly { src: string; width: number; height: number }[],
+): string {
+  let h = 0;
+  const s = images.map((i) => `${i.src}:${i.width}x${i.height}`).join("|");
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  }
+  return (h >>> 0).toString(36);
+}
+
+/** Cookie-safe per-project key for image grid layouts (dims invalidate stale cookies). */
 export function imageLayoutsKeyForSlug(
   slug: string | undefined | null,
-  imageSrcs?: readonly string[],
+  images?: readonly { src: string; width: number; height: number }[],
 ): ImageLayoutsCookieKey {
+  const srcList = images?.map((i) => i.src);
   let raw =
     typeof slug === "string" && slug.length > 0
       ? slug
-      : imageSrcs?.length
-        ? [...imageSrcs].sort().join("-")
+      : srcList?.length
+        ? [...srcList].sort().join("-")
         : "default";
   if (raw.length > 180) {
     raw = raw.slice(0, 180);
   }
   const safe = raw.replace(/[^a-zA-Z0-9_-]/g, "_");
-  return `${IMAGE_LAYOUTS_PREFIX}${safe}` as ImageLayoutsCookieKey;
+  const dim =
+    images?.length && images.length > 0
+      ? `_${imageLayoutDimensionHash(images)}`
+      : "";
+  return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}` as ImageLayoutsCookieKey;
 }
 
 export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;

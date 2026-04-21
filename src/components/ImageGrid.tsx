@@ -1,6 +1,10 @@
-import { Images } from "@/lib/server/project-dto";
 import { getLayouts } from "@/lib/server/layouts";
-import { imageLayoutsKeyForSlug, IMAGE_LAYOUTS_KEY } from "@/lib/site/constants";
+import { Images } from "@/lib/server/project-dto";
+import {
+  IMAGE_LAYOUTS_KEY,
+  imageLayoutsKeyForSlug,
+} from "@/lib/site/constants";
+import { imageGridCardSizes } from "@/lib/site/image-sizes";
 import Image from "next/image";
 import GridContainer from "./GridContainer";
 import { Card } from "./ui/card";
@@ -12,13 +16,12 @@ export default async function ImageGrid({
   slug: string | undefined;
   images: Images;
 }) {
-  const imageSrcs = images.map((img) => img.src);
   const layouts = await getLayouts({
     layoutKey: IMAGE_LAYOUTS_KEY,
     projectSlug: slug,
     images,
   });
-  const layoutKey = imageLayoutsKeyForSlug(slug, imageSrcs);
+  const layoutKey = imageLayoutsKeyForSlug(slug, images);
 
   return (
     <GridContainer layouts={layouts} layoutKey={layoutKey}>
@@ -26,14 +29,14 @@ export default async function ImageGrid({
         <Card
           key={image.src}
           variant="item"
-          className="flex size-full items-center"
+          className="relative flex size-full items-center overflow-hidden"
         >
           <Image
             src={`/${image.src}`}
             alt={image.alt}
             fill
-            sizes="50vw"
-            loading="eager"
+            sizes={imageGridCardSizes(image.width)}
+            quality={92}
             style={{
               objectFit: "cover",
             }}

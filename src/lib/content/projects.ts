@@ -6,10 +6,7 @@ import path from "node:path";
 import matter from "gray-matter";
 import { flattenError } from "zod";
 
-import {
-  projectFrontMatterSchema,
-  type ProjectDetails,
-} from "./schemas";
+import { projectFrontMatterSchema, type ProjectDetails } from "./schemas";
 
 const PROJECTS_DIR = path.join(process.cwd(), "src/content/projects");
 

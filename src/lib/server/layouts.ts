@@ -1,10 +1,10 @@
 "use server";
-import { getProjectSlugsDTO, Images } from "@/lib/server/project-dto";
 import { jsonToLayouts } from "@/lib/schemas/layouts";
+import { getProjectSlugsDTO, Images } from "@/lib/server/project-dto";
 import {
   COOKIE_MAX_AGE,
-  imageLayoutsKeyForSlug,
   IMAGE_LAYOUTS_KEY,
+  imageLayoutsKeyForSlug,
   LayoutKey,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
@@ -26,10 +26,7 @@ function layoutsCookieName(params: GetLayoutsParams): string {
   if (params.layoutKey === MAIN_LAYOUTS_KEY) {
     return MAIN_LAYOUTS_KEY;
   }
-  return imageLayoutsKeyForSlug(
-    params.projectSlug,
-    params.images.map((img) => img.src),
-  );
+  return imageLayoutsKeyForSlug(params.projectSlug, params.images);
 }
 
 export async function getLayouts(

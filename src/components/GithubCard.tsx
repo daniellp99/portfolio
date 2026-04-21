@@ -1,6 +1,8 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Image from "next/image";
 
+import githubMarkWhite from "@/assets/brand/github-mark-white.webp";
+import githubMark from "@/assets/brand/github-mark.webp";
 import { buttonVariants } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -11,18 +13,18 @@ const GitHubIcon = () => {
   return (
     <>
       <Image
-        width={98}
-        height={96}
-        alt="Picture of the github logo"
-        src="/github-mark.png"
-        className="block dark:hidden"
+        src={githubMark}
+        alt="GitHub logo"
+        className="block size-[98px] dark:hidden"
+        placeholder="blur"
+        quality={90}
       />
       <Image
-        width={98}
-        height={96}
-        alt="Picture of the github logo"
-        src={"/github-mark-white.png"}
-        className="hidden dark:block"
+        src={githubMarkWhite}
+        alt="GitHub logo"
+        className="hidden size-[98px] dark:block"
+        placeholder="blur"
+        quality={90}
       />
     </>
   );

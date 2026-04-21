@@ -8,10 +8,7 @@ import { flattenError } from "zod";
 
 import { ownerDataSchema, type OwnerData } from "./schemas";
 
-const OWNER_DATA_PATH = path.join(
-  process.cwd(),
-  "src/content/owner-data.yaml",
-);
+const OWNER_DATA_PATH = path.join(process.cwd(), "src/content/owner-data.yaml");
 
 export async function readOwnerData(): Promise<OwnerData | null> {
   try {

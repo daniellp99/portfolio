@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { getOwnerData } from "@/lib/server/owner";
+import { getOwnerAvatarPath } from "@/lib/site/metadata";
 
 export function LogoFallback() {
   return <Skeleton className="size-20 rounded-full" />;
@@ -19,12 +20,13 @@ export default async function Logo() {
 
   return (
     <Image
-      src={ownerData.avatar}
+      src={getOwnerAvatarPath(ownerData.avatar)}
       alt={altText}
       width={80}
       height={80}
-      priority
+      preload
       sizes="80px"
+      quality={90}
       className="size-20 drop-shadow-[0px_0px_4px] drop-shadow-foreground transition-all"
     />
   );

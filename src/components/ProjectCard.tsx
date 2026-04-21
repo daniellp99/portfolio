@@ -5,14 +5,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 import { Project } from "@/lib/server/project-dto";
+import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 import { cn } from "@/lib/utils";
 
 export default function ProjectCard({
   project,
-  priority = false,
+  eager = false,
 }: {
   project: Project;
-  priority?: boolean;
+  /** First visible project tiles: eager load (avoid `preload` when several may be LCP). */
+  eager?: boolean;
 }) {
   return (
     <div className="group relative size-full">
@@ -21,8 +23,9 @@ export default function ProjectCard({
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
-        priority={priority}
-        sizes="50vw"
+        loading={eager ? "eager" : "lazy"}
+        sizes={MAIN_GRID_CARD_IMAGE_SIZES}
+        quality={92}
         style={{
           objectFit: "contain",
         }}

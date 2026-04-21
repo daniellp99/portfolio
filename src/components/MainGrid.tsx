@@ -53,7 +53,7 @@ export default function MainGrid({
       </Card>
       {projects.map((project, index) => (
         <Card variant="item" key={project.slug}>
-          <ProjectCard project={project} priority={index < 3} />
+          <ProjectCard project={project} eager={index < 3} />
         </Card>
       ))}
     </GridContainer>
