@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoaderSkeleton } from "@/components/animations/skeleton";
 
 import { getOwnerData } from "@/lib/server/owner";
 import { getOwnerAvatarPath } from "@/lib/site/metadata";
 
 export function LogoFallback() {
-  return <Skeleton className="size-20 rounded-full" />;
+  return <LoaderSkeleton className="size-20 rounded-full" />;
 }
 
 export default async function Logo() {

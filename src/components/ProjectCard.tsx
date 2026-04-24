@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Project } from "@/lib/server/project-dto";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 import { cn } from "@/lib/utils";
+import { CardGrayscale } from "./animations/grayscale";
 
 export default function ProjectCard({
   project,
@@ -17,7 +18,7 @@ export default function ProjectCard({
   eager?: boolean;
 }) {
   return (
-    <div className="group relative size-full">
+    <CardGrayscale className="group relative size-full">
       <Image
         className={cn("rounded-lg shadow-2xl")}
         alt={project.name}
@@ -32,7 +33,7 @@ export default function ProjectCard({
       />
       <Button
         variant="projectLink"
-        className="cancelDrag absolute bottom-3 left-3 flex w-fit items-center overflow-hidden p-2 transition duration-150 ease-linear"
+        className="cancelDrag absolute bottom-3 left-3 flex w-fit items-center overflow-hidden p-2 transition duration-500 ease-linear"
         size="icon-lg"
         render={<Link href={`/project/${project.slug}`} />}
         nativeButton={false}
@@ -42,6 +43,6 @@ export default function ProjectCard({
         </p>
         <ArrowUpRightIcon className="absolute right-2 size-5" />
       </Button>
-    </div>
+    </CardGrayscale>
   );
 }

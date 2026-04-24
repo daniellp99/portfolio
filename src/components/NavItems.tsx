@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { setLayouts } from "@/lib/server/layouts";
@@ -12,7 +12,7 @@ import { generateLayouts } from "@/lib/site/layout";
 import { tabs, TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
-  return <Skeleton className="h-13 w-56 rounded-full" />;
+  return <LoaderSkeleton className="h-13 w-56 rounded-full" />;
 }
 
 export default function NavItems({
