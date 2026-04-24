@@ -2,7 +2,7 @@ import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { Card } from "@/components/ui/card";
 
 import AboutMe from "@/components/AboutMe";
-import GithubCard from "@/components/GithubCard";
+import ContributionsCard from "@/components/ContributionsCard";
 import GridContainer from "@/components/GridContainer";
 import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
@@ -52,8 +52,8 @@ export default function MainGrid({
       <Card variant="item" key="maps">
         <Map mapMarkerInfoPromise={mapMarkerInfoPromise} />
       </Card>
-      <Card variant="item" key="social-links">
-        <GithubCard />
+      <Card variant="item" key="contributions" className="flex flex-col">
+        <ContributionsCard />
       </Card>
       {projects.map((project, index) => (
         <Card variant="item" key={project.slug}>

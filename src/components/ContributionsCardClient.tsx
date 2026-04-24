@@ -1,0 +1,296 @@
+"use client";
+
+import {
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
+  getMonth,
+  getYear,
+  parseISO,
+  startOfMonth,
+  startOfWeek,
+} from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+import { ArrowUpRightIcon } from "lucide-react";
+import {
+  Component,
+  ReactNode,
+  Suspense,
+  use,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
+import { flattenError } from "zod";
+
+import { buttonVariants } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { LoaderSkeleton } from "./animations/skeleton";
+import {
+  githubContributionMonthResponseSchema,
+  type GithubContributionMonthResponse,
+} from "@/lib/schemas/github-contributions";
+
+type FetchErrorResponse = { error?: string; details?: string };
+
+function intensityBucket(count: number, max: number) {
+  if (count <= 0 || max <= 0) return 0;
+  const ratio = count / max;
+  if (ratio <= 0.25) return 1;
+  if (ratio <= 0.5) return 2;
+  if (ratio <= 0.75) return 3;
+  return 4;
+}
+
+function bucketClass(bucket: number) {
+  switch (bucket) {
+    case 0:
+      return "bg-foreground/5";
+    case 1:
+      return "bg-foreground/20";
+    case 2:
+      return "bg-foreground/40";
+    case 3:
+      return "bg-foreground/60";
+    default:
+      return "bg-foreground/80";
+  }
+}
+
+function formatTooltip(date: string, count: number) {
+  const day = parseISO(date);
+  const formatted = formatInTimeZone(day, TZ, "MMM d, yyyy");
+  return `${count} contribution${count === 1 ? "" : "s"} on ${formatted}`;
+}
+
+class ErrorBoundary extends Component<
+  { fallback: (error: Error) => ReactNode; children: ReactNode },
+  { error: Error | null }
+> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) return this.props.fallback(this.state.error);
+    return this.props.children;
+  }
+}
+
+const contributionPromiseCache = new Map<
+  string,
+  Promise<GithubContributionMonthResponse>
+>();
+
+function keyFor(year: number, month: number) {
+  return `${year}-${month}`;
+}
+
+function getContributionsPromise(year: number, month: number) {
+  const key = keyFor(year, month);
+  const existing = contributionPromiseCache.get(key);
+  if (existing) return existing;
+
+  const promise = fetch(
+    `/api/github/contributions?year=${year}&month=${month}`,
+    {
+      cache: "no-store",
+    },
+  ).then(async (res) => {
+    const json = (await res.json()) as unknown;
+    if (!res.ok) {
+      const maybeError = json as FetchErrorResponse;
+      const message =
+        maybeError?.details ||
+        maybeError?.error ||
+        "Failed to load contributions.";
+      throw new Error(String(message));
+    }
+
+    const parsed = githubContributionMonthResponseSchema.safeParse(json);
+    if (!parsed.success) {
+      throw new Error(
+        `Invalid contributions response: ${flattenError(parsed.error)}`,
+      );
+    }
+
+    return parsed.data;
+  });
+
+  contributionPromiseCache.set(key, promise);
+  return promise;
+}
+
+const TZ = "UTC";
+
+function ContributionsHeatmapFallback() {
+  return (
+    <div className="flex flex-col gap-2">
+      <LoaderSkeleton className="h-4 w-3/4 rounded-xs" />
+      <div className="grid grid-cols-7 gap-1 xl:gap-2.5">
+        {Array.from({ length: 35 }).map((_, idx) => (
+          <LoaderSkeleton key={idx} className="size-2.5 rounded-xs xl:size-5" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ContributionsHeatmap({
+  year,
+  month,
+}: {
+  year: number;
+  month: number; // 1-12
+}) {
+  const data = use(getContributionsPromise(year, month));
+  const monthIndex = month - 1;
+
+  const byDate = new Map<string, number>();
+  for (const day of data.calendar.weeks.flatMap((w) => w.contributionDays)) {
+    byDate.set(day.date, day.contributionCount);
+  }
+
+  const monthStart = startOfMonth(
+    toZonedTime(new Date(Date.UTC(year, monthIndex, 1)), TZ),
+  );
+  const monthEnd = endOfMonth(monthStart);
+  const gridStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
+  const dates = eachDayOfInterval({ start: gridStart, end: gridEnd });
+
+  const max = Math.max(...Array.from(byDate.values()), 0);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="text-xs text-muted-foreground">
+        {data.calendar.totalContributions}{" "}
+        <span className="hidden xl:inline">contributions</span> in{" "}
+        {formatInTimeZone(monthStart, TZ, "MMMM yyyy")}
+      </div>
+      <div className="grid grid-cols-7 gap-1 xl:gap-2.5">
+        {dates.map((d) => {
+          const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
+          const isOutside = getMonth(d) !== getMonth(monthStart);
+          const count = byDate.get(iso) ?? 0;
+          const bucket = isOutside ? 0 : intensityBucket(count, max);
+          const label = formatTooltip(iso, count);
+
+          return (
+            <Tooltip key={iso}>
+              <TooltipTrigger
+                render={
+                  <div
+                    role="img"
+                    aria-label={label}
+                    aria-hidden={isOutside || undefined}
+                    className={cn(
+                      "size-2.5 rounded-xs ring-1 ring-foreground/10 xl:size-5",
+                      isOutside
+                        ? "bg-transparent ring-foreground/5"
+                        : bucketClass(bucket),
+                    )}
+                  />
+                }
+              />
+              <TooltipContent>{label}</TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export default function ContributionsCardClient({
+  login,
+  years,
+  defaultYear,
+}: {
+  login: string;
+  years: number[];
+  defaultYear: number;
+}) {
+  const minYear = years[years.length - 1] ?? defaultYear;
+  const maxYear = years[0] ?? defaultYear;
+  const startMonth = toZonedTime(new Date(Date.UTC(minYear, 0, 1)), TZ);
+  const endMonth = toZonedTime(new Date(Date.UTC(maxYear, 11, 1)), TZ);
+  const initialMonth = startOfMonth(toZonedTime(new Date(), TZ));
+
+  const [month, setMonth] = useState<Date>(initialMonth);
+  const [optimisticMonth, setOptimisticMonth] = useOptimistic(month);
+  const [, startTransition] = useTransition();
+  const year = getYear(optimisticMonth);
+  const monthNumber = getMonth(optimisticMonth) + 1;
+
+  function setMonthFrom(next: Date) {
+    startTransition(() => {
+      const normalized = startOfMonth(toZonedTime(next, TZ));
+      setOptimisticMonth(normalized);
+      setMonth(normalized);
+    });
+  }
+
+  return (
+    <>
+      <CardHeader className="inline-flex w-full flex-row items-center justify-between px-4 pt-2 xl:px-6 xl:pt-4">
+        <CardTitle>GitHub Contributions</CardTitle>
+      </CardHeader>
+      <CardContent className="flex-1 px-4 xl:px-6">
+        <ErrorBoundary
+          fallback={(error) => (
+            <div className="text-sm text-muted-foreground">{error.message}</div>
+          )}
+        >
+          <Suspense fallback={<ContributionsHeatmapFallback />}>
+            <ContributionsHeatmap year={year} month={monthNumber} />
+          </Suspense>
+        </ErrorBoundary>
+      </CardContent>
+      <CardFooter className="items-end justify-between px-2 pb-2">
+        <a
+          className={cn(
+            "cancelDrag",
+            buttonVariants({ variant: "projectLink", size: "icon-lg" }),
+          )}
+          href={`https://github.com/${login}`}
+        >
+          <ArrowUpRightIcon data-icon="inline-start" />
+          <span className="sr-only">Open GitHub profile</span>
+        </a>
+        <Calendar
+          buttonVariant="ghost"
+          captionLayout="label"
+          mode="single"
+          month={optimisticMonth}
+          onMonthChange={setMonthFrom}
+          onNextClick={setMonthFrom}
+          onPrevClick={setMonthFrom}
+          startMonth={startMonth}
+          endMonth={endMonth}
+          classNames={{
+            table: "hidden",
+            weekdays: "hidden",
+            week: "hidden",
+            month: "gap-0",
+          }}
+          className="cancelDrag rounded-sm bg-input p-1"
+        />
+      </CardFooter>
+    </>
+  );
+}

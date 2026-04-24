@@ -7,8 +7,13 @@ import { Metadata, Viewport } from "next";
 import "@/../node_modules/react-grid-layout/css/styles.css";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { getOwnerDataDTO } from "@/lib/server/project-dto";
-import { getCanonicalUrl, getMetadataBase, getOwnerAvatarPath } from "@/lib/site/metadata";
+import {
+  getCanonicalUrl,
+  getMetadataBase,
+  getOwnerAvatarPath,
+} from "@/lib/site/metadata";
 
 import "./globals.css";
 
@@ -97,9 +102,11 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ScrollArea className="h-screen">
-            <main className="w-full">{children}</main>
-          </ScrollArea>
+          <TooltipProvider>
+            <ScrollArea className="h-screen">
+              <main className="w-full">{children}</main>
+            </ScrollArea>
+          </TooltipProvider>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

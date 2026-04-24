@@ -68,7 +68,7 @@ export class DefaultLayoutFactory implements LayoutFactory {
         isResizable,
       },
       {
-        i: "social-links",
+        i: "contributions",
         x: size === "xs" ? 0 : size === "sm" ? 2 : 1,
         y: sizeFactor * (size === "xs" ? 3 : 1),
         w: 1,
@@ -154,7 +154,7 @@ export class AboutLayoutFactory implements LayoutFactory {
         isResizable,
       },
       {
-        i: "social-links",
+        i: "contributions",
         x: 2,
         y: sizeFactor * (size === "xs" ? 8 : size === "lg" ? 1 : 6),
         w: 1,
@@ -239,7 +239,7 @@ export class ProjectsLayoutFactory implements LayoutFactory {
         isResizable,
       },
       {
-        i: "social-links",
+        i: "contributions",
         x: size === "xs" ? 0 : 3,
         y: sizeFactor * (size === "xs" ? 6 : 2),
         w: 1,
