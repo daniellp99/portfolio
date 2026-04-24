@@ -312,7 +312,9 @@ export default function ContributionsCardClient({
   return (
     <>
       <CardHeader className="inline-flex w-full flex-row items-center justify-between px-4 pt-2 xl:px-6 xl:pt-4">
-        <CardTitle>GitHub Contributions</CardTitle>
+        <CardTitle>
+          GitHub <span className="hidden xl:inline">Contributions</span>
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 px-4 xl:px-6">
         <ErrorBoundary
