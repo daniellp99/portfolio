@@ -6,10 +6,13 @@ import { Button } from "@/components/ui/button";
 import Logo, { LogoFallback } from "@/components/Logo";
 import NavItems, { NavItemsFallback } from "@/components/NavItems";
 
+import { getOwnerData } from "@/lib/server/owner";
 import { getProjectSlugs } from "@/lib/server/projects";
 
 export default async function NavBar() {
   const projectsSlugs = await getProjectSlugs();
+  const ownerData = await getOwnerData();
+  const email = ownerData?.email;
   return (
     <nav className="peer relative mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row">
       <Suspense fallback={<LogoFallback />}>
@@ -21,7 +24,8 @@ export default async function NavBar() {
       <Button
         variant="link"
         className="hidden text-xl/6 sm:block"
-        render={<Link href="mailto:dalejandrolp99@gmail.com" />}
+        render={<Link href={email ? `mailto:${email}` : "#"} />}
+        disabled={!email}
         nativeButton={false}
       >
         Contact

@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const ownerDataSchema = z.object({
   name: z.string(),
+  email: z.email(),
+  journeyStartAt: z.iso.datetime(),
   githubUser: z.string(),
   aboutMe: z.string(),
   avatar: z.string(),
