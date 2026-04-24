@@ -30,7 +30,7 @@ export default function ZoomHandler() {
           size="icon-lg"
           onClick={() => handleZoomOut()}
           className={cn(
-            "cancelDrag invisible absolute bottom-0 left-0 transition duration-150 ease-linear",
+            "cancelDrag invisible absolute bottom-0 left-0 transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",
             zoomLevel !== map.getMinZoom() && "visible",
           )}
         >
@@ -42,7 +42,7 @@ export default function ZoomHandler() {
           size="icon-lg"
           onClick={() => handleZoomIn()}
           className={cn(
-            "cancelDrag invisible absolute right-0 bottom-0 transition duration-150 ease-linear",
+            "cancelDrag invisible absolute right-0 bottom-0 transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",
             zoomLevel !== map.getMaxZoom() && "visible",
           )}
         >

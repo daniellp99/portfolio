@@ -33,12 +33,12 @@ export default function ProjectCard({
       />
       <Button
         variant="projectLink"
-        className="cancelDrag absolute bottom-2 left-2 flex w-fit items-center overflow-hidden p-2 transition duration-500 ease-linear"
+        className="cancelDrag absolute bottom-2 left-2 flex w-fit items-center overflow-hidden p-2 duration-500 ease-linear"
         size="icon-lg"
         render={<Link href={`/project/${project.slug}`} />}
         nativeButton={false}
       >
-        <p className="max-w-0 -translate-x-full truncate pr-5 text-sm font-bold opacity-0 transition-all delay-75 duration-300 ease-linear group-hover:max-w-[116px] group-hover:translate-x-0 group-hover:opacity-100 md:group-hover:max-w-[152px] lg:group-hover:max-w-[252px]">
+        <p className="max-w-0 -translate-x-full truncate pr-5 text-sm font-bold opacity-0 transition-[max-width,transform,opacity] delay-75 duration-300 ease-linear group-hover:max-w-[116px] group-hover:translate-x-0 group-hover:opacity-100 md:group-hover:max-w-[152px] lg:group-hover:max-w-[252px]">
           {project.name}
         </p>
         <ArrowUpRightIcon className="absolute right-2 size-5" />

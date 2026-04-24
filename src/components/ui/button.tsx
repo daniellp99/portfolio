@@ -19,7 +19,7 @@ const buttonVariants = cva(
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
         projectLink:
-          "rounded-full border-2 border-border bg-foreground text-background ring-border hover:ring-2",
+          "rounded-full border-2 border-border bg-foreground text-background ring-border transition-[transform,opacity,box-shadow,filter] hover:ring-2",
         themeToggle: "rounded-full border-border bg-secondary dark:border-2",
       },
       size: {

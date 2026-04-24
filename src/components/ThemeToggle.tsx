@@ -1,28 +1,58 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
+import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
 import { Button } from "@/components/ui/button";
 
+const KNOB_X = 16;
+
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const reduceMotion = useReducedMotion() ?? false;
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      setMounted(true);
+    });
+  }, []);
+
+  const isDark = resolvedTheme === "dark";
+
+  const knobTransition = reduceMotion
+    ? { duration: 0 }
+    : { type: "spring" as const, stiffness: 420, damping: 32, mass: 0.85 };
 
   return (
-    <div className="flex size-full items-center justify-items-center">
+    <motion.div
+      className="flex size-full items-center justify-items-center"
+      initial={false}
+      animate={{ opacity: mounted ? 1 : 0 }}
+      transition={{ duration: reduceMotion ? 0 : 0.15 }}
+    >
       <Button
         variant="themeToggle"
         size="icon-lg"
-        className="cancelDrag mx-auto h-12 w-20 p-1"
+        className="cancelDrag mx-auto h-12 w-20 overflow-hidden p-1"
+        disabled={!mounted}
+        aria-busy={!mounted}
         onClick={() => {
-          setTheme(theme === "light" ? "dark" : "light");
+          setTheme(isDark ? "light" : "dark");
         }}
       >
-        <div className="size-9 -translate-x-4 rounded-full bg-card p-1 text-orange-300 transition duration-300 ease-linear dark:translate-x-4">
-          <SunIcon className="block size-7 dark:hidden" />
-          <MoonIcon className="hidden size-7 dark:block" />
-        </div>
+        <motion.div
+          className="size-9 rounded-full bg-card p-1 text-orange-300"
+          initial={false}
+          animate={{ x: mounted ? (isDark ? KNOB_X : -KNOB_X) : -KNOB_X }}
+          whileTap={mounted && !reduceMotion ? { scale: 0.97 } : undefined}
+          transition={knobTransition}
+        >
+          <ThemeToggleIcon isDark={mounted && isDark} />
+        </motion.div>
       </Button>
-    </div>
+    </motion.div>
   );
 }
