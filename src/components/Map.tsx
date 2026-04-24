@@ -3,6 +3,8 @@ import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
+import { LoaderSkeleton } from "@/components/animations/skeleton";
+
 import { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import { useTheme } from "next-themes";
@@ -10,7 +12,12 @@ import { Suspense } from "react";
 
 const LeafletMapContainer = dynamic(
   async () => (await import("react-leaflet")).MapContainer,
-  { ssr: false },
+  {
+    ssr: false,
+    loading() {
+      return <LoaderSkeleton className="size-full" />;
+    },
+  },
 );
 const LeafletTileLayer = dynamic(
   async () => (await import("react-leaflet")).TileLayer,
