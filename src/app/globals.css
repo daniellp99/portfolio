@@ -287,3 +287,17 @@ pre code {
   text-align: right;
   color: #a4a4a4;
 }
+
+/* React ViewTransition styling */
+::view-transition-old(.avatar-marker-fade),
+::view-transition-new(.avatar-marker-fade) {
+  animation-duration: 260ms;
+  animation-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.avatar-marker-fade),
+  ::view-transition-new(.avatar-marker-fade) {
+    animation-duration: 1ms;
+  }
+}

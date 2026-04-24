@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 
 export default function ZoomHandler() {
   const map = useMap();
-  const [zoomLevel, setZoomLevel] = useState(16);
+  const [zoomLevel, setZoomLevel] = useState(5);
 
   const mapEvents = useMapEvents({
     zoomend: () => {

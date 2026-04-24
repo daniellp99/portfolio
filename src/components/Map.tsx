@@ -49,7 +49,7 @@ export default function Map({
       doubleClickZoom={false}
       dragging={false}
       center={DEFAULT_CENTER}
-      zoom={16}
+      zoom={5}
       maxZoom={16}
       className="size-full"
     >
