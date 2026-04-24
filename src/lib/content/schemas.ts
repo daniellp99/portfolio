@@ -10,6 +10,13 @@ export const ownerDataSchema = z.object({
   avatarMarker: z.string(),
   avatarMarkerHover: z.string(),
   avatarMarkerTooltip: z.string(),
+  skills: z.array(
+    z.object({
+      key: z.string(),
+      title: z.string(),
+      href: z.url(),
+    }),
+  ),
 });
 
 export type OwnerData = z.infer<typeof ownerDataSchema>;

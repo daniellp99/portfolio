@@ -6,6 +6,7 @@ import GithubCard from "@/components/GithubCard";
 import GridContainer from "@/components/GridContainer";
 import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
+import SkillsCard from "@/components/SkillsCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
 import { MapMarkerInfo, Project } from "@/lib/server/project-dto";
@@ -44,6 +45,9 @@ export default function MainGrid({
       </Card>
       <Card variant="item" key="toggle-theme">
         <ThemeToggle />
+      </Card>
+      <Card variant="item" key="skills">
+        <SkillsCard />
       </Card>
       <Card variant="item" key="maps">
         <Map mapMarkerInfoPromise={mapMarkerInfoPromise} />

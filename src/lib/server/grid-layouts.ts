@@ -52,6 +52,14 @@ export class DefaultLayoutFactory implements LayoutFactory {
         isResizable,
       },
       {
+        i: "skills",
+        x: size === "xs" ? 0 : 2,
+        y: sizeFactor * (size === "xs" ? 5 : 2),
+        w: 1,
+        h: sizeFactor * 1,
+        isResizable,
+      },
+      {
         i: "maps",
         x: size === "xs" ? 0 : 2,
         y: sizeFactor * (size === "xs" ? 2 : 0),
@@ -102,7 +110,7 @@ export class AboutLayoutFactory implements LayoutFactory {
       ],
       sm: [
         { x: 3, y: 1, w: 1, h: 1 },
-        { x: 2, y: 3, w: 1, h: 1 },
+        { x: 0, y: 3, w: 1, h: 1 },
         { x: 2, y: 1, w: 1, h: 1 },
       ],
       xs: [
@@ -130,6 +138,14 @@ export class AboutLayoutFactory implements LayoutFactory {
         isResizable,
       },
       {
+        i: "skills",
+        x: size === "xs" ? 0 : 3,
+        y: sizeFactor * (size === "xs" ? 3 : 0),
+        w: 1,
+        h: sizeFactor * 1,
+        isResizable,
+      },
+      {
         i: "maps",
         x: size === "xs" ? 0 : 2,
         y: 0,
@@ -139,8 +155,8 @@ export class AboutLayoutFactory implements LayoutFactory {
       },
       {
         i: "social-links",
-        x: size === "xs" ? 0 : 3,
-        y: sizeFactor * (size === "xs" ? 3 : 0),
+        x: 2,
+        y: sizeFactor * (size === "xs" ? 8 : size === "lg" ? 1 : 6),
         w: 1,
         h: sizeFactor * 1,
         isResizable,
@@ -201,6 +217,14 @@ export class ProjectsLayoutFactory implements LayoutFactory {
       {
         i: "toggle-theme",
         x: size === "sm" ? 2 : 1,
+        y: sizeFactor * (size === "xs" ? 6 : size === "sm" ? 5 : 2),
+        w: 1,
+        h: sizeFactor * 1,
+        isResizable,
+      },
+      {
+        i: "skills",
+        x: size === "xs" ? 0 : 2,
         y: sizeFactor * (size === "xs" ? 6 : size === "sm" ? 5 : 2),
         w: 1,
         h: sizeFactor * 1,
