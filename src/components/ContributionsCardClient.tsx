@@ -342,7 +342,7 @@ export default function ContributionsCardClient({
           )}
           href={`https://github.com/${login}`}
         >
-          <ArrowUpRightIcon data-icon="inline-start" />
+          <ArrowUpRightIcon data-icon="inline-start" className="size-5" />
           <span className="sr-only">Open GitHub profile</span>
         </a>
         <Calendar
