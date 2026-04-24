@@ -11,7 +11,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
-import { ArrowUpRightIcon } from "lucide-react";
+import { AlertTriangleIcon, ArrowUpRightIcon } from "lucide-react";
 import {
   Component,
   ReactNode,
@@ -23,7 +23,8 @@ import {
 } from "react";
 import { flattenError } from "zod";
 
-import { buttonVariants } from "@/components/ui/button";
+import { LoaderSkeleton } from "@/components/animations/skeleton";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   CardContent,
@@ -32,16 +33,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { LoaderSkeleton } from "./animations/skeleton";
+
 import {
   githubContributionMonthResponseSchema,
   type GithubContributionMonthResponse,
 } from "@/lib/schemas/github-contributions";
+import { cn } from "@/lib/utils";
 
 type FetchErrorResponse = { error?: string; details?: string };
 
@@ -76,7 +85,11 @@ function formatTooltip(date: string, count: number) {
 }
 
 class ErrorBoundary extends Component<
-  { fallback: (error: Error) => ReactNode; children: ReactNode },
+  {
+    fallback: (args: { error: Error; reset: () => void }) => ReactNode;
+    children: ReactNode;
+    resetKey?: string | number;
+  },
   { error: Error | null }
 > {
   state = { error: null as Error | null };
@@ -85,8 +98,18 @@ class ErrorBoundary extends Component<
     return { error };
   }
 
+  componentDidUpdate(prevProps: Readonly<{ resetKey?: string | number }>) {
+    if (this.state.error && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ error: null });
+    }
+  }
+
   render() {
-    if (this.state.error) return this.props.fallback(this.state.error);
+    if (this.state.error)
+      return this.props.fallback({
+        error: this.state.error,
+        reset: () => this.setState({ error: null }),
+      });
     return this.props.children;
   }
 }
@@ -136,6 +159,41 @@ function getContributionsPromise(year: number, month: number) {
 }
 
 const TZ = "UTC";
+
+function ContributionsErrorFallback({
+  error,
+  onRetry,
+}: {
+  error: Error;
+  onRetry: () => void;
+}) {
+  const isProd = process.env.NODE_ENV === "production";
+
+  return (
+    <Empty className="gap-1 p-0 pt-2">
+      <EmptyHeader className="gap-0">
+        <EmptyMedia variant="icon">
+          <AlertTriangleIcon />
+        </EmptyMedia>
+        <EmptyTitle>Couldn’t load data</EmptyTitle>
+        <EmptyDescription>Please try again in a moment.</EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="secondary" size="sm" onClick={onRetry}>
+          Retry
+        </Button>
+        {!isProd && (
+          <details className="text-xs text-muted-foreground">
+            <summary className="cursor-pointer select-none">
+              Technical details
+            </summary>
+            <div className="mt-2 whitespace-pre-wrap">{error.message}</div>
+          </details>
+        )}
+      </EmptyContent>
+    </Empty>
+  );
+}
 
 function ContributionsHeatmapFallback() {
   return (
@@ -234,6 +292,7 @@ export default function ContributionsCardClient({
   const [month, setMonth] = useState<Date>(initialMonth);
   const [optimisticMonth, setOptimisticMonth] = useOptimistic(month);
   const [, startTransition] = useTransition();
+  const [retryNonce, setRetryNonce] = useState(0);
   const year = getYear(optimisticMonth);
   const monthNumber = getMonth(optimisticMonth) + 1;
 
@@ -245,6 +304,11 @@ export default function ContributionsCardClient({
     });
   }
 
+  function retry() {
+    contributionPromiseCache.delete(keyFor(year, monthNumber));
+    setRetryNonce((n) => n + 1);
+  }
+
   return (
     <>
       <CardHeader className="inline-flex w-full flex-row items-center justify-between px-4 pt-2 xl:px-6 xl:pt-4">
@@ -252,8 +316,15 @@ export default function ContributionsCardClient({
       </CardHeader>
       <CardContent className="flex-1 px-4 xl:px-6">
         <ErrorBoundary
-          fallback={(error) => (
-            <div className="text-sm text-muted-foreground">{error.message}</div>
+          resetKey={`${year}-${monthNumber}-${retryNonce}`}
+          fallback={({ error, reset }) => (
+            <ContributionsErrorFallback
+              error={error}
+              onRetry={() => {
+                reset();
+                retry();
+              }}
+            />
           )}
         >
           <Suspense fallback={<ContributionsHeatmapFallback />}>
