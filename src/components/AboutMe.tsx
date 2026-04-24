@@ -30,8 +30,7 @@ export default async function AboutMe() {
 
   const nameParts = renderedAboutMe.split(name);
   const beforeName = nameParts[0] ?? renderedAboutMe;
-  const afterName =
-    nameParts.length >= 2 ? nameParts.slice(1).join(name) : "";
+  const afterName = nameParts.length >= 2 ? nameParts.slice(1).join(name) : "";
   return (
     <CardHeader className="size-full content-center">
       <p className="text-xl leading-relaxed tracking-wide text-pretty antialiased">

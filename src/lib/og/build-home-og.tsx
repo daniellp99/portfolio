@@ -21,91 +21,89 @@ export async function buildHomeOgImageResponse() {
   const initial = (ownerName || "P").slice(0, 1).toUpperCase();
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100%",
+        height: "100%",
+        background: ogPalette.bg,
+        color: ogPalette.fg,
+        fontFamily:
+          'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+      }}
+    >
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          height: "100%",
-          background: ogPalette.bg,
-          color: ogPalette.fg,
-          fontFamily:
-            'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+          flexDirection: "column",
+          flex: 1,
+          padding: 56,
+          justifyContent: "center",
+          gap: 20,
         }}
       >
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            padding: 56,
-            justifyContent: "center",
-            gap: 20,
+            fontSize: 58,
+            fontWeight: 700,
+            letterSpacing: -1.5,
+            lineHeight: 1.05,
           }}
         >
-          <div
-            style={{
-              fontSize: 58,
-              fontWeight: 700,
-              letterSpacing: -1.5,
-              lineHeight: 1.05,
-            }}
-          >
-            {brandTitle}
-          </div>
-          <div
-            style={{
-              fontSize: 26,
-              color: ogPalette.muted,
-              lineHeight: 1.35,
-            }}
-          >
-            {subtitle}
-          </div>
+          {brandTitle}
         </div>
         <div
           style={{
-            display: "flex",
-            width: 420,
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 48,
+            fontSize: 26,
+            color: ogPalette.muted,
+            lineHeight: 1.35,
           }}
         >
-          {avatarSrc ? (
-            <img
-              alt=""
-              height={360}
-              src={avatarSrc}
-              style={{
-                borderRadius: 28,
-                border: `1px solid ${ogPalette.accent}`,
-              }}
-              width={360}
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                width: 360,
-                height: 360,
-                borderRadius: 28,
-                alignItems: "center",
-                justifyContent: "center",
-                background: ogPalette.accent,
-                border: `1px solid ${ogPalette.accent}`,
-                fontSize: 140,
-                fontWeight: 700,
-                color: ogPalette.muted,
-              }}
-            >
-              {initial}
-            </div>
-          )}
+          {subtitle}
         </div>
       </div>
-    ),
+      <div
+        style={{
+          display: "flex",
+          width: 420,
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 48,
+        }}
+      >
+        {avatarSrc ? (
+          <img
+            alt=""
+            height={360}
+            src={avatarSrc}
+            style={{
+              borderRadius: 28,
+              border: `1px solid ${ogPalette.accent}`,
+            }}
+            width={360}
+          />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              width: 360,
+              height: 360,
+              borderRadius: 28,
+              alignItems: "center",
+              justifyContent: "center",
+              background: ogPalette.accent,
+              border: `1px solid ${ogPalette.accent}`,
+              fontSize: 140,
+              fontWeight: 700,
+              color: ogPalette.muted,
+            }}
+          >
+            {initial}
+          </div>
+        )}
+      </div>
+    </div>,
     {
       ...ogImageSize,
       headers: {

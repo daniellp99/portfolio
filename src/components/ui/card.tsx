@@ -4,13 +4,13 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const cardVariants = cva(
-  "group/card overflow-hidden rounded-lg bg-card text-sm text-card-foreground shadow-sm",
+  "group/card overflow-hidden bg-card text-sm text-card-foreground shadow-sm",
   {
     variants: {
       variant: {
         default:
-          "flex flex-col gap-6 border py-6 ring-1 ring-foreground/10 has-[>img:first-child]:pt-0 data-[size=sm]:gap-4 data-[size=sm]:py-4 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
-        item: "border-2 select-none group-peer-has-data-[pending=true]/main:animate-pulse hover:cursor-grab active:cursor-grabbing",
+          "flex flex-col gap-6 rounded-lg border py-6 ring-1 ring-foreground/10 has-[>img:first-child]:pt-0 data-[size=sm]:gap-4 data-[size=sm]:py-4 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl",
+        item: "rounded-xl border-2 select-none group-peer-has-data-[pending=true]/main:animate-pulse hover:cursor-grab active:cursor-grabbing",
       },
     },
     defaultVariants: {

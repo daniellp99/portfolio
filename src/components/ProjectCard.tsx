@@ -33,7 +33,7 @@ export default function ProjectCard({
       />
       <Button
         variant="projectLink"
-        className="cancelDrag absolute bottom-3 left-3 flex w-fit items-center overflow-hidden p-2 transition duration-500 ease-linear"
+        className="cancelDrag absolute bottom-2 left-2 flex w-fit items-center overflow-hidden p-2 transition duration-500 ease-linear"
         size="icon-lg"
         render={<Link href={`/project/${project.slug}`} />}
         nativeButton={false}

@@ -1,5 +1,8 @@
 import { buildProjectOgImageResponse } from "@/lib/og/build-project-og";
-import { ogImageContentType as contentType, ogImageSize as size } from "@/lib/og/image-config";
+import {
+  ogImageContentType as contentType,
+  ogImageSize as size,
+} from "@/lib/og/image-config";
 
 export { contentType, size };
 

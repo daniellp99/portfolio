@@ -29,7 +29,11 @@ function normalizePublicPath(path: string): string | null {
   return rel.length > 0 ? rel : null;
 }
 
-async function toPngExactCover(input: Buffer, w: number, h: number): Promise<string> {
+async function toPngExactCover(
+  input: Buffer,
+  w: number,
+  h: number,
+): Promise<string> {
   const ws = w * 2;
   const hs = h * 2;
   const png = await sharp(input)
