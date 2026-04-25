@@ -34,7 +34,7 @@ export function LogoCarousel({
     <Carousel
       plugins={[
         AutoScroll({
-          speed: 0.8,
+          speed: 0.6,
           stopOnMouseEnter: true,
           stopOnFocusIn: true,
           stopOnInteraction: false,
@@ -52,7 +52,7 @@ export function LogoCarousel({
         {logos.map((logo, idx) => (
           <CarouselItem
             key={`${logo.title}-${idx}-${id}`}
-            className="basis-1/12 pl-0 md:basis-1/11 xl:basis-1/10"
+            className="basis-1/13 pl-0"
           >
             <a
               href={logo.href}
@@ -69,7 +69,7 @@ export function LogoCarousel({
                   <StackIcon
                     name={logo.key}
                     variant={resolvedTheme === "light" ? "light" : "dark"}
-                    className="size-10 xl:size-16"
+                    className="aspect-square size-10 xl:size-16"
                   />
                 </figure>
               </CardGrayscale>

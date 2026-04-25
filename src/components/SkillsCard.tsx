@@ -6,7 +6,7 @@ export default async function SkillsCard() {
   if (!owner) return null;
 
   return (
-    <div className="grid size-full place-items-center py-3 xl:py-6">
+    <div className="flex size-full flex-col items-center justify-evenly">
       <LogoCarousel logos={owner.skills} opts={{ direction: "ltr" }} />
       <LogoCarousel logos={owner.skills} opts={{ direction: "rtl" }} />
     </div>
