@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 
 import { Project } from "@/lib/server/project-dto";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
-import { cn } from "@/lib/utils";
 import { CardGrayscale } from "./animations/grayscale";
 
 export default function ProjectCard({
@@ -20,7 +19,7 @@ export default function ProjectCard({
   return (
     <CardGrayscale className="group relative size-full">
       <Image
-        className={cn("rounded-lg shadow-2xl")}
+        className="rounded-lg px-4"
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
@@ -28,7 +27,8 @@ export default function ProjectCard({
         sizes={MAIN_GRID_CARD_IMAGE_SIZES}
         quality={92}
         style={{
-          objectFit: "contain",
+          objectFit: "scale-down",
+          objectPosition: "top",
         }}
       />
       <Button
