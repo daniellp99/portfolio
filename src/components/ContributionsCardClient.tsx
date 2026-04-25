@@ -28,6 +28,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -197,11 +198,11 @@ function ContributionsErrorFallback({
 
 function ContributionsHeatmapFallback() {
   return (
-    <div className="flex flex-col gap-2">
-      <LoaderSkeleton className="h-4 w-3/4 rounded-xs" />
-      <div className="grid grid-cols-7 gap-1 xl:gap-2.5">
+    <div className="relative flex flex-col gap-1 xl:gap-1.5">
+      <LoaderSkeleton className="h-3.5 w-6 rounded not-xl:absolute not-xl:inset-e-0 not-xl:-top-5 xl:w-3/4" />
+      <div className="grid grid-cols-7 place-items-stretch gap-1 xl:gap-2.5">
         {Array.from({ length: 35 }).map((_, idx) => (
-          <LoaderSkeleton key={idx} className="size-2.5 rounded-xs xl:size-5" />
+          <LoaderSkeleton key={idx} className="aspect-square rounded" />
         ))}
       </div>
     </div>
@@ -234,13 +235,14 @@ function ContributionsHeatmap({
   const max = Math.max(...Array.from(byDate.values()), 0);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="text-xs text-muted-foreground">
+    <div className="relative flex flex-col gap-1">
+      <CardDescription className="absolute inset-e-0 -top-5 text-xs text-muted-foreground xl:static">
         {data.calendar.totalContributions}{" "}
-        <span className="hidden xl:inline">contributions</span> in{" "}
-        {formatInTimeZone(monthStart, TZ, "MMMM yyyy")}
-      </div>
-      <div className="grid grid-cols-7 gap-1 xl:gap-2.5">
+        <span className="hidden xl:inline">
+          contributions in {formatInTimeZone(monthStart, TZ, "MMMM yyyy")}
+        </span>
+      </CardDescription>
+      <div className="grid grid-cols-7 place-items-stretch gap-1 xl:gap-2.5">
         {dates.map((d) => {
           const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
           const isOutside = getMonth(d) !== getMonth(monthStart);
@@ -252,12 +254,12 @@ function ContributionsHeatmap({
             <Tooltip key={iso}>
               <TooltipTrigger
                 render={
-                  <div
+                  <span
                     role="img"
                     aria-label={label}
                     aria-hidden={isOutside || undefined}
                     className={cn(
-                      "size-2.5 rounded-xs ring-1 ring-foreground/10 xl:size-5",
+                      "cancelDrag aspect-square rounded ring-1 ring-foreground/10",
                       isOutside
                         ? "bg-transparent ring-foreground/5"
                         : bucketClass(bucket),
@@ -311,12 +313,12 @@ export default function ContributionsCardClient({
 
   return (
     <>
-      <CardHeader className="inline-flex w-full flex-row items-center justify-between px-4 pt-2 xl:px-6 xl:pt-4">
+      <CardHeader className="px-6 text-center md:pt-2 md:text-left xl:pt-4">
         <CardTitle>
           GitHub <span className="hidden xl:inline">Contributions</span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 px-4 xl:px-6">
+      <CardContent className="flex-1 px-6">
         <ErrorBoundary
           resetKey={`${year}-${monthNumber}-${retryNonce}`}
           fallback={({ error, reset }) => (
@@ -360,8 +362,9 @@ export default function ContributionsCardClient({
             weekdays: "hidden",
             week: "hidden",
             month: "gap-0",
+            caption_label: "text-center leading-4",
           }}
-          className="cancelDrag rounded-sm bg-input p-1"
+          className="cancelDrag rounded-sm bg-input px-0 py-1"
         />
       </CardFooter>
     </>
