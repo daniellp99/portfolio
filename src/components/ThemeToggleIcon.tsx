@@ -7,6 +7,8 @@
  */
 import { motion, useReducedMotion } from "motion/react";
 
+import { UI_SPRING } from "@/lib/motion";
+
 const VIEW = 24;
 
 /** Lucide `sun` icon node (circle + ray paths). */
@@ -35,7 +37,7 @@ export function ThemeToggleIcon({ isDark }: ThemeToggleIconProps) {
 
   const transition = reduceMotion
     ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 420, damping: 32, mass: 0.85 };
+    : UI_SPRING;
 
   const origin = `${VIEW / 2}px ${VIEW / 2}px`;
 

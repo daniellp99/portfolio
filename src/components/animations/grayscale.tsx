@@ -19,16 +19,23 @@ export function CardGrayscale({
   ...props
 }: CardGrayscaleProps) {
   const [isHovered, setIsHovered] = React.useState(false);
+  const { onHoverStart, onHoverEnd, ...rest } = props;
   return (
     <motion.div
       className={cn("relative overflow-hidden", className)}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onHoverStart={(event, info) => {
+        setIsHovered(true);
+        onHoverStart?.(event, info);
+      }}
+      onHoverEnd={(event, info) => {
+        setIsHovered(false);
+        onHoverEnd?.(event, info);
+      }}
       animate={{
         filter: isHovered ? "grayscale(0%)" : "grayscale(100%)",
       }}
       transition={{ duration }}
-      {...props}
+      {...rest}
     >
       {image && (
         <div

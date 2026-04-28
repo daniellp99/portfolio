@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
 import { Button } from "@/components/ui/button";
+import { UI_SPRING } from "@/lib/motion";
 
 const KNOB_X = 16;
 
@@ -24,7 +25,7 @@ export default function ThemeToggle() {
 
   const knobTransition = reduceMotion
     ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 420, damping: 32, mass: 0.85 };
+    : UI_SPRING;
 
   return (
     <motion.div

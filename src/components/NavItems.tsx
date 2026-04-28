@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 
 import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { setLayouts } from "@/lib/server/layouts";
@@ -12,14 +13,6 @@ import { ProjectSlugs } from "@/lib/server/project-dto";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { generateLayouts } from "@/lib/site/layout";
 import { tabs, TabsType } from "@/lib/site/tabs";
-
-/** Matches ThemeToggle knob spring for consistent motion language. */
-const TAB_INDICATOR_SPRING = {
-  type: "spring" as const,
-  stiffness: 420,
-  damping: 32,
-  mass: 0.85,
-};
 
 export function NavItemsFallback() {
   return <LoaderSkeleton className="h-13 w-67.5 rounded-full" />;
@@ -36,7 +29,7 @@ export default function NavItems({
 
   const indicatorTransition = reduceMotion
     ? { duration: 0 }
-    : TAB_INDICATOR_SPRING;
+    : UI_SPRING;
 
   return (
     <Tabs
