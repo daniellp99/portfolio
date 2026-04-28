@@ -1,18 +1,18 @@
 "use client";
 import { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
-import type L from "leaflet";
-import { divIcon } from "leaflet";
+import L from "leaflet";
 import Image from "next/image";
 import {
   Activity,
+  ViewTransition,
   startTransition,
   use,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
-  ViewTransition,
 } from "react";
 import { createPortal } from "react-dom";
 import { Marker } from "react-leaflet";
@@ -20,7 +20,6 @@ import { Marker } from "react-leaflet";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
@@ -30,98 +29,79 @@ function AvatarMarkerIcon({
   tooltip,
   isActive,
   onActiveChange,
+  markerRootId,
 }: {
   avatarMarker: string;
   avatarMarkerHover: string;
   tooltip: string;
   isActive: boolean;
   onActiveChange: (next: boolean) => void;
+  markerRootId: string;
 }) {
-  const rafIdRef = useRef<number | null>(null);
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    return () => {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-        rafIdRef.current = null;
+    let raf = 0;
+    function find() {
+      const el = document.getElementById(markerRootId);
+      if (el) {
+        setPortalTarget(el);
+        return;
       }
-    };
-  }, []);
-
-  function scheduleTransition(next: boolean) {
-    if (rafIdRef.current !== null) {
-      cancelAnimationFrame(rafIdRef.current);
+      raf = window.requestAnimationFrame(find);
     }
-    // Base UI Tooltip may do sync layout work (flushSync) on open/close; starting the
-    // ViewTransition one frame later avoids "flushSync cancelled View Transition" warnings.
-    rafIdRef.current = requestAnimationFrame(() => {
-      rafIdRef.current = null;
-      startTransition(() => onActiveChange(next));
-    });
+    find();
+    return () => window.cancelAnimationFrame(raf);
+  }, [markerRootId]);
+
+  if (!portalTarget) {
+    return null;
   }
 
-  return (
-    <div className="relative size-[60px]">
-      {/* Visuals ignore pointer: ViewTransition snapshots can break hit-testing on <img>. */}
-      <div className="pointer-events-none absolute inset-0">
-        <Activity mode={isActive ? "hidden" : "visible"}>
-          <ViewTransition
-            default="none"
-            enter="avatar-marker-fade"
-            exit="avatar-marker-fade"
+  return createPortal(
+    <Tooltip open={isActive} onOpenChange={onActiveChange}>
+      <TooltipTrigger
+        render={
+          <button
+            type="button"
+            aria-label={tooltip}
+            className="group relative grid size-[60px] place-items-center rounded-full"
+            onPointerEnter={() => startTransition(() => onActiveChange(true))}
+            onPointerLeave={() => startTransition(() => onActiveChange(false))}
           >
-            {/* Next/Image fill requires a positioned parent; ViewTransition's host is static. */}
-            <div className="relative size-full">
-              <Image
-                src={avatarMarker}
-                alt=""
-                fill
-                sizes="60px"
-                draggable={false}
-                className="cancelDrag rounded-full object-cover drop-shadow-[0px_0px_4px] drop-shadow-foreground"
-              />
-            </div>
-          </ViewTransition>
-        </Activity>
-        <Activity mode={isActive ? "visible" : "hidden"}>
-          <ViewTransition
-            default="none"
-            enter="avatar-marker-fade"
-            exit="avatar-marker-fade"
-          >
-            <div className="relative size-full">
-              <Image
-                src={avatarMarkerHover}
-                alt=""
-                fill
-                sizes="60px"
-                draggable={false}
-                className="cancelDrag -translate-x-px rounded-full object-cover drop-shadow-[0px_0px_4px] drop-shadow-foreground"
-              />
-            </div>
-          </ViewTransition>
-        </Activity>
-      </div>
-      <TooltipProvider delay={5}>
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <div
-                className="cancelDrag absolute inset-0 z-10 rounded-full"
-                role="img"
-                aria-label={tooltip}
-                tabIndex={0}
-                onMouseEnter={() => scheduleTransition(true)}
-                onMouseLeave={() => scheduleTransition(false)}
-                onFocus={() => scheduleTransition(true)}
-                onBlur={() => scheduleTransition(false)}
-              />
-            }
-          />
-          <TooltipContent side="top">{tooltip}</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
+            <Activity mode={isActive ? "hidden" : "visible"}>
+              <ViewTransition default="avatar-marker-fade">
+                <Image
+                  src={avatarMarker}
+                  alt=""
+                  width={60}
+                  height={60}
+                  unoptimized
+                  className="pointer-events-none size-[60px] rounded-full object-cover drop-shadow-[0px_0px_4px] drop-shadow-foreground"
+                  draggable={false}
+                />
+              </ViewTransition>
+            </Activity>
+
+            <Activity mode={isActive ? "visible" : "hidden"}>
+              <ViewTransition default="avatar-marker-fade">
+                <Image
+                  src={avatarMarkerHover}
+                  alt=""
+                  width={60}
+                  height={60}
+                  unoptimized
+                  className="pointer-events-none size-[60px] -translate-x-px rounded-full object-cover drop-shadow-[0px_0px_4px] drop-shadow-foreground"
+                  draggable={false}
+                />
+              </ViewTransition>
+            </Activity>
+          </button>
+        }
+      />
+      <TooltipContent side="top">{tooltip}</TooltipContent>
+    </Tooltip>,
+    portalTarget,
   );
 }
 
@@ -133,68 +113,41 @@ export default function AvatarMarker({
   const [isActive, setIsActive] = useState(false);
   const mapMarkerInfo = use(mapMarkerInfoPromise);
   const markerRef = useRef<L.Marker | null>(null);
-  const [mountEl, setMountEl] = useState<HTMLElement | null>(null);
+  const reactId = useId();
+  const markerRootId = useMemo(
+    () => `avatar-marker-${reactId.replace(/[:]/g, "")}`,
+    [reactId],
+  );
+  const icon = useMemo(() => {
+    const size = 60;
+    return L.divIcon({
+      className: "avatar-marker-div-icon",
+      html: `<div id="${markerRootId}" class="size-[60px]"></div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size],
+    });
+  }, [markerRootId]);
 
   const avatarMarker = mapMarkerInfo?.avatarMarker ?? "";
   const avatarMarkerHover = mapMarkerInfo?.avatarMarkerHover ?? "";
   const avatarMarkerTooltip = mapMarkerInfo?.avatarMarkerTooltip ?? "";
-
-  const avatarIcon = useMemo(
-    () =>
-      divIcon({
-        className: "avatar-marker-icon",
-        iconSize: [60, 60],
-        iconAnchor: [30, 60],
-        tooltipAnchor: [3, -60],
-        html: '<div class="avatar-marker-react-root"></div>',
-      }),
-    [],
-  );
-
-  useEffect(() => {
-    let rafId: number | null = null;
-
-    const findMountEl = () => {
-      const marker = markerRef.current;
-      const el = marker?.getElement();
-      const nextMountEl = el?.querySelector<HTMLElement>(
-        ".avatar-marker-react-root",
-      );
-      if (!nextMountEl) {
-        rafId = requestAnimationFrame(findMountEl);
-        return;
-      }
-      setMountEl(nextMountEl);
-    };
-
-    findMountEl();
-
-    return () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      setMountEl(null);
-    };
-  }, []);
 
   if (!mapMarkerInfo) {
     return null;
   }
 
   return (
-    <Marker position={DEFAULT_CENTER} icon={avatarIcon} ref={markerRef}>
-      {mountEl
-        ? createPortal(
-            <AvatarMarkerIcon
-              avatarMarker={avatarMarker}
-              avatarMarkerHover={avatarMarkerHover}
-              tooltip={avatarMarkerTooltip}
-              isActive={isActive}
-              onActiveChange={(next) =>
-                setIsActive((prev) => (prev === next ? prev : next))
-              }
-            />,
-            mountEl,
-          )
-        : null}
+    <Marker position={DEFAULT_CENTER} ref={markerRef} icon={icon}>
+      <AvatarMarkerIcon
+        avatarMarker={avatarMarker}
+        avatarMarkerHover={avatarMarkerHover}
+        tooltip={avatarMarkerTooltip}
+        isActive={isActive}
+        onActiveChange={(next) =>
+          setIsActive((prev) => (prev === next ? prev : next))
+        }
+        markerRootId={markerRootId}
+      />
     </Marker>
   );
 }
