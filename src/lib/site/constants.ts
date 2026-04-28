@@ -44,3 +44,4 @@ export function imageLayoutsKeyForSlug(
 
 export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;
 export const COOKIE_MAX_AGE = 31536000; // 1 year in seconds
+export const DEFAULT_ZOOM = 4.49;

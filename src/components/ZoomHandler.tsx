@@ -1,13 +1,16 @@
 "use client";
-import { cn } from "@/lib/utils";
 import { MinusIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { useMap, useMapEvents } from "react-leaflet";
-import { Button } from "./ui/button";
+
+import { Button } from "@/components/ui/button";
+
+import { DEFAULT_ZOOM } from "@/lib/site/constants";
+import { cn } from "@/lib/utils";
 
 export default function ZoomHandler() {
   const map = useMap();
-  const [zoomLevel, setZoomLevel] = useState(5);
+  const [zoomLevel, setZoomLevel] = useState(DEFAULT_ZOOM);
 
   const mapEvents = useMapEvents({
     zoomend: () => {
