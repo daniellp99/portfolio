@@ -72,8 +72,8 @@
     "minimatch": "3.1.5",
     "nanoid": "3.3.11",
     "picomatch": "2.3.2",
-    "postcss": "8.5.12",
-    "yaml": "2.8.3",
+    "postcss": "^8.5.12",
+    "yaml": "^2.8.3",
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
