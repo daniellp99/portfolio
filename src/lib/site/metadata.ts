@@ -14,7 +14,7 @@ export function getOwnerAvatarPath(avatar: string | null | undefined): string {
  * Canonical origin for absolute URLs (canonical tags, OG, JSON-LD).
  * Matches {@link getMetadataBase} resolution so strings stay consistent with Next metadata.
  */
-export function getBaseUrl(): string {
+function getBaseUrl(): string {
   return getMetadataBase().origin;
 }
 

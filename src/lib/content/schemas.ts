@@ -1,5 +1,11 @@
 import { z } from "zod";
 
+const logoSchema = z.object({
+  key: z.string(),
+  title: z.string(),
+  href: z.url(),
+});
+
 export const ownerDataSchema = z.object({
   name: z.string(),
   email: z.email(),
@@ -10,23 +16,15 @@ export const ownerDataSchema = z.object({
   avatarMarker: z.string(),
   avatarMarkerHover: z.string(),
   avatarMarkerTooltip: z.string(),
-  skills: z.array(
-    z.object({
-      key: z.string(),
-      title: z.string(),
-      href: z.url(),
-    }),
-  ),
+  skills: z.array(logoSchema),
 });
 
-export type OwnerData = z.infer<typeof ownerDataSchema>;
-
-export const projectLinkSchema = z.object({
+const projectLinkSchema = z.object({
   name: z.string(),
   url: z.url(),
 });
 
-export const projectImageSchema = z.object({
+const projectImageSchema = z.object({
   alt: z.string(),
   width: z.number().int(),
   height: z.number().int(),
@@ -42,9 +40,9 @@ export const projectFrontMatterSchema = z.object({
   links: z.array(projectLinkSchema),
 });
 
-export type ProjectFrontMatter = z.infer<typeof projectFrontMatterSchema>;
-
-export type ProjectDetails = ProjectFrontMatter & {
+export type ProjectDetails = z.infer<typeof projectFrontMatterSchema> & {
   slug: string;
   content: string;
 };
+export type OwnerData = z.infer<typeof ownerDataSchema>;
+export type Logo = z.infer<typeof logoSchema>;

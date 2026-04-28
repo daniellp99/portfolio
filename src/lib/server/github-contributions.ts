@@ -7,23 +7,9 @@ import { flattenError } from "zod";
 import {
   githubContributionGraphqlResponseSchema,
   githubContributionMonthResponseSchema,
-  githubContributionYearResponseSchema,
   type GithubContributionCalendar,
   type GithubContributionMonthResponse,
-  type GithubContributionYearResponse,
 } from "@/lib/schemas/github-contributions";
-
-export type {
-  GithubContributionCalendar,
-  GithubContributionMonthResponse,
-  GithubContributionYearResponse,
-};
-
-function toIsoDateRangeForYear(year: number) {
-  const from = new Date(Date.UTC(year, 0, 1, 0, 0, 0)).toISOString();
-  const to = new Date(Date.UTC(year, 11, 31, 23, 59, 59)).toISOString();
-  return { from, to };
-}
 
 function toIsoDateRangeForMonth(year: number, month: number) {
   const monthIndex = month - 1;
@@ -100,48 +86,6 @@ const QUERY = /* GraphQL */ `
     }
   }
 `;
-
-export const getGithubContributionsForYear = cache(
-  async (
-    login: string,
-    year: number,
-  ): Promise<GithubContributionYearResponse> => {
-    "use cache";
-    cacheLife("hours");
-    cacheTag(`github_contrib_${login}_${year}`);
-
-    const { from, to } = toIsoDateRangeForYear(year);
-
-    const data = await githubGraphql<{
-      user: null | {
-        contributionsCollection: {
-          restrictedContributionsCount: number;
-          contributionCalendar: GithubContributionCalendar;
-        };
-      };
-    }>(QUERY, { login, from, to });
-
-    if (!data.user) {
-      throw new Error(`GitHub user not found: ${login}`);
-    }
-
-    const result = {
-      year,
-      calendar: data.user.contributionsCollection.contributionCalendar,
-      restrictedContributionsCount:
-        data.user.contributionsCollection.restrictedContributionsCount,
-    };
-
-    const validated = githubContributionYearResponseSchema.safeParse(result);
-    if (!validated.success) {
-      throw new Error(
-        `Invalid contributions payload: ${flattenError(validated.error)}`,
-      );
-    }
-
-    return validated.data;
-  },
-);
 
 export const getGithubContributionsForMonth = cache(
   async (

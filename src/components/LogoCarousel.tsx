@@ -1,7 +1,8 @@
 "use client";
 import AutoScroll from "embla-carousel-auto-scroll";
+import { useTheme } from "next-themes";
 import { useId } from "react";
-import StackIcon, { type IconName } from "tech-stack-icons";
+import StackIcon from "tech-stack-icons";
 
 import { CardGrayscale } from "@/components/animations/grayscale";
 import type { CarouselOptions } from "@/components/ui/carousel";
@@ -10,13 +11,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { useTheme } from "next-themes";
 
-export type Logo = {
-  key: IconName;
-  href: string;
-  title: string;
-};
+import { Logo } from "@/lib/content/schemas";
 
 export function LogoCarousel({
   logos,

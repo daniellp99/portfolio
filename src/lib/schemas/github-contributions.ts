@@ -1,23 +1,17 @@
 import { z } from "zod";
 
-export const githubContributionDaySchema = z.object({
+const githubContributionDaySchema = z.object({
   date: z.string(),
   contributionCount: z.number().int().nonnegative(),
 });
 
-export const githubContributionWeekSchema = z.object({
+const githubContributionWeekSchema = z.object({
   contributionDays: z.array(githubContributionDaySchema),
 });
 
-export const githubContributionCalendarSchema = z.object({
+const githubContributionCalendarSchema = z.object({
   totalContributions: z.number().int().nonnegative(),
   weeks: z.array(githubContributionWeekSchema),
-});
-
-export const githubContributionYearResponseSchema = z.object({
-  year: z.number().int(),
-  calendar: githubContributionCalendarSchema,
-  restrictedContributionsCount: z.number().int().nonnegative(),
 });
 
 export const githubContributionMonthResponseSchema = z.object({
@@ -27,15 +21,8 @@ export const githubContributionMonthResponseSchema = z.object({
   restrictedContributionsCount: z.number().int().nonnegative(),
 });
 
-export type GithubContributionDay = z.infer<typeof githubContributionDaySchema>;
-export type GithubContributionWeek = z.infer<
-  typeof githubContributionWeekSchema
->;
 export type GithubContributionCalendar = z.infer<
   typeof githubContributionCalendarSchema
->;
-export type GithubContributionYearResponse = z.infer<
-  typeof githubContributionYearResponseSchema
 >;
 export type GithubContributionMonthResponse = z.infer<
   typeof githubContributionMonthResponseSchema

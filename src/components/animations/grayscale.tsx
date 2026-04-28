@@ -1,7 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import * as motion from "framer-motion/client";
-import type { HTMLMotionProps } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 import * as React from "react";
 export interface CardGrayscaleProps extends Omit<
   HTMLMotionProps<"div">,

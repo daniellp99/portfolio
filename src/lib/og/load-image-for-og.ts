@@ -7,7 +7,7 @@ import sharp from "sharp";
 
 const DEFAULT_FIT = { w: 1200, h: 1200 } as const;
 
-export type LoadImageForOgOptions = {
+type LoadImageForOgOptions = {
   /**
    * Resize to fit inside this box (px). Used when you do not pass `exactCover`.
    */

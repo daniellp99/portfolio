@@ -75,6 +75,5 @@ export const getMapMarkerInfoDTO = cache(async () => {
 
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];
 export type Images = Awaited<ReturnType<typeof getProjectDetailsDTO>>["images"];
-export type OwnerData = Awaited<ReturnType<typeof getOwnerDataDTO>>;
 export type ProjectSlugs = Awaited<ReturnType<typeof getProjectSlugsDTO>>;
 export type MapMarkerInfo = Awaited<ReturnType<typeof getMapMarkerInfoDTO>>;

@@ -6,7 +6,7 @@ export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
 export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 
 const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;
-export type ImageLayoutsCookieKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
+type ImageLayoutsCookieKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
 
 function imageLayoutDimensionHash(
   images: readonly { src: string; width: number; height: number }[],
