@@ -9,4 +9,3 @@ export const UI_SPRING = {
   damping: 32,
   mass: 0.85,
 };
-

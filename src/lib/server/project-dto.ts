@@ -1,7 +1,6 @@
 import "server-only";
 
 import { notFound } from "next/navigation";
-import { cache } from "react";
 
 import { readOwnerData } from "@/lib/content/owner";
 import {
@@ -9,31 +8,26 @@ import {
   readAllProjectSummaries,
   readProject,
 } from "@/lib/content/projects";
-import { cacheLife, cacheTag } from "next/cache";
 
-export const getProjectSlugsDTO = cache(async () => {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("project_slugs");
-
+export async function getProjectSlugsDTO() {
   try {
     return await listProjectSlugs();
   } catch (error) {
     console.error("Failed to fetch project slugs in DTO:", error);
     return [];
   }
-});
+}
 
-export const getProjectsDTO = cache(async () => {
+export async function getProjectsDTO() {
   try {
     return await readAllProjectSummaries();
   } catch (error) {
     console.error("Failed to fetch projects in DTO:", error);
     return [];
   }
-});
+}
 
-export const getProjectDetailsDTO = cache(async (slug: string) => {
+export async function getProjectDetailsDTO(slug: string) {
   let project;
   try {
     project = await readProject(slug);
@@ -47,21 +41,18 @@ export const getProjectDetailsDTO = cache(async (slug: string) => {
   }
 
   return project;
-});
+}
 
-export const getOwnerDataDTO = cache(async () => {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("owner_data");
+export async function getOwnerDataDTO() {
   try {
     return await readOwnerData();
   } catch (error) {
     console.warn("Failed to fetch owner data in DTO:", error);
     return null;
   }
-});
+}
 
-export const getMapMarkerInfoDTO = cache(async () => {
+export async function getMapMarkerInfoDTO() {
   const ownerData = await getOwnerDataDTO();
   if (!ownerData) {
     return null;
@@ -71,7 +62,7 @@ export const getMapMarkerInfoDTO = cache(async () => {
     avatarMarkerHover: ownerData.avatarMarkerHover,
     avatarMarkerTooltip: ownerData.avatarMarkerTooltip,
   };
-});
+}
 
 export type Project = Awaited<ReturnType<typeof getProjectsDTO>>[number];
 export type Images = Awaited<ReturnType<typeof getProjectDetailsDTO>>["images"];

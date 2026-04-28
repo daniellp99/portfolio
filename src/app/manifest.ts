@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next";
 
-import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getOwnerData } from "@/lib/server/owner";
 import { getOwnerAvatarPath } from "@/lib/site/metadata";
 
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "Portfolio";
 
   return {

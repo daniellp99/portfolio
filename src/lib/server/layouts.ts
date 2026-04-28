@@ -1,6 +1,7 @@
 "use server";
 import { jsonToLayouts } from "@/lib/schemas/layouts";
-import { getProjectSlugsDTO, Images } from "@/lib/server/project-dto";
+import { Images } from "@/lib/server/project-dto";
+import { getProjectSlugs } from "@/lib/server/projects";
 import {
   COOKIE_MAX_AGE,
   IMAGE_LAYOUTS_KEY,
@@ -45,7 +46,7 @@ export async function getLayouts(
   let defaultLayouts: ResponsiveLayouts = {};
   switch (params.layoutKey) {
     case MAIN_LAYOUTS_KEY:
-      const projectKeys = await getProjectSlugsDTO();
+      const projectKeys = await getProjectSlugs();
       defaultLayouts = generateLayouts("All", projectKeys);
       break;
     case IMAGE_LAYOUTS_KEY:

@@ -35,9 +35,7 @@ type ThemeToggleIconProps = {
 export function ThemeToggleIcon({ isDark }: ThemeToggleIconProps) {
   const reduceMotion = useReducedMotion() ?? false;
 
-  const transition = reduceMotion
-    ? { duration: 0 }
-    : UI_SPRING;
+  const transition = reduceMotion ? { duration: 0 } : UI_SPRING;
 
   const origin = `${VIEW / 2}px ${VIEW / 2}px`;
 

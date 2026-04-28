@@ -4,24 +4,20 @@ import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import GoBackButton from "@/components/GoBackButton";
-import { CustomMDX } from "@/components/MdxRemote";
-
 import ImageGrid from "@/components/ImageGrid";
+import { CustomMDX } from "@/components/MdxRemote";
 import ProjectJsonLd from "@/components/ProjectJsonLd";
-import {
-  getOwnerDataDTO,
-  getProjectDetailsDTO,
-  getProjectSlugsDTO,
-} from "@/lib/server/project-dto";
-import { getProjectDetails } from "@/lib/server/projects";
+
+import { getOwnerData } from "@/lib/server/owner";
+import { getProjectDetails, getProjectSlugs } from "@/lib/server/projects";
 import { getCanonicalUrl } from "@/lib/site/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
-  const project = await getProjectDetailsDTO(params.slug);
-  const ownerData = await getOwnerDataDTO();
+  const project = await getProjectDetails(params.slug);
+  const ownerData = await getOwnerData();
 
   const title = project.name;
   const description = project.description;
@@ -64,7 +60,7 @@ export async function generateMetadata(props: {
 }
 
 export async function generateStaticParams() {
-  const slugs = await getProjectSlugsDTO();
+  const slugs = await getProjectSlugs();
 
   return [...slugs.map((slug) => ({ slug: slug }))];
 }

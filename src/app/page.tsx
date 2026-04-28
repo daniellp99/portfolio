@@ -6,14 +6,13 @@ import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 import NavBar from "@/components/NavBar";
 
 import { getLayouts } from "@/lib/server/layouts";
-import { getMapMarkerInfo } from "@/lib/server/owner";
-import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
 import { getProjects } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { getCanonicalUrl } from "@/lib/site/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
   const ownerName = ownerData?.name || "";
   const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
   const description = ownerData?.aboutMe || "";

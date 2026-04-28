@@ -23,9 +23,7 @@ export default function ThemeToggle() {
 
   const isDark = resolvedTheme === "dark";
 
-  const knobTransition = reduceMotion
-    ? { duration: 0 }
-    : UI_SPRING;
+  const knobTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
 
   return (
     <motion.div

@@ -8,7 +8,7 @@ import "@/../node_modules/react-grid-layout/css/styles.css";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getOwnerData } from "@/lib/server/owner";
 import {
   getCanonicalUrl,
   getMetadataBase,
@@ -18,7 +18,7 @@ import {
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
 
   const ownerName = ownerData?.name || "";
   const brandTitle = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
@@ -103,7 +103,7 @@ export default function RootLayout({
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
         >
           Skip to content
         </a>

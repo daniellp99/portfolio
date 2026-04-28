@@ -27,9 +27,7 @@ export default function NavItems({
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const reduceMotion = useReducedMotion() ?? false;
 
-  const indicatorTransition = reduceMotion
-    ? { duration: 0 }
-    : UI_SPRING;
+  const indicatorTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
 
   return (
     <Tabs

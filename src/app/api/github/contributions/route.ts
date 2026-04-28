@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getGithubContributionsForMonth } from "@/lib/server/github-contributions";
-import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getOwnerData } from "@/lib/server/owner";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const owner = await getOwnerDataDTO();
+  const owner = await getOwnerData();
   const login = owner?.githubUser?.trim();
   if (!login) {
     return NextResponse.json(

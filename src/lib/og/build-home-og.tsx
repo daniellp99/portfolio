@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element -- next/og ImageResponse uses Satori, not next/image */
 import { ImageResponse } from "next/og";
 
-import { getOwnerDataDTO } from "@/lib/server/project-dto";
+import { getOwnerData } from "@/lib/server/owner";
 
 import { ogImageSize, ogPalette, truncateForOg } from "./image-config";
 import { loadImageForOg } from "./load-image-for-og";
 
 export async function buildHomeOgImageResponse() {
-  const ownerData = await getOwnerDataDTO();
+  const ownerData = await getOwnerData();
 
   const ownerName = ownerData?.name || "";
   const brandTitle = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
