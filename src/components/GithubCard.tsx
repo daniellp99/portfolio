@@ -50,6 +50,7 @@ export default async function GithubCard() {
           buttonVariants({ variant: "projectLink", size: "icon-lg" }),
           ownerData.githubUser === " " && "pointer-events-none opacity-10",
         )}
+        aria-label="Open GitHub profile"
         href={`https://github.com/${ownerData.githubUser}`}
       >
         <ArrowUpRightIcon className="size-6" />
