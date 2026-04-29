@@ -11,6 +11,9 @@ if (
 const nextConfig = {
   reactCompiler: true,
   cacheComponents: true,
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85, 90, 92],
