@@ -31,6 +31,7 @@ export default function ZoomHandler() {
         <Button
           variant="projectLink"
           size="icon-lg"
+          aria-label="Zoom out"
           onClick={() => handleZoomOut()}
           className={cn(
             "cancelDrag invisible absolute bottom-0 left-0 transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",
@@ -43,6 +44,7 @@ export default function ZoomHandler() {
         <Button
           variant="projectLink"
           size="icon-lg"
+          aria-label="Zoom in"
           onClick={() => handleZoomIn()}
           className={cn(
             "cancelDrag invisible absolute right-0 bottom-0 transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",

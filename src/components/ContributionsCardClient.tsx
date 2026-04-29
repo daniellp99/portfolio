@@ -254,12 +254,15 @@ function ContributionsHeatmap({
             <Tooltip key={iso}>
               <TooltipTrigger
                 render={
-                  <span
-                    role="img"
+                  <button
+                    type="button"
                     aria-label={label}
                     aria-hidden={isOutside || undefined}
+                    tabIndex={isOutside ? -1 : 0}
+                    disabled={isOutside}
                     className={cn(
                       "cancelDrag aspect-square rounded ring-1 ring-foreground/10",
+                      "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
                       isOutside
                         ? "bg-transparent ring-foreground/5"
                         : bucketClass(bucket),

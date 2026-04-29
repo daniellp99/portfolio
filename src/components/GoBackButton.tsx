@@ -9,6 +9,7 @@ export default function GoBackButton() {
       size="icon-lg"
       type="button"
       className="cancelDrag"
+      aria-label="Go back to home"
       render={<Link href="/" />}
       nativeButton={false}
     >

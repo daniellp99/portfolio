@@ -28,6 +28,7 @@ export function LogoCarousel({
 
   return (
     <Carousel
+      aria-label="Tech stack logos carousel"
       plugins={[
         AutoScroll({
           speed: 0.6,

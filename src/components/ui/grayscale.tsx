@@ -21,7 +21,7 @@ export function CardGrayscale({
       className={cn(
         "relative overflow-hidden grayscale transition-[filter] hover:grayscale-0",
         "motion-reduce:grayscale-0 motion-reduce:transition-none",
-        className
+        className,
       )}
       style={{
         transitionDuration: `${duration}s`,

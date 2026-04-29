@@ -36,6 +36,7 @@ export default function NotFound() {
           <Button
             variant="projectLink"
             size="icon-lg"
+            aria-label="Go back to home"
             render={<Link href="/" />}
             nativeButton={false}
           >

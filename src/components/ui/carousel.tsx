@@ -19,6 +19,8 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
 };
 
 type CarouselContextProps = {
