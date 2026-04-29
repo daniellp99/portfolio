@@ -5,6 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
 
 import "@/../node_modules/react-grid-layout/css/styles.css";
+import NavBar from "@/components/NavBar";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -111,6 +112,7 @@ export default function RootLayout({
           <TooltipProvider>
             <ScrollArea className="h-screen">
               <main id="main" className="w-full">
+                <NavBar />
                 {children}
               </main>
             </ScrollArea>

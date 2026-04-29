@@ -15,7 +15,7 @@ import { generateLayouts } from "@/lib/site/layout";
 import { tabs, TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
-  return <Skeleton className="h-13 w-67.5 rounded-full" />;
+  return <Skeleton className="h-12 w-68.25 rounded-full" />;
 }
 
 export default function NavItems({
@@ -42,7 +42,7 @@ export default function NavItems({
       }}
       className="flex flex-col items-center"
     >
-      <TabsList className="h-12 w-fit rounded-full bg-card text-secondary-foreground ring-2 ring-border">
+      <TabsList className="h-11 w-fit gap-1 rounded-full bg-card px-px py-0 text-secondary-foreground ring-2 ring-border">
         <LayoutGroup id="nav-tabs">
           {tabs.map((tabId) => (
             <TabsTrigger
@@ -55,7 +55,7 @@ export default function NavItems({
               {activeTab === tabId ? (
                 <motion.span
                   layoutId="nav-tab-indicator"
-                  className="pointer-events-none absolute inset-0 z-0 rounded-full bg-foreground shadow-sm"
+                  className="pointer-events-none absolute inset-0 z-0 rounded-full bg-foreground"
                   transition={indicatorTransition}
                 />
               ) : null}
