@@ -4,7 +4,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { CardGrayscale } from "@/components/ui/grayscale";
@@ -52,29 +52,40 @@ export default function ProjectCard({
           variant="projectLink"
           className="relative flex w-fit items-center overflow-hidden p-2"
           size="icon-lg"
-          render={<Link href={`/project/${project.slug}`} />}
+          render={
+            <Link
+              href={`/project/${project.slug}`}
+              transitionTypes={["nav-forward"]}
+            />
+          }
           nativeButton={false}
         >
-          <motion.p
-            initial={false}
-            animate={
-              isHovered
-                ? {
-                    maxWidth: 252,
-                    x: 0,
-                    opacity: 1,
-                  }
-                : {
-                    maxWidth: 0,
-                    x: -18,
-                    opacity: 0,
-                  }
-            }
-            transition={transition}
-            className="truncate pr-5 text-sm font-bold"
+          <ViewTransition
+            name={`project-title-${project.slug}`}
+            share="text-morph"
+            default="none"
           >
-            {project.name}
-          </motion.p>
+            <motion.p
+              initial={false}
+              animate={
+                isHovered
+                  ? {
+                      maxWidth: 252,
+                      x: 0,
+                      opacity: 1,
+                    }
+                  : {
+                      maxWidth: 0,
+                      x: -18,
+                      opacity: 0,
+                    }
+              }
+              transition={transition}
+              className="truncate pr-5 text-sm font-bold"
+            >
+              {project.name}
+            </motion.p>
+          </ViewTransition>
           <ArrowUpRightIcon className="absolute right-2 size-5" />
         </Button>
       </motion.div>

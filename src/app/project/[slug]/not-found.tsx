@@ -37,7 +37,7 @@ export default function NotFound() {
             variant="projectLink"
             size="icon-lg"
             aria-label="Go back to home"
-            render={<Link href="/" />}
+            render={<Link href="/" transitionTypes={["nav-back"]} />}
             nativeButton={false}
           >
             <ChevronLeftIcon className="size-6" />

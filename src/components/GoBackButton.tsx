@@ -10,7 +10,7 @@ export default function GoBackButton() {
       type="button"
       className="cancelDrag"
       aria-label="Go back to home"
-      render={<Link href="/" />}
+      render={<Link href="/" transitionTypes={["nav-back"]} />}
       nativeButton={false}
     >
       <XIcon className="size-6" />
