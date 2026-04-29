@@ -45,7 +45,7 @@ export default function ThemeToggle() {
         }}
       >
         <motion.div
-          className="size-9 rounded-full bg-card p-1 text-orange-300"
+          className="size-9 rounded-full bg-foreground p-1 text-background"
           initial={false}
           animate={{ x: mounted ? (isDark ? KNOB_X : -KNOB_X) : -KNOB_X }}
           whileTap={mounted && !reduceMotion ? { scale: 0.97 } : undefined}

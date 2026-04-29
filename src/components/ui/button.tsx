@@ -20,7 +20,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         projectLink:
           "rounded-full border-2 border-border bg-foreground text-background ring-border transition-[transform,opacity,box-shadow,filter] hover:ring-2",
-        themeToggle: "rounded-full border-border bg-secondary dark:border-2",
+        themeToggle: "rounded-full border-border bg-input dark:border-2",
       },
       size: {
         default:

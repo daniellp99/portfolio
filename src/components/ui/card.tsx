@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const cardVariants = cva(
-  "group/card overflow-hidden bg-card text-sm text-card-foreground shadow-sm",
+  "group/card overflow-hidden bg-card text-sm text-card-foreground",
   {
     variants: {
       variant: {

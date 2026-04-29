@@ -27,7 +27,7 @@ export default async function Logo() {
       preload
       sizes="80px"
       quality={90}
-      className="size-20 drop-shadow-[0px_0px_4px] drop-shadow-foreground"
+      className="size-20 rounded-full border border-foreground bg-foreground"
     />
   );
 }

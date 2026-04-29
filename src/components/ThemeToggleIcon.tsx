@@ -48,7 +48,7 @@ export function ThemeToggleIcon({ isDark }: ThemeToggleIconProps) {
       strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="size-7 shrink-0 text-orange-300"
+      className="m-0.5 size-6 shrink-0"
       aria-hidden
     >
       <motion.g
