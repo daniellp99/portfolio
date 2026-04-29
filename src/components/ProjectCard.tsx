@@ -7,11 +7,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { CardGrayscale } from "@/components/ui/grayscale";
 
 import { UI_SPRING } from "@/lib/motion";
 import { Project } from "@/lib/server/project-dto";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
-import { CardGrayscale } from "./animations/grayscale";
 
 export default function ProjectCard({
   project,
@@ -31,8 +31,8 @@ export default function ProjectCard({
   return (
     <CardGrayscale
       className="group relative size-full"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
     >
       <Image
         className="rounded-lg px-4"

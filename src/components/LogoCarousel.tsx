@@ -4,13 +4,13 @@ import { useTheme } from "next-themes";
 import { useId } from "react";
 import StackIcon from "tech-stack-icons";
 
-import { CardGrayscale } from "@/components/animations/grayscale";
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { CardGrayscale } from "@/components/ui/grayscale";
 
 import { Logo } from "@/lib/content/schemas";
 
