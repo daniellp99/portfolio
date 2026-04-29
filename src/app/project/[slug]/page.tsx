@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
+import { Suspense, ViewTransition } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import GoBackButton from "@/components/GoBackButton";
+import DirectionalTransition from "@/components/DirectionalTransition";
 import ImageGrid from "@/components/ImageGrid";
 import { CustomMDX } from "@/components/MdxRemote";
 import ProjectJsonLd from "@/components/ProjectJsonLd";
@@ -72,29 +72,50 @@ export default async function ProjectPage(props: {
   const project = await getProjectDetails(slug);
 
   return (
-    <>
+    <DirectionalTransition>
       <ProjectJsonLd slug={slug} />
-      <div className="flex flex-col place-items-center gap-10 pt-10">
-        <GoBackButton />
+      <div className="flex flex-col place-items-center gap-10">
         <article className="container mx-auto flex size-full flex-col gap-4 sm:flex-row">
           <section className="flex w-full flex-col space-y-4">
-            <h1 className="font-sans text-6xl font-bold tracking-tight">
-              {project.name}
-            </h1>
+            <ViewTransition
+              name={`project-title-${slug}`}
+              share="text-morph"
+              default="none"
+            >
+              <h1 className="font-sans text-6xl font-bold tracking-tight">
+                {project.name}
+              </h1>
+            </ViewTransition>
             <p className="text-4xl text-pretty">{project.description}</p>
           </section>
           <section className="prose size-full max-w-none prose-zinc lg:prose-xl dark:prose-invert">
-            <Suspense fallback={<Skeleton className="size-full" />}>
-              <CustomMDX source={project.content} />
+            <Suspense
+              fallback={
+                <ViewTransition exit="slide-down">
+                  <Skeleton className="size-full" />
+                </ViewTransition>
+              }
+            >
+              <ViewTransition enter="slide-up" default="none">
+                <CustomMDX source={project.content} />
+              </ViewTransition>
             </Suspense>
           </section>
         </article>
         <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-          <Suspense fallback={<Skeleton className="size-full" />}>
-            <ImageGrid slug={slug} images={project.images} />
+          <Suspense
+            fallback={
+              <ViewTransition exit="slide-down">
+                <Skeleton className="size-full" />
+              </ViewTransition>
+            }
+          >
+            <ViewTransition enter="slide-up" default="none">
+              <ImageGrid slug={slug} images={project.images} />
+            </ViewTransition>
           </Suspense>
         </section>
       </div>
-    </>
+    </DirectionalTransition>
   );
 }

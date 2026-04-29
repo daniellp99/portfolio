@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { ViewTransition } from "react";
 
+import DirectionalTransition from "@/components/DirectionalTransition";
 import HomeJsonLd from "@/components/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
-import NavBar from "@/components/NavBar";
 
 import { getLayouts } from "@/lib/server/layouts";
 import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
@@ -45,18 +46,25 @@ export default function HomePage() {
   const mapMarkerInfoPromise = getMapMarkerInfo();
 
   return (
-    <>
+    <DirectionalTransition>
       <HomeJsonLd />
-      <NavBar />
       <section className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-        <Suspense fallback={<MainGridFallback />}>
-          <MainGrid
-            projectsPromise={projectsPromise}
-            layoutsPromise={layoutsPromise}
-            mapMarkerInfoPromise={mapMarkerInfoPromise}
-          />
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <MainGridFallback />
+            </ViewTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" default="none">
+            <MainGrid
+              projectsPromise={projectsPromise}
+              layoutsPromise={layoutsPromise}
+              mapMarkerInfoPromise={mapMarkerInfoPromise}
+            />
+          </ViewTransition>
         </Suspense>
       </section>
-    </>
+    </DirectionalTransition>
   );
 }

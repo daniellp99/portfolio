@@ -20,6 +20,7 @@ import {
   useOptimistic,
   useState,
   useTransition,
+  ViewTransition,
 } from "react";
 import { flattenError } from "zod";
 
@@ -334,8 +335,16 @@ export default function ContributionsCardClient({
             />
           )}
         >
-          <Suspense fallback={<ContributionsHeatmapFallback />}>
-            <ContributionsHeatmap year={year} month={monthNumber} />
+          <Suspense
+            fallback={
+              <ViewTransition exit="slide-down">
+                <ContributionsHeatmapFallback />
+              </ViewTransition>
+            }
+          >
+            <ViewTransition enter="slide-up" default="none">
+              <ContributionsHeatmap year={year} month={monthNumber} />
+            </ViewTransition>
           </Suspense>
         </ErrorBoundary>
       </CardContent>
