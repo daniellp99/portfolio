@@ -23,7 +23,6 @@ import {
 } from "react";
 import { flattenError } from "zod";
 
-import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -41,6 +40,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -199,10 +199,10 @@ function ContributionsErrorFallback({
 function ContributionsHeatmapFallback() {
   return (
     <div className="relative flex flex-col gap-1 xl:gap-1.5">
-      <LoaderSkeleton className="h-3.5 w-6 rounded not-xl:absolute not-xl:inset-e-0 not-xl:-top-5 xl:w-3/4" />
+      <Skeleton className="h-3.5 w-6 rounded not-xl:absolute not-xl:inset-e-0 not-xl:-top-5 xl:w-3/4" />
       <div className="grid grid-cols-7 place-items-stretch gap-1 xl:gap-2.5">
         {Array.from({ length: 35 }).map((_, idx) => (
-          <LoaderSkeleton key={idx} className="aspect-square rounded" />
+          <Skeleton key={idx} className="aspect-square rounded" />
         ))}
       </div>
     </div>

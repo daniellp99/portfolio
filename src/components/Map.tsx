@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { Activity, Suspense } from "react";
 
-import { LoaderSkeleton } from "@/components/animations/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
@@ -15,7 +15,7 @@ const LeafletMapContainer = dynamic(
   {
     ssr: false,
     loading() {
-      return <LoaderSkeleton className="size-full" />;
+      return <Skeleton className="size-full" />;
     },
   },
 );

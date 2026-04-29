@@ -1,5 +1,5 @@
-import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import AboutMe from "@/components/AboutMe";
 import ContributionsCard from "@/components/ContributionsCard";
@@ -17,11 +17,11 @@ import { ResponsiveLayouts } from "react-grid-layout";
 export function MainGridFallback() {
   return (
     <div className="mx-auto grid max-w-[375px] grid-cols-2 gap-[15.5px] p-[15.5px] md:max-w-[800px] md:grid-cols-4 md:gap-4 xl:max-w-[1200px]">
-      <LoaderSkeleton className="col-span-full row-span-full h-86 sm:col-span-2 sm:row-span-2 sm:h-94 xl:row-auto xl:h-69" />
-      <LoaderSkeleton className="col-span-2 h-40 sm:col-auto sm:h-45 xl:h-69" />
-      <LoaderSkeleton className="row-span-2 h-full" />
-      <LoaderSkeleton className="h-40 sm:h-45 xl:h-69" />
-      <LoaderSkeleton className="h-40 sm:h-45 xl:h-69" />
+      <Skeleton className="col-span-full row-span-full h-86 sm:col-span-2 sm:row-span-2 sm:h-94 xl:row-auto xl:h-69" />
+      <Skeleton className="col-span-2 h-40 sm:col-auto sm:h-45 xl:h-69" />
+      <Skeleton className="row-span-2 h-full" />
+      <Skeleton className="h-40 sm:h-45 xl:h-69" />
+      <Skeleton className="h-40 sm:h-45 xl:h-69" />
     </div>
   );
 }

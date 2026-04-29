@@ -1,5 +1,6 @@
-import { LoaderSkeleton } from "@/components/animations/skeleton";
 import { CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
 import { getOwnerData } from "@/lib/server/owner";
 
 function formatExperienceYears(journeyStartAtIso: string) {
@@ -20,7 +21,7 @@ function formatExperienceYears(journeyStartAtIso: string) {
 export default async function AboutMe() {
   const ownerData = await getOwnerData();
   if (!ownerData) {
-    return <LoaderSkeleton className="size-full" />;
+    return <Skeleton className="size-full" />;
   }
   const { aboutMe, name, journeyStartAt } = ownerData;
   const experience = formatExperienceYears(journeyStartAt);

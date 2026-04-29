@@ -3,7 +3,7 @@
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useState, useTransition } from "react";
 
-import { LoaderSkeleton } from "@/components/animations/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ import { generateLayouts } from "@/lib/site/layout";
 import { tabs, TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
-  return <LoaderSkeleton className="h-13 w-67.5 rounded-full" />;
+  return <Skeleton className="h-13 w-67.5 rounded-full" />;
 }
 
 export default function NavItems({
