@@ -45,8 +45,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Tooltip as TooltipBase } from "@base-ui/react/tooltip";
 
 import {
   githubContributionMonthResponseSchema,
@@ -210,6 +212,8 @@ function ContributionsHeatmapFallback() {
   );
 }
 
+const tooltipHandle = TooltipBase.createHandle<React.ComponentType>();
+
 function ContributionsHeatmap({
   year,
   month,
@@ -244,16 +248,20 @@ function ContributionsHeatmap({
         </span>
       </CardDescription>
       <div className="grid grid-cols-7 place-items-stretch gap-1 xl:gap-2.5">
-        {dates.map((d) => {
-          const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
-          const isOutside = getMonth(d) !== getMonth(monthStart);
-          const count = byDate.get(iso) ?? 0;
-          const bucket = isOutside ? 0 : intensityBucket(count, max);
-          const label = formatTooltip(iso, count);
+        <TooltipProvider>
+          {dates.map((d) => {
+            const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
+            const isOutside = getMonth(d) !== getMonth(monthStart);
+            const count = byDate.get(iso) ?? 0;
+            const bucket = isOutside ? 0 : intensityBucket(count, max);
+            const label = formatTooltip(iso, count);
 
-          return (
-            <Tooltip key={iso}>
+            return (
               <TooltipTrigger
+                key={iso}
+                id={`contributions-day-${iso}`}
+                handle={tooltipHandle}
+                payload={label}
                 render={
                   <button
                     type="button"
@@ -271,10 +279,15 @@ function ContributionsHeatmap({
                   />
                 }
               />
-              <TooltipContent>{label}</TooltipContent>
-            </Tooltip>
-          );
-        })}
+            );
+          })}
+
+          <Tooltip handle={tooltipHandle}>
+            {({ payload: Payload }) => (
+              <TooltipContent>{Payload as ReactNode}</TooltipContent>
+            )}
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
