@@ -8,7 +8,7 @@ import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
 import { Button } from "@/components/ui/button";
 import { UI_SPRING } from "@/lib/motion";
 
-const KNOB_X = 16;
+const KNOB_X = 18;
 
 export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -36,7 +36,7 @@ export default function ThemeToggle() {
       <Button
         variant="themeToggle"
         size="icon-lg"
-        className="cancelDrag mx-auto h-12 w-20 overflow-hidden p-1"
+        className="cancelDrag mx-auto h-11 w-20 overflow-hidden p-0"
         disabled={!mounted}
         aria-busy={!mounted}
         aria-label={label}
