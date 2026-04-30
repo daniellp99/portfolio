@@ -1,5 +1,6 @@
 import { getOwnerData } from "@/lib/server/owner";
 import { getProjectDetails } from "@/lib/server/projects";
+import { serializeJsonLd } from "@/lib/json-ld";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/lib/site/metadata";
 
 export default async function ProjectJsonLd({ slug }: { slug: string }) {
@@ -67,7 +68,7 @@ export default async function ProjectJsonLd({ slug }: { slug: string }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }
