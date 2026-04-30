@@ -3,11 +3,13 @@ import "leaflet/dist/leaflet.css";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { Activity, Suspense } from "react";
+import { Activity } from "react";
+import { TileLayer } from "react-leaflet";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { MapMarkerInfo } from "@/lib/server/project-dto";
+import ZoomHandler from "@/components/ZoomHandler";
+
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
 const LeafletMapContainer = dynamic(
@@ -19,23 +21,8 @@ const LeafletMapContainer = dynamic(
     },
   },
 );
-const LeafletTileLayer = dynamic(
-  async () => (await import("react-leaflet")).TileLayer,
-  { ssr: false },
-);
 
-const ZoomHandler = dynamic(() => import("@/components/ZoomHandler"), {
-  ssr: false,
-});
-
-const AvatarMarker = dynamic(() => import("@/components/AvatarMarker"), {
-  ssr: false,
-});
-export default function Map({
-  mapMarkerInfoPromise,
-}: {
-  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
-}) {
+export default function Map({ children }: { children: React.ReactNode }) {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
 
@@ -56,18 +43,16 @@ export default function Map({
       <ZoomHandler />
 
       <Activity mode={resolvedTheme === "dark" ? "visible" : "hidden"}>
-        <LeafletTileLayer
+        <TileLayer
           url={"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
         />
       </Activity>
       <Activity mode={resolvedTheme === "dark" ? "hidden" : "visible"}>
-        <LeafletTileLayer
+        <TileLayer
           url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
         />
       </Activity>
-      <Suspense>
-        <AvatarMarker mapMarkerInfoPromise={mapMarkerInfoPromise} />
-      </Suspense>
+      {children}
     </LeafletMapContainer>
   );
 }

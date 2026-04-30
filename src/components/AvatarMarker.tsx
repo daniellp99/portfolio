@@ -6,6 +6,7 @@ import Image from "next/image";
 import {
   Activity,
   ViewTransition,
+  createContext,
   startTransition,
   use,
   useEffect,
@@ -17,61 +18,64 @@ import {
 import { createPortal } from "react-dom";
 import { Marker } from "react-leaflet";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
 import { cn } from "@/lib/utils";
 
-function AvatarMarkerIcon({
-  avatarMarker,
-  avatarMarkerHover,
-  tooltip,
-  isActive,
-  onActiveChange,
-  markerRootId,
+const MarkerRootIdContext = createContext<string | null>(null);
+
+export function AvatarMarkerIcon({
+  mapMarkerInfoPromise,
 }: {
-  avatarMarker: string;
-  avatarMarkerHover: string;
-  tooltip: string;
-  isActive: boolean;
-  onActiveChange: (next: boolean) => void;
-  markerRootId: string;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
 }) {
+  const markerRootId = use(MarkerRootIdContext);
+  const mapMarkerInfo = use(mapMarkerInfoPromise);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    const id = markerRootId;
+    if (!id) return;
     let raf = 0;
-    function find() {
-      const el = document.getElementById(markerRootId);
+    function find(markerId: string) {
+      const el = document.getElementById(markerId);
       if (el) {
         setPortalTarget(el);
         return;
       }
-      raf = window.requestAnimationFrame(find);
+      raf = window.requestAnimationFrame(() => find(markerId));
     }
-    find();
+    find(id);
     return () => window.cancelAnimationFrame(raf);
   }, [markerRootId]);
 
-  if (!portalTarget) {
+  const avatarMarker = mapMarkerInfo?.avatarMarker ?? "";
+  const avatarMarkerHover = mapMarkerInfo?.avatarMarkerHover ?? "";
+  const avatarMarkerTooltip = mapMarkerInfo?.avatarMarkerTooltip ?? "";
+
+  if (!markerRootId || !portalTarget || !mapMarkerInfo) {
     return null;
   }
 
   return createPortal(
-    <Tooltip open={isActive} onOpenChange={onActiveChange}>
+    <Tooltip open={isActive} onOpenChange={setIsActive}>
       <TooltipTrigger
         render={
           <button
             type="button"
-            aria-label={tooltip}
+            aria-label={avatarMarkerTooltip}
             className={cn(
               "group relative grid size-11 place-items-center p-0.5",
-              "before:absolute before:inset-0 before:-z-10 before:-rotate-45 before:rounded-[999px_999px_999px_0] before:border before:border-foreground before:bg-foreground before:content-['']",
+              "before:absolute before:inset-0 before:-z-10 before:-rotate-45 before:rounded-[50%_50%_50%_0] before:border before:border-foreground before:bg-foreground before:content-['']",
             )}
-            onPointerEnter={() => startTransition(() => onActiveChange(true))}
-            onPointerLeave={() => startTransition(() => onActiveChange(false))}
+            onPointerEnter={() => startTransition(() => setIsActive(true))}
+            onPointerLeave={() => startTransition(() => setIsActive(false))}
           >
             <Activity mode={isActive ? "hidden" : "visible"}>
               <ViewTransition default="avatar-marker-fade">
@@ -103,19 +107,17 @@ function AvatarMarkerIcon({
           </button>
         }
       />
-      <TooltipContent side="top">{tooltip}</TooltipContent>
+      <TooltipContent side="top">{avatarMarkerTooltip}</TooltipContent>
     </Tooltip>,
     portalTarget,
   );
 }
 
 export default function AvatarMarker({
-  mapMarkerInfoPromise,
+  children,
 }: {
-  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+  children: React.ReactNode;
 }) {
-  const [isActive, setIsActive] = useState(false);
-  const mapMarkerInfo = use(mapMarkerInfoPromise);
   const markerRef = useRef<L.Marker | null>(null);
   const reactId = useId();
   const markerRootId = useMemo(
@@ -136,26 +138,15 @@ export default function AvatarMarker({
     });
   }, [markerRootId]);
 
-  const avatarMarker = mapMarkerInfo?.avatarMarker ?? "";
-  const avatarMarkerHover = mapMarkerInfo?.avatarMarkerHover ?? "";
-  const avatarMarkerTooltip = mapMarkerInfo?.avatarMarkerTooltip ?? "";
-
-  if (!mapMarkerInfo) {
-    return null;
-  }
-
   return (
     <Marker position={DEFAULT_CENTER} ref={markerRef} icon={icon}>
-      <AvatarMarkerIcon
-        avatarMarker={avatarMarker}
-        avatarMarkerHover={avatarMarkerHover}
-        tooltip={avatarMarkerTooltip}
-        isActive={isActive}
-        onActiveChange={(next) =>
-          setIsActive((prev) => (prev === next ? prev : next))
-        }
-        markerRootId={markerRootId}
-      />
+      <MarkerRootIdContext value={markerRootId}>{children}</MarkerRootIdContext>
     </Marker>
+  );
+}
+
+export function AvatarMarkerSkeleton() {
+  return (
+    <Skeleton className="absolute top-1/2 left-1/2 z-100000 size-11 -translate-x-1/2 -translate-y-[calc(50%+30px)] -rotate-45 rounded-[50%_50%_50%_0] before:-inset-10 before:rotate-45" />
   );
 }
