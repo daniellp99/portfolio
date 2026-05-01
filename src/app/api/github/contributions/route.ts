@@ -9,6 +9,7 @@ export async function GET(req: Request) {
   const year = Number(yearParam);
   const monthParam = searchParams.get("month");
   const month = Number(monthParam);
+  const timeZone = searchParams.get("tz") ?? "UTC";
 
   if (!Number.isInteger(year) || year < 2000 || year > 3000) {
     return NextResponse.json(
@@ -34,7 +35,12 @@ export async function GET(req: Request) {
   }
 
   try {
-    const data = await getGithubContributionsForMonth(login, year, month);
+    const data = await getGithubContributionsForMonth(
+      login,
+      year,
+      month,
+      timeZone,
+    );
     return NextResponse.json(data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

@@ -1,5 +1,7 @@
 import "server-only";
 
+import { endOfMonth, startOfMonth } from "date-fns";
+import { fromZonedTime } from "date-fns-tz";
 import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
 import { flattenError } from "zod";
@@ -11,12 +13,22 @@ import {
   type GithubContributionMonthResponse,
 } from "@/lib/schemas/github-contributions";
 
-function toIsoDateRangeForMonth(year: number, month: number) {
+function toIsoDateRangeForMonth(
+  year: number,
+  month: number,
+  timeZone: string = "UTC",
+) {
   const monthIndex = month - 1;
-  const from = new Date(Date.UTC(year, monthIndex, 1, 0, 0, 0)).toISOString();
-  const to = new Date(
-    Date.UTC(year, monthIndex + 1, 0, 23, 59, 59),
-  ).toISOString();
+
+  // "Wall clock" dates in the user's time zone, then converted to UTC instants.
+  const monthWallClock = new Date(year, monthIndex, 1, 0, 0, 0, 0);
+  const fromWallClock = startOfMonth(monthWallClock);
+  const toWallClock = endOfMonth(monthWallClock);
+  toWallClock.setHours(23, 59, 59, 999);
+
+  const from = fromZonedTime(fromWallClock, timeZone).toISOString();
+  const to = fromZonedTime(toWallClock, timeZone).toISOString();
+
   return { from, to };
 }
 
@@ -92,12 +104,13 @@ export const getGithubContributionsForMonth = cache(
     login: string,
     year: number,
     month: number,
+    timeZone: string = "UTC",
   ): Promise<GithubContributionMonthResponse> => {
     "use cache";
     cacheLife("hours");
-    cacheTag(`github_contrib_${login}_${year}_${month}`);
+    cacheTag(`github_contrib_${login}_${year}_${month}_${timeZone}`);
 
-    const { from, to } = toIsoDateRangeForMonth(year, month);
+    const { from, to } = toIsoDateRangeForMonth(year, month, timeZone);
 
     const data = await githubGraphql<{
       user: null | {
