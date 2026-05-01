@@ -8,6 +8,8 @@ type Breakpoint = "lg" | "sm" | "xs";
 type Variant = "default" | "about" | "projects";
 type LayoutItem = Layout[number];
 type Slot = { x: number; y: number; w: number; h: number };
+type BaseItemId = "me" | "toggle-theme" | "skills" | "maps" | "contributions";
+type BaseSlotUnits = { x: number; y: number; w: number; h: number };
 
 const SCALE_Y: Record<Breakpoint, number> = { lg: 1.645, sm: 1.09, xs: 1 };
 const IS_RESIZABLE = false;
@@ -37,7 +39,7 @@ const PROJECT_SLOTS: Record<Variant, Record<Breakpoint, Slot[]>> = {
   about: {
     lg: [
       { x: 3, y: 1, w: 1, h: 1 },
-      { x: 0, y: 3, w: 1, h: 1 },
+      { x: 2, y: 3, w: 1, h: 1 },
       { x: 2, y: 1, w: 1, h: 1 },
     ],
     sm: [
@@ -47,7 +49,7 @@ const PROJECT_SLOTS: Record<Variant, Record<Breakpoint, Slot[]>> = {
     ],
     xs: [
       { x: 1, y: 3, w: 1, h: 1 },
-      { x: 0, y: 10, w: 1, h: 1 },
+      { x: 1, y: 5, w: 1, h: 1 },
       { x: 0, y: 4, w: 1, h: 1 },
     ],
   },
@@ -64,9 +66,92 @@ const PROJECT_SLOTS: Record<Variant, Record<Breakpoint, Slot[]>> = {
     ],
     xs: [
       { x: 1, y: 0, w: 1, h: 1 },
-      { x: 0, y: 2, w: 1, h: 1 },
+      { x: 0, y: 1, w: 1, h: 1 },
       { x: 0, y: 0, w: 1, h: 1 },
     ],
+  },
+};
+
+const BASE_ITEM_ORDER: BaseItemId[] = [
+  "me",
+  "toggle-theme",
+  "skills",
+  "maps",
+  "contributions",
+];
+
+const BASE_SLOTS: Record<
+  Variant,
+  Record<Breakpoint, Record<BaseItemId, BaseSlotUnits>>
+> = {
+  default: {
+    lg: {
+      me: { x: 0, y: 0, w: 2, h: 1 },
+      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
+      skills: { x: 2, y: 2, w: 1, h: 1 },
+      maps: { x: 2, y: 0, w: 1, h: 1 },
+      contributions: { x: 3, y: 1, w: 1, h: 1.5 },
+    },
+    sm: {
+      me: { x: 0, y: 0, w: 2, h: 2 },
+      "toggle-theme": { x: 2, y: 1, w: 1, h: 0.5 },
+      skills: { x: 3, y: 2, w: 1, h: 1 },
+      maps: { x: 3, y: 0, w: 1, h: 1 },
+      contributions: { x: 2, y: 0, w: 1, h: 1.5 },
+    },
+    xs: {
+      me: { x: 0, y: 0, w: 2, h: 2 },
+      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
+      skills: { x: 1, y: 5, w: 1, h: 1 },
+      maps: { x: 0, y: 2, w: 2, h: 1 },
+      contributions: { x: 0, y: 3, w: 1, h: 1.5 },
+    },
+  },
+  about: {
+    lg: {
+      me: { x: 0, y: 0, w: 2, h: 1 },
+      "toggle-theme": { x: 1, y: 1, w: 1, h: 0.5 },
+      skills: { x: 3, y: 0, w: 1, h: 1 },
+      maps: { x: 2, y: 0, w: 1, h: 1 },
+      contributions: { x: 0, y: 1, w: 1, h: 1.5 },
+    },
+    sm: {
+      me: { x: 0, y: 0, w: 2, h: 2 },
+      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
+      skills: { x: 3, y: 0, w: 1, h: 1 },
+      maps: { x: 2, y: 0, w: 1, h: 1 },
+      contributions: { x: 2, y: 2, w: 1, h: 1.5 },
+    },
+    xs: {
+      me: { x: 0, y: 1, w: 2, h: 2 },
+      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
+      skills: { x: 0, y: 3, w: 1, h: 1 },
+      maps: { x: 0, y: 0, w: 2, h: 1 },
+      contributions: { x: 0, y: 8, w: 1, h: 1.5 },
+    },
+  },
+  projects: {
+    lg: {
+      me: { x: 0, y: 1, w: 2, h: 1 },
+      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
+      skills: { x: 2, y: 2, w: 1, h: 1 },
+      maps: { x: 2, y: 2, w: 1, h: 1 },
+      contributions: { x: 3, y: 0, w: 1, h: 1.5 },
+    },
+    sm: {
+      me: { x: 0, y: 1, w: 2, h: 2 },
+      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
+      skills: { x: 2, y: 1, w: 1, h: 1 },
+      maps: { x: 2, y: 2, w: 1, h: 1 },
+      contributions: { x: 3, y: 0, w: 1, h: 1.5 },
+    },
+    xs: {
+      me: { x: 0, y: 5, w: 2, h: 2 },
+      "toggle-theme": { x: 0, y: 3, w: 1, h: 0.5 },
+      skills: { x: 0, y: 2, w: 1, h: 1 },
+      maps: { x: 0, y: 4, w: 2, h: 1 },
+      contributions: { x: 1, y: 2, w: 1, h: 1.5 },
+    },
   },
 };
 
@@ -78,150 +163,18 @@ function scale(size: Breakpoint, units: number) {
   return SCALE_Y[size] * units;
 }
 
-function baseItems(variant: Variant, size: Breakpoint): Layout {
-  switch (variant) {
-    case "default":
-      return [
-        {
-          i: "me",
-          x: 0,
-          y: 0,
-          w: 2,
-          h: scale(size, size === "lg" ? 1 : 2),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "toggle-theme",
-          x: size === "xs" ? 1 : 3,
-          y: scale(size, size === "xs" ? 5 : 2),
-          w: 1,
-          h: scale(size, 0.5),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "skills",
-          x: size === "xs" ? 0 : 2,
-          y: scale(size, size === "xs" ? 5 : 2),
-          w: 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "maps",
-          x: size === "xs" ? 0 : 2,
-          y: scale(size, size === "xs" ? 2 : 0),
-          w: size === "xs" ? 2 : 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "contributions",
-          x: size === "xs" ? 0 : size === "sm" ? 2 : 3,
-          y: scale(size, size === "xs" ? 3 : 1),
-          w: 1,
-          h: scale(size, 1.5),
-          isResizable: IS_RESIZABLE,
-        },
-      ];
-    case "about":
-      return [
-        {
-          i: "me",
-          x: 0,
-          y: scale(size, size === "xs" ? 1 : 0),
-          w: 2,
-          h: scale(size, size === "lg" ? 1 : 2),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "toggle-theme",
-          x: 1,
-          y: scale(size, size === "lg" ? 1 : 5),
-          w: 1,
-          h: scale(size, 0.5),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "skills",
-          x: size === "xs" ? 0 : 3,
-          y: scale(size, size === "xs" ? 3 : 0),
-          w: 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "maps",
-          x: size === "xs" ? 0 : 2,
-          y: 0,
-          w: size === "xs" ? 2 : 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "contributions",
-          x: 0,
-          y: scale(size, size === "xs" ? 8 : size === "lg" ? 1 : 6),
-          w: 1,
-          h: scale(size, 1.5),
-          isResizable: IS_RESIZABLE,
-        },
-      ];
-    case "projects":
-      return [
-        {
-          i: "me",
-          x: 0,
-          y: scale(size, size === "xs" ? 4 : 1),
-          w: 2,
-          h: scale(size, size === "lg" ? 1 : 2),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "toggle-theme",
-          x: size === "sm" ? 2 : 3,
-          y: scale(size, size === "xs" ? 6 : size === "sm" ? 5 : 2),
-          w: 1,
-          h: scale(size, 0.5),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "skills",
-          x: size === "xs" ? 0 : 2,
-          y: scale(size, size === "xs" ? 6 : size === "sm" ? 5 : 2),
-          w: 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "maps",
-          x: size === "xs" ? 0 : 2,
-          y: scale(size, size === "xs" ? 3 : 2),
-          w: size === "xs" ? 2 : 1,
-          h: scale(size, 1),
-          isResizable: IS_RESIZABLE,
-        },
-        {
-          i: "contributions",
-          x: size === "xs" ? 0 : 3,
-          y: scale(size, size === "xs" ? 2 : 0),
-          w: 1,
-          h: scale(size, 1.5),
-          isResizable: IS_RESIZABLE,
-        },
-      ];
-  }
-}
-
-function projectItems(
+function layoutForVariant(
   size: Breakpoint,
   variant: Variant,
   projectKeys: string[],
 ): Layout {
-  const slots = PROJECT_SLOTS[variant][size];
-  return projectKeys.slice(0, slots.length).map((key, index): LayoutItem => {
-    const slot = slots[index];
+  const baseSlots = BASE_SLOTS[variant][size];
+  const projectSlots = PROJECT_SLOTS[variant][size];
+
+  const baseItems = BASE_ITEM_ORDER.map((id): LayoutItem => {
+    const slot = baseSlots[id];
     return {
-      i: key,
+      i: id,
       x: slot.x,
       y: scale(size, slot.y),
       w: slot.w,
@@ -229,17 +182,21 @@ function projectItems(
       isResizable: IS_RESIZABLE,
     };
   });
-}
 
-function layoutForVariant(
-  size: Breakpoint,
-  variant: Variant,
-  projectKeys: string[],
-): Layout {
-  return [
-    ...baseItems(variant, size),
-    ...projectItems(size, variant, projectKeys),
-  ];
+  const projectItems = projectKeys
+    .slice(0, projectSlots.length)
+    .map((key, index): LayoutItem => {
+      const slot = projectSlots[index];
+      return {
+        i: key,
+        x: slot.x,
+        y: scale(size, slot.y),
+        w: slot.w,
+        h: scale(size, slot.h),
+        isResizable: IS_RESIZABLE,
+      };
+    });
+  return [...baseItems, ...projectItems];
 }
 
 function imageLayout(size: Breakpoint, images: Images): Layout {
