@@ -1,4 +1,4 @@
-import { LatLngExpression } from "leaflet";
+import type { LatLngExpression } from "leaflet";
 
 export const DEFAULT_CENTER = [20.89689, -76.26652] satisfies LatLngExpression;
 export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;

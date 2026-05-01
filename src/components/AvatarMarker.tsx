@@ -1,5 +1,5 @@
 "use client";
-import { MapMarkerInfo } from "@/lib/server/project-dto";
+import type { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import L from "leaflet";
 import Image from "next/image";
@@ -12,13 +12,10 @@ import {
   useEffect,
   useId,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Marker } from "react-leaflet";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -26,8 +23,14 @@ import {
 } from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
 
 const MarkerRootIdContext = createContext<string | null>(null);
+
+const LeafletMarker = dynamic(
+  async () => (await import("react-leaflet")).Marker,
+  { ssr: false },
+);
 
 export function AvatarMarkerIcon({
   mapMarkerInfoPromise,
@@ -114,11 +117,10 @@ export function AvatarMarkerIcon({
 }
 
 export default function AvatarMarker({
-  children,
+  mapMarkerInfoPromise,
 }: {
-  children: React.ReactNode;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
 }) {
-  const markerRef = useRef<L.Marker | null>(null);
   const reactId = useId();
   const markerRootId = useMemo(
     () => `avatar-marker-${reactId.replace(/[:]/g, "")}`,
@@ -139,14 +141,10 @@ export default function AvatarMarker({
   }, [markerRootId]);
 
   return (
-    <Marker position={DEFAULT_CENTER} ref={markerRef} icon={icon}>
-      <MarkerRootIdContext value={markerRootId}>{children}</MarkerRootIdContext>
-    </Marker>
-  );
-}
-
-export function AvatarMarkerSkeleton() {
-  return (
-    <Skeleton className="absolute top-1/2 left-1/2 z-100000 size-11 -translate-x-1/2 -translate-y-[calc(50%+30px)] -rotate-45 rounded-[50%_50%_50%_0] before:-inset-10 before:rotate-45" />
+    <LeafletMarker position={DEFAULT_CENTER} icon={icon}>
+      <MarkerRootIdContext value={markerRootId}>
+        <AvatarMarkerIcon mapMarkerInfoPromise={mapMarkerInfoPromise} />
+      </MarkerRootIdContext>
+    </LeafletMarker>
   );
 }
