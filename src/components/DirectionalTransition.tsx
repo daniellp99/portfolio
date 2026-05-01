@@ -7,12 +7,19 @@ export default function DirectionalTransition({
 }) {
   return (
     <ViewTransition
-      enter={{ "nav-forward": "nav-forward", "nav-back": "nav-back", default: "none" }}
-      exit={{ "nav-forward": "nav-forward", "nav-back": "nav-back", default: "none" }}
+      enter={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "none",
+      }}
+      exit={{
+        "nav-forward": "nav-forward",
+        "nav-back": "nav-back",
+        default: "none",
+      }}
       default="none"
     >
       {children}
     </ViewTransition>
   );
 }
-

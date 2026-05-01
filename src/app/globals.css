@@ -209,7 +209,12 @@
     @apply bg-background text-foreground;
   }
 
-  :where(input, textarea, [contenteditable="true"], [contenteditable="plaintext-only"]) {
+  :where(
+    input,
+    textarea,
+    [contenteditable="true"],
+    [contenteditable="plaintext-only"]
+  ) {
     caret-color: var(--foreground);
   }
 }

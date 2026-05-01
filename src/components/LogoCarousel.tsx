@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 import { useId } from "react";
 import StackIcon from "tech-stack-icons";
 
+import { useSkillHover } from "@/components/SkillHoverContext";
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
   Carousel,
@@ -23,6 +24,7 @@ export function LogoCarousel({
 }) {
   const id = useId();
   const { resolvedTheme } = useTheme();
+  const { setHoveredTitle } = useSkillHover();
 
   if (logos.length === 0) return null;
 
@@ -57,6 +59,10 @@ export function LogoCarousel({
               rel="noreferrer noopener"
               aria-label={logo.title}
               className="block p-2 transition-transform duration-200 hover:scale-110"
+              onPointerEnter={() => setHoveredTitle(logo.title)}
+              onPointerLeave={() => setHoveredTitle(null)}
+              onFocus={() => setHoveredTitle(logo.title)}
+              onBlur={() => setHoveredTitle(null)}
             >
               <CardGrayscale
                 duration={0.2}
