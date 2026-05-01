@@ -58,7 +58,7 @@ export function LogoCarousel({
               target="_blank"
               rel="noreferrer noopener"
               aria-label={logo.title}
-              className="block p-2 transition-transform duration-200 hover:scale-110"
+              className="block p-2 transition-transform duration-200 hover:scale-110 active:scale-110"
               onPointerEnter={() => setHoveredTitle(logo.title)}
               onPointerLeave={() => setHoveredTitle(null)}
               onFocus={() => setHoveredTitle(logo.title)}

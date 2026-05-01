@@ -43,13 +43,13 @@ import {
 } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Tooltip as TooltipBase } from "@base-ui/react/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Popover as PopoverBase } from "@base-ui/react/popover";
 
+import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
 import {
   githubContributionMonthResponseSchema,
   type GithubContributionMonthResponse,
@@ -281,7 +281,7 @@ function ContributionsHeatmapFallback({
   );
 }
 
-const tooltipHandle = TooltipBase.createHandle<React.ComponentType>();
+const contributionsPopoverHandle = PopoverBase.createHandle<React.ReactNode>();
 
 function ContributionsHeatmap({
   year,
@@ -290,6 +290,7 @@ function ContributionsHeatmap({
   year: number;
   month: number; // 1-12
 }) {
+  const openOnHover = usePrefersFinePointer();
   const data = use(getContributionsPromise(year, month));
   const monthIndex = month - 1;
 
@@ -331,49 +332,59 @@ function ContributionsHeatmap({
             <span className="hidden xl:inline">{short}</span>
           </span>
         ))}
-        <TooltipProvider>
-          {dates.map((d) => {
-            const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
-            const isOutside = getMonth(d) !== getMonth(monthStart);
-            const count = byDate.get(iso) ?? 0;
-            const bucket = isOutside ? 0 : intensityBucket(count, max);
-            const label = formatTooltip(iso, count);
+        {dates.map((d) => {
+          const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
+          const isOutside = getMonth(d) !== getMonth(monthStart);
+          const count = byDate.get(iso) ?? 0;
+          const bucket = isOutside ? 0 : intensityBucket(count, max);
+          const label = formatTooltip(iso, count);
 
-            return (
-              <li
-                key={iso}
-                className={cn(
-                  "cancelDrag grid aspect-square place-content-stretch rounded ring-1 ring-foreground/10",
-                  "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
-                  isOutside
-                    ? "bg-transparent ring-foreground/5"
-                    : bucketClass(bucket),
-                )}
-              >
-                <TooltipTrigger
-                  id={`contributions-day-${iso}`}
-                  handle={tooltipHandle}
-                  payload={label}
-                  render={
-                    <button
-                      type="button"
-                      aria-label={label}
-                      aria-hidden={isOutside || undefined}
-                      tabIndex={isOutside ? -1 : 0}
-                      disabled={isOutside}
-                    />
-                  }
-                />
-              </li>
-            );
-          })}
+          return (
+            <li
+              key={iso}
+              className={cn(
+                "cancelDrag grid aspect-square place-content-stretch rounded ring-1 ring-foreground/10",
+                "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none",
+                isOutside
+                  ? "bg-transparent ring-foreground/5"
+                  : bucketClass(bucket),
+              )}
+            >
+              <PopoverTrigger
+                id={`contributions-day-${iso}`}
+                handle={contributionsPopoverHandle}
+                payload={label}
+                openOnHover={openOnHover}
+                delay={openOnHover ? 0 : undefined}
+                closeDelay={openOnHover ? 0 : undefined}
+                render={
+                  <button
+                    type="button"
+                    aria-label={label}
+                    aria-hidden={isOutside || undefined}
+                    tabIndex={isOutside ? -1 : 0}
+                    disabled={isOutside}
+                  />
+                }
+              />
+            </li>
+          );
+        })}
 
-          <Tooltip handle={tooltipHandle}>
-            {({ payload: Payload }) => (
-              <TooltipContent>{Payload as ReactNode}</TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
+        <Popover handle={contributionsPopoverHandle}>
+          {({ payload: Payload }) => (
+            <PopoverContent
+              side="top"
+              align="center"
+              sideOffset={4}
+              className={cn(
+                "z-50 w-fit max-w-xs min-w-0 flex-col gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100 outline-none",
+              )}
+            >
+              {Payload as ReactNode}
+            </PopoverContent>
+          )}
+        </Popover>
       </ol>
 
       <ContributionsLegend />

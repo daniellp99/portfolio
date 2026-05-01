@@ -7,7 +7,6 @@ import {
   Activity,
   ViewTransition,
   createContext,
-  startTransition,
   use,
   useEffect,
   useId,
@@ -20,11 +19,12 @@ import { Marker } from "react-leaflet";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
+import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
 import { cn } from "@/lib/utils";
 
 const MarkerRootIdContext = createContext<string | null>(null);
@@ -38,6 +38,7 @@ export function AvatarMarkerIcon({
   const mapMarkerInfo = use(mapMarkerInfoPromise);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [isActive, setIsActive] = useState(false);
+  const openOnHover = usePrefersFinePointer();
 
   useEffect(() => {
     const id = markerRootId;
@@ -64,8 +65,11 @@ export function AvatarMarkerIcon({
   }
 
   return createPortal(
-    <Tooltip open={isActive} onOpenChange={setIsActive}>
-      <TooltipTrigger
+    <Popover open={isActive} onOpenChange={setIsActive}>
+      <PopoverTrigger
+        openOnHover={openOnHover}
+        delay={openOnHover ? 0 : undefined}
+        closeDelay={openOnHover ? 0 : undefined}
         render={
           <button
             type="button"
@@ -74,8 +78,6 @@ export function AvatarMarkerIcon({
               "group relative grid size-11 place-items-center p-0.5",
               "before:absolute before:inset-0 before:-z-10 before:-rotate-45 before:rounded-[50%_50%_50%_0] before:border before:border-foreground before:bg-foreground before:content-['']",
             )}
-            onPointerEnter={() => startTransition(() => setIsActive(true))}
-            onPointerLeave={() => startTransition(() => setIsActive(false))}
           >
             <Activity mode={isActive ? "hidden" : "visible"}>
               <ViewTransition default="avatar-marker-fade">
@@ -107,8 +109,17 @@ export function AvatarMarkerIcon({
           </button>
         }
       />
-      <TooltipContent side="top">{avatarMarkerTooltip}</TooltipContent>
-    </Tooltip>,
+      <PopoverContent
+        side="top"
+        align="center"
+        sideOffset={4}
+        className={cn(
+          "z-50 w-fit max-w-xs flex-col gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100 outline-none",
+        )}
+      >
+        {avatarMarkerTooltip}
+      </PopoverContent>
+    </Popover>,
     portalTarget,
   );
 }

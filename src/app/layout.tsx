@@ -7,7 +7,6 @@ import { Metadata, Viewport } from "next";
 import NavBar from "@/components/NavBar";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { getOwnerData } from "@/lib/server/owner";
 import {
   getCanonicalUrl,
@@ -108,14 +107,12 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            <ScrollArea className="h-screen">
-              <main id="main" className="w-full">
-                <NavBar />
-                {children}
-              </main>
-            </ScrollArea>
-          </TooltipProvider>
+          <ScrollArea className="h-screen">
+            <main id="main" className="w-full">
+              <NavBar />
+              {children}
+            </main>
+          </ScrollArea>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
