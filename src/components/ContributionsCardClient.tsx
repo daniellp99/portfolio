@@ -41,12 +41,12 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Popover as PopoverBase } from "@base-ui/react/popover";
 
 import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
@@ -270,10 +270,7 @@ function ContributionsHeatmapFallback({
           </span>
         ))}
         {Array.from({ length: cellCount }).map((_, idx) => (
-          <Skeleton
-            key={idx}
-            className="aspect-square rounded ring-1 ring-foreground/10"
-          />
+          <Skeleton key={idx} className="aspect-square rounded" />
         ))}
       </div>
       <ContributionsLegend />

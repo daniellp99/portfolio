@@ -22,6 +22,8 @@ export function CardGrayscale({
         "relative overflow-hidden grayscale transition-[filter]",
         "[@media(hover:hover)_and_(pointer:fine)]:hover:grayscale-0",
         "active:grayscale-0",
+        "[&:has(:active)]:grayscale-0",
+        "group-active:grayscale-0",
         "motion-reduce:grayscale-0 motion-reduce:transition-none",
         className,
       )}
