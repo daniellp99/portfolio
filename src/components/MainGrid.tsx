@@ -11,12 +11,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 import { MapMarkerInfo, Project } from "@/lib/server/project-dto";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { Suspense, use } from "react";
+import { use } from "react";
 import { ResponsiveLayouts } from "react-grid-layout";
-import AvatarMarker, {
-  AvatarMarkerIcon,
-  AvatarMarkerSkeleton,
-} from "./AvatarMarker";
 
 export function MainGridFallback() {
   return (
@@ -54,13 +50,7 @@ export default function MainGrid({
         <SkillsCard />
       </Card>
       <Card variant="item" key="maps" className="relative">
-        <Map>
-          <AvatarMarker>
-            <Suspense fallback={<AvatarMarkerSkeleton />}>
-              <AvatarMarkerIcon mapMarkerInfoPromise={mapMarkerInfoPromise} />
-            </Suspense>
-          </AvatarMarker>
-        </Map>
+        <Map mapMarkerInfoPromise={mapMarkerInfoPromise} />
       </Card>
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />

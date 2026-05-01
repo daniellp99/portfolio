@@ -3,13 +3,11 @@ import "leaflet/dist/leaflet.css";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { Activity } from "react";
-import { TileLayer } from "react-leaflet";
+import { Activity, Suspense } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
-import ZoomHandler from "@/components/ZoomHandler";
-
+import type { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
 const LeafletMapContainer = dynamic(
@@ -22,7 +20,30 @@ const LeafletMapContainer = dynamic(
   },
 );
 
-export default function Map({ children }: { children: React.ReactNode }) {
+const LeafletTileLayer = dynamic(
+  async () => (await import("react-leaflet")).TileLayer,
+  { ssr: false },
+);
+
+const ZoomHandler = dynamic(() => import("@/components/ZoomHandler"), {
+  ssr: false,
+});
+
+const AvatarMarker = dynamic(() => import("@/components/AvatarMarker"), {
+  ssr: false,
+});
+
+function AvatarMarkerSkeleton() {
+  return (
+    <Skeleton className="absolute top-1/2 left-1/2 z-100000 size-11 -translate-x-1/2 -translate-y-[calc(50%+30px)] -rotate-45 rounded-[50%_50%_50%_0] before:-inset-10 before:rotate-45" />
+  );
+}
+
+export default function Map({
+  mapMarkerInfoPromise,
+}: {
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+}) {
   const { resolvedTheme } = useTheme();
   const pathname = usePathname();
 
@@ -43,16 +64,18 @@ export default function Map({ children }: { children: React.ReactNode }) {
       <ZoomHandler />
 
       <Activity mode={resolvedTheme === "dark" ? "visible" : "hidden"}>
-        <TileLayer
+        <LeafletTileLayer
           url={"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
         />
       </Activity>
       <Activity mode={resolvedTheme === "dark" ? "hidden" : "visible"}>
-        <TileLayer
+        <LeafletTileLayer
           url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
         />
       </Activity>
-      {children}
+      <Suspense fallback={<AvatarMarkerSkeleton />}>
+        <AvatarMarker mapMarkerInfoPromise={mapMarkerInfoPromise} />
+      </Suspense>
     </LeafletMapContainer>
   );
 }
