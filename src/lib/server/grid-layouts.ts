@@ -18,7 +18,7 @@ export class DefaultLayoutFactory implements LayoutFactory {
 
     const projectSlots = {
       lg: [
-        { x: 3, y: 0, w: 1, h: 1 },
+        { x: 1, y: 0, w: 1, h: 1 },
         { x: 0, y: 1, w: 1, h: 1 },
         { x: 2, y: 1, w: 1, h: 1 },
       ],
@@ -48,7 +48,7 @@ export class DefaultLayoutFactory implements LayoutFactory {
         x: size === "xs" ? 1 : 3,
         y: sizeFactor * (size === "xs" ? 5 : 2),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 0.5,
         isResizable,
       },
       {
@@ -69,10 +69,10 @@ export class DefaultLayoutFactory implements LayoutFactory {
       },
       {
         i: "contributions",
-        x: size === "xs" ? 0 : size === "sm" ? 2 : 1,
+        x: size === "xs" ? 0 : size === "sm" ? 2 : 3,
         y: sizeFactor * (size === "xs" ? 3 : 1),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 1.5,
         isResizable,
       },
     ].concat(
@@ -134,7 +134,7 @@ export class AboutLayoutFactory implements LayoutFactory {
         x: 1,
         y: sizeFactor * (size === "lg" ? 1 : 5),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 0.5,
         isResizable,
       },
       {
@@ -155,10 +155,10 @@ export class AboutLayoutFactory implements LayoutFactory {
       },
       {
         i: "contributions",
-        x: 2,
+        x: 0,
         y: sizeFactor * (size === "xs" ? 8 : size === "lg" ? 1 : 6),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 1.5,
         isResizable,
       },
     ].concat(
@@ -216,10 +216,10 @@ export class ProjectsLayoutFactory implements LayoutFactory {
       },
       {
         i: "toggle-theme",
-        x: size === "sm" ? 2 : 1,
+        x: size === "sm" ? 2 : 3,
         y: sizeFactor * (size === "xs" ? 6 : size === "sm" ? 5 : 2),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 0.5,
         isResizable,
       },
       {
@@ -241,9 +241,9 @@ export class ProjectsLayoutFactory implements LayoutFactory {
       {
         i: "contributions",
         x: size === "xs" ? 0 : 3,
-        y: sizeFactor * (size === "xs" ? 6 : 2),
+        y: sizeFactor * (size === "xs" ? 2 : 0),
         w: 1,
-        h: sizeFactor * 1,
+        h: sizeFactor * 1.5,
         isResizable,
       },
     ].concat(
