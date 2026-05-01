@@ -31,7 +31,7 @@ function SkillsHoverLabel() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 flex justify-center px-2"
+      className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center px-2"
       role="status"
       aria-live="polite"
       aria-atomic="true"
@@ -58,7 +58,7 @@ function SkillsHoverLabel() {
 export default function SkillsCardClient({ logos }: { logos: Logo[] }) {
   return (
     <SkillHoverProvider>
-      <div className="relative flex size-full flex-col items-center justify-evenly">
+      <div className="relative isolate flex size-full flex-col items-center justify-evenly">
         <SkillsHoverLabel />
         <LogoCarousel logos={logos} opts={{ direction: "ltr" }} />
         <LogoCarousel logos={logos} opts={{ direction: "rtl" }} />

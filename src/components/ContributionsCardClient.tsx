@@ -247,7 +247,7 @@ function ContributionsHeatmap({
           contributions in {formatInTimeZone(monthStart, TZ, "MMMM yyyy")}
         </span>
       </CardDescription>
-      <div className="grid grid-cols-7 place-items-stretch gap-1 xl:gap-2.5">
+      <div className="grid grid-cols-7 place-items-stretch gap-1 px-2 xl:gap-2">
         <TooltipProvider>
           {dates.map((d) => {
             const iso = formatInTimeZone(d, TZ, "yyyy-MM-dd");
