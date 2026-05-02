@@ -1,5 +1,5 @@
 "use client";
-import { MapMarkerInfo } from "@/lib/server/project-dto";
+import type { MapMarkerInfo } from "@/lib/server/project-dto";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import L from "leaflet";
 import Image from "next/image";
@@ -125,9 +125,9 @@ export function AvatarMarkerIcon({
 }
 
 export default function AvatarMarker({
-  children,
+  mapMarkerInfoPromise,
 }: {
-  children: React.ReactNode;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
 }) {
   const markerRef = useRef<L.Marker | null>(null);
   const reactId = useId();
@@ -151,7 +151,9 @@ export default function AvatarMarker({
 
   return (
     <Marker position={DEFAULT_CENTER} ref={markerRef} icon={icon}>
-      <MarkerRootIdContext value={markerRootId}>{children}</MarkerRootIdContext>
+      <MarkerRootIdContext value={markerRootId}>
+        <AvatarMarkerIcon mapMarkerInfoPromise={mapMarkerInfoPromise} />
+      </MarkerRootIdContext>
     </Marker>
   );
 }
