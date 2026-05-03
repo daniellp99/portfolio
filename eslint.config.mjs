@@ -14,6 +14,34 @@ const eslintConfig = [
   ...nextCoreWebVitals,
   ...nextTypescript,
   {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: [
+      "**/*.test.ts",
+      "src/lib/server/content-load.ts",
+      "src/lib/content/owner.ts",
+      "src/lib/content/projects.ts",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/lib/content/owner",
+              message:
+                "Import owner content only through @/lib/server/content-load (or tests).",
+            },
+            {
+              name: "@/lib/content/projects",
+              message:
+                "Import project content only through @/lib/server/content-load (or tests).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
       "jsx-a11y/alt-text": "error",
