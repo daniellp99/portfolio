@@ -8,9 +8,13 @@ import {
   readAllProjectSummaries,
   readProject,
 } from "@/lib/content/projects";
+import {
+  InvalidProjectFrontMatterError,
+  type ReadProjectResult,
+} from "@/lib/content/projects-read";
 import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
 import type { MapMarkerInfo } from "@/lib/content/display";
-import type { OwnerData } from "@/lib/content/schemas";
+import type { OwnerData, ProjectDetails } from "@/lib/content/schemas";
 
 export async function loadProjectSlugs(): Promise<string[]> {
   try {
@@ -25,25 +29,32 @@ export async function loadProjects() {
   try {
     return await readAllProjectSummaries();
   } catch (error) {
+    if (error instanceof InvalidProjectFrontMatterError) {
+      throw error;
+    }
     console.error("Failed to fetch projects:", error);
     return [];
   }
 }
 
-export async function loadProjectDetails(slug: string) {
-  let project;
+export async function loadProjectDetails(slug: string): Promise<ProjectDetails> {
+  let result: ReadProjectResult;
   try {
-    project = await readProject(slug);
+    result = await readProject(slug);
   } catch (error) {
     console.error("Failed to fetch project details:", error);
     notFound();
   }
 
-  if (!project) {
+  if (result.status === "missing") {
     notFound();
   }
 
-  return project;
+  if (result.status === "invalid") {
+    throw new InvalidProjectFrontMatterError(result.slug, result.cause);
+  }
+
+  return result.project;
 }
 
 export async function loadOwnerData(): Promise<OwnerData | null> {

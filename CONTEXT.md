@@ -17,3 +17,8 @@ Short glossary for architecture and import rules in this repo.
 
 - **`src/lib/content/*`** holds read/parse logic. Direct imports of `@/lib/content/owner` and `@/lib/content/projects` are restricted outside the content modules and `content-load`; use the server stack instead.
 - **`src/lib/server/content-load.ts`** is the single app seam for mapping I/O errors and calling readers; it uses `import "server-only"`.
+
+## Project MDX: read results and strictness
+
+- **`readProject`** in `src/lib/content/projects.ts` returns a discriminated **`ReadProjectResult`** (`ok` | `missing` | `invalid`) instead of overloading `null`. **`loadProjectDetails`** maps `missing` → `notFound()` (404) and `invalid` → throws **`InvalidProjectFrontMatterError`** (500 / error boundary), returning **`ProjectDetails`** only for `ok`.
+- **Listing** (`readAllProjectSummaries`): invalid front matter is **strict** by default when `process.env.CI` is truthy or `process.env.NODE_ENV === "development"` (throws `InvalidProjectFrontMatterError`). In other environments it **skips** invalid files and logs. Set **`PROJECT_CONTENT_STRICT`** to `0` or `1` to override that default (tests use this for split coverage).

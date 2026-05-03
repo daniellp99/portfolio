@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "bun:test";
 
 import { createFixtureContentPaths } from "./paths";
+import { InvalidProjectFrontMatterError } from "./projects-read";
 import {
   listProjectSlugs,
   readAllProjectSummaries,
@@ -34,13 +35,16 @@ describe("listProjectSlugs", () => {
 describe("readProject", () => {
   it("reads fixture project", async () => {
     const p = await readProject("sample", paths);
-    expect(p).not.toBeNull();
-    expect(p?.slug).toBe("sample");
-    expect(p?.name).toBe("Sample Project");
+    expect(p).toMatchObject({
+      status: "ok",
+      project: { slug: "sample", name: "Sample Project" },
+    });
   });
 
-  it("returns null for missing slug", async () => {
-    await expect(readProject("missing", paths)).resolves.toBeNull();
+  it("returns missing for unknown slug", async () => {
+    await expect(readProject("missing", paths)).resolves.toEqual({
+      status: "missing",
+    });
   });
 });
 
@@ -57,24 +61,44 @@ describe("readAllProjectSummaries", () => {
   });
 
   it("orders summaries by sorted slug list and omits invalid front matter", async () => {
-    await expect(listProjectSlugs(multiPaths)).resolves.toEqual([
-      "alpha",
-      "invalid",
-      "zebra",
-    ]);
+    const prevStrict = process.env.PROJECT_CONTENT_STRICT;
+    process.env.PROJECT_CONTENT_STRICT = "0";
+    try {
+      await expect(listProjectSlugs(multiPaths)).resolves.toEqual([
+        "alpha",
+        "invalid",
+        "zebra",
+      ]);
 
-    const rows = await readAllProjectSummaries(multiPaths);
-    expect(rows).toEqual([
-      {
-        slug: "alpha",
-        name: "Alpha Project",
-        coverImage: "https://example.com/alpha.webp",
-      },
-      {
-        slug: "zebra",
-        name: "Zebra Project",
-        coverImage: "https://example.com/zebra.webp",
-      },
-    ]);
+      const rows = await readAllProjectSummaries(multiPaths);
+      expect(rows).toEqual([
+        {
+          slug: "alpha",
+          name: "Alpha Project",
+          coverImage: "https://example.com/alpha.webp",
+        },
+        {
+          slug: "zebra",
+          name: "Zebra Project",
+          coverImage: "https://example.com/zebra.webp",
+        },
+      ]);
+    } finally {
+      if (prevStrict === undefined) delete process.env.PROJECT_CONTENT_STRICT;
+      else process.env.PROJECT_CONTENT_STRICT = prevStrict;
+    }
+  });
+
+  it("throws in strict mode when any listed project has invalid front matter", async () => {
+    const prevStrict = process.env.PROJECT_CONTENT_STRICT;
+    process.env.PROJECT_CONTENT_STRICT = "1";
+    try {
+      await expect(readAllProjectSummaries(multiPaths)).rejects.toBeInstanceOf(
+        InvalidProjectFrontMatterError,
+      );
+    } finally {
+      if (prevStrict === undefined) delete process.env.PROJECT_CONTENT_STRICT;
+      else process.env.PROJECT_CONTENT_STRICT = prevStrict;
+    }
   });
 });
