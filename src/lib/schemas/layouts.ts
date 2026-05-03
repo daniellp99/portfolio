@@ -16,4 +16,6 @@ const LayoutSchema = z.object({
 
 const LayoutsSchema = z.record(z.string(), z.array(LayoutSchema));
 
+export type DecodedLayouts = z.infer<typeof LayoutsSchema>;
+
 export const jsonToLayouts = jsonCodec(LayoutsSchema);

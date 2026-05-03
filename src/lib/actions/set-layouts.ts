@@ -2,6 +2,7 @@
 
 import { jsonToLayouts } from "@/lib/schemas/layouts";
 import { COOKIE_MAX_AGE, type LayoutKey } from "@/lib/site/constants";
+import { stripUnknownLayoutBreakpoints } from "@/lib/site/grid";
 import { cookies } from "next/headers";
 import type { ResponsiveLayouts } from "react-grid-layout";
 
@@ -10,13 +11,15 @@ export async function setLayouts(
   layoutKey: LayoutKey,
 ): Promise<void> {
   try {
-    const filteredLayouts = Object.fromEntries(
-      Object.entries(layouts)
-        .filter(
-          (entry): entry is [string, NonNullable<(typeof entry)[1]>] =>
-            entry[1] !== undefined,
-        )
-        .map(([key, value]) => [key, [...value]]),
+    const filteredLayouts = stripUnknownLayoutBreakpoints(
+      Object.fromEntries(
+        Object.entries(layouts)
+          .filter(
+            (entry): entry is [string, NonNullable<(typeof entry)[1]>] =>
+              entry[1] !== undefined,
+          )
+          .map(([key, value]) => [key, [...value]]),
+      ),
     );
     const encoded = jsonToLayouts.encode(filteredLayouts);
     const expires = new Date();

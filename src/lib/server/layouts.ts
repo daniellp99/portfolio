@@ -8,7 +8,11 @@ import {
   imageLayoutsKeyForSlug,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
-import { generateImageLayouts, generateLayouts } from "@/lib/site/layout";
+import {
+  generateImageLayouts,
+  generateLayouts,
+  normalizeLayoutsFromCookie,
+} from "@/lib/site/grid";
 import { cookies } from "next/headers";
 import { ResponsiveLayouts } from "react-grid-layout";
 
@@ -35,22 +39,24 @@ export async function getLayouts(
   const cookieStore = await cookies();
   const layoutsCookie = cookieStore.get(layoutsCookieName(params));
 
-  if (layoutsCookie?.value) {
-    const parsed = jsonToLayouts.safeDecode(layoutsCookie.value);
-
-    if (parsed.success) {
-      return parsed.data;
-    }
-  }
   let defaultLayouts: ResponsiveLayouts = {};
   switch (params.layoutKey) {
-    case MAIN_LAYOUTS_KEY:
+    case MAIN_LAYOUTS_KEY: {
       const projectKeys = await getProjectSlugs();
       defaultLayouts = generateLayouts("All", projectKeys);
       break;
+    }
     case IMAGE_LAYOUTS_KEY:
       defaultLayouts = generateImageLayouts(params.images);
       break;
   }
+
+  if (layoutsCookie?.value) {
+    const parsed = jsonToLayouts.safeDecode(layoutsCookie.value);
+    if (parsed.success) {
+      return normalizeLayoutsFromCookie(parsed.data, defaultLayouts);
+    }
+  }
+
   return defaultLayouts;
 }

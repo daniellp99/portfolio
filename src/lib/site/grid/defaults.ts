@@ -1,9 +1,9 @@
-import { Layout } from "react-grid-layout";
+import type { Layout } from "react-grid-layout";
 
 import type { Images } from "@/lib/content/schemas";
+import type { LogicalLayoutBreakpoint } from "./config";
+import { SCALE_Y } from "./config";
 import { TabsType } from "@/lib/site/tabs";
-
-type Breakpoint = "lg" | "sm" | "xs";
 
 type Variant = "default" | "about" | "projects";
 type LayoutItem = Layout[number];
@@ -11,14 +11,16 @@ type Slot = { x: number; y: number; w: number; h: number };
 type BaseItemId = "me" | "toggle-theme" | "skills" | "maps" | "contributions";
 type BaseSlotUnits = { x: number; y: number; w: number; h: number };
 
-const SCALE_Y: Record<Breakpoint, number> = { lg: 1.645, sm: 1.09, xs: 1 };
 const IS_RESIZABLE = false;
 const TAB_TO_VARIANT = {
   All: "default",
   About: "about",
   Projects: "projects",
 } as const satisfies Record<TabsType, Variant>;
-const PROJECT_SLOTS: Record<Variant, Record<Breakpoint, Slot[]>> = {
+const PROJECT_SLOTS: Record<
+  Variant,
+  Record<LogicalLayoutBreakpoint, Slot[]>
+> = {
   default: {
     lg: [
       { x: 1, y: 0, w: 1, h: 1 },
@@ -82,7 +84,7 @@ const BASE_ITEM_ORDER: BaseItemId[] = [
 
 const BASE_SLOTS: Record<
   Variant,
-  Record<Breakpoint, Record<BaseItemId, BaseSlotUnits>>
+  Record<LogicalLayoutBreakpoint, Record<BaseItemId, BaseSlotUnits>>
 > = {
   default: {
     lg: {
@@ -155,16 +157,16 @@ const BASE_SLOTS: Record<
   },
 };
 
-function withMdFromLg(x: { lg: Layout; sm: Layout; xs: Layout }) {
-  return { ...x, md: x.lg };
+function withRglAliases(x: { lg: Layout; sm: Layout; xs: Layout }) {
+  return { ...x, md: x.lg, xxs: x.xs };
 }
 
-function scale(size: Breakpoint, units: number) {
+function scale(size: LogicalLayoutBreakpoint, units: number) {
   return SCALE_Y[size] * units;
 }
 
 function layoutForVariant(
-  size: Breakpoint,
+  size: LogicalLayoutBreakpoint,
   variant: Variant,
   projectKeys: string[],
 ): Layout {
@@ -199,7 +201,7 @@ function layoutForVariant(
   return [...baseItems, ...projectItems];
 }
 
-function imageLayout(size: Breakpoint, images: Images): Layout {
+function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
   const colsNumber = size === "xs" ? 2 : 4;
   let totalWSoFar = 0;
 
@@ -237,12 +239,12 @@ export function generateLayouts(tab: TabsType, projectKeys: string[]) {
   const lg = layoutForVariant("lg", variant, projectKeys);
   const sm = layoutForVariant("sm", variant, projectKeys);
   const xs = layoutForVariant("xs", variant, projectKeys);
-  return withMdFromLg({ lg, sm, xs });
+  return withRglAliases({ lg, sm, xs });
 }
 
 export function generateImageLayouts(images: Images) {
   const lg = imageLayout("lg", images);
   const sm = imageLayout("sm", images);
   const xs = imageLayout("xs", images);
-  return withMdFromLg({ lg, sm, xs });
+  return withRglAliases({ lg, sm, xs });
 }
