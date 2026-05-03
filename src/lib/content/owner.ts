@@ -1,27 +1,29 @@
 import "server-only";
 
 import fs from "node:fs/promises";
-import path from "node:path";
 
 import { parse as parseYaml } from "yaml";
 import { flattenError } from "zod";
 
+import { createContentPaths, isENOENT, type ContentPaths } from "./paths";
 import { ownerDataSchema, type OwnerData } from "./schemas";
 
-const OWNER_DATA_PATH = path.join(process.cwd(), "src/content/owner-data.yaml");
-
-export async function readOwnerData(): Promise<OwnerData | null> {
+export async function readOwnerData(
+  paths: ContentPaths = createContentPaths(),
+): Promise<OwnerData | null> {
+  let raw: string;
   try {
-    const raw = await fs.readFile(OWNER_DATA_PATH, "utf8");
-    const data = parseYaml(raw);
-    const parsed = ownerDataSchema.safeParse(data);
-    if (!parsed.success) {
-      console.warn("Invalid owner-data.yaml:", flattenError(parsed.error));
-      return null;
-    }
-    return parsed.data;
+    raw = await fs.readFile(paths.ownerYamlPath, "utf8");
   } catch (error) {
-    console.warn("Failed to read owner-data.yaml:", error);
+    if (isENOENT(error)) return null;
+    throw error;
+  }
+
+  const data = parseYaml(raw);
+  const parsed = ownerDataSchema.safeParse(data);
+  if (!parsed.success) {
+    console.warn("Invalid owner-data.yaml:", flattenError(parsed.error));
     return null;
   }
+  return parsed.data;
 }

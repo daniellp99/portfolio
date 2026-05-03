@@ -46,3 +46,19 @@ export type ProjectDetails = z.infer<typeof projectFrontMatterSchema> & {
 };
 export type OwnerData = z.infer<typeof ownerDataSchema>;
 export type Logo = z.infer<typeof logoSchema>;
+
+/** Project card / grid summary (subset of persisted project content). */
+export type Project = {
+  slug: string;
+  name: string;
+  coverImage: string;
+};
+
+export type ProjectSlugs = string[];
+
+export type Images = ProjectDetails["images"];
+
+export type MapMarkerInfo = Pick<
+  OwnerData,
+  "avatarMarker" | "avatarMarkerHover" | "avatarMarkerTooltip"
+>;
