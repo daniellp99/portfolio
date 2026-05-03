@@ -1,6 +1,8 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
+import clientServerBoundary from "./eslint-plugins/client-server-boundary.mjs";
+
 const eslintConfig = [
   {
     ignores: [
@@ -39,6 +41,14 @@ const eslintConfig = [
           ],
         },
       ],
+    },
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["**/*.test.ts"],
+    plugins: { boundary: clientServerBoundary },
+    rules: {
+      "boundary/no-server-value-imports-in-use-client": "error",
     },
   },
   {
