@@ -1,12 +1,11 @@
-"use server";
+import "server-only";
+
 import { jsonToLayouts } from "@/lib/schemas/layouts";
 import type { Images } from "@/lib/content/schemas";
 import { getProjectSlugs } from "@/lib/server/projects";
 import {
-  COOKIE_MAX_AGE,
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
-  LayoutKey,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import { generateImageLayouts, generateLayouts } from "@/lib/site/layout";
@@ -54,33 +53,4 @@ export async function getLayouts(
       break;
   }
   return defaultLayouts;
-}
-
-export async function setLayouts(
-  layouts: ResponsiveLayouts,
-  layoutKey: LayoutKey,
-): Promise<void> {
-  try {
-    // Filter out undefined values and convert readonly arrays to mutable arrays
-    const filteredLayouts = Object.fromEntries(
-      Object.entries(layouts)
-        .filter(
-          (entry): entry is [string, NonNullable<(typeof entry)[1]>] =>
-            entry[1] !== undefined,
-        )
-        .map(([key, value]) => [key, [...value]]),
-    );
-    const encoded = jsonToLayouts.encode(filteredLayouts);
-    const expires = new Date();
-    expires.setTime(expires.getTime() + COOKIE_MAX_AGE * 1000);
-
-    const cookieStore = await cookies();
-    cookieStore.set(layoutKey, encoded, {
-      expires: expires,
-      path: "/",
-      sameSite: "lax",
-    });
-  } catch (error) {
-    console.error("Error setting layouts cookie:", error);
-  }
 }

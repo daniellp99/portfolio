@@ -1,6 +1,6 @@
 "use client";
 
-import { setLayouts } from "@/lib/server/layouts";
+import { setLayouts } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
 import { ReactNode, startTransition, useOptimistic } from "react";
 import {

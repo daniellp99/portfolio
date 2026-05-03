@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
-import { setLayouts } from "@/lib/server/layouts";
+import { setLayouts } from "@/lib/actions/set-layouts";
 import type { ProjectSlugs } from "@/lib/content/schemas";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { generateLayouts } from "@/lib/site/layout";
