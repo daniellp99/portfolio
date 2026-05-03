@@ -37,7 +37,9 @@ export async function loadProjects() {
   }
 }
 
-export async function loadProjectDetails(slug: string): Promise<ProjectDetails> {
+export async function loadProjectDetails(
+  slug: string,
+): Promise<ProjectDetails> {
   let result: ReadProjectResult;
   try {
     result = await readProject(slug);
