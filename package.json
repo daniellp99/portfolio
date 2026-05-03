@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "knip": "knip",
     "test": "bun test --conditions react-server",
+    "measure:project-listing": "bun run scripts/measure-project-listing.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
