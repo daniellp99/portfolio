@@ -9,7 +9,7 @@ import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { setLayouts } from "@/lib/server/layouts";
-import { ProjectSlugs } from "@/lib/server/project-dto";
+import type { ProjectSlugs } from "@/lib/content/schemas";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { generateLayouts } from "@/lib/site/layout";
 import { tabs, TabsType } from "@/lib/site/tabs";

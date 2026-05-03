@@ -5,7 +5,7 @@ import { Suspense, ViewTransition } from "react";
 
 import GoBackButton from "@/components/GoBackButton";
 import NavItems, { NavItemsFallback } from "@/components/NavItems";
-import type { ProjectSlugs } from "@/lib/server/project-dto";
+import type { ProjectSlugs } from "@/lib/content/schemas";
 
 export default function NavBarCenter({
   projectsSlugs,

@@ -1,5 +1,5 @@
 "use client";
-import { MapMarkerInfo } from "@/lib/server/project-dto";
+import type { MapMarkerInfo } from "@/lib/content/schemas";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import L from "leaflet";
 import Image from "next/image";
@@ -32,7 +32,7 @@ const MarkerRootIdContext = createContext<string | null>(null);
 export function AvatarMarkerIcon({
   mapMarkerInfoPromise,
 }: {
-  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
 }) {
   const markerRootId = use(MarkerRootIdContext);
   const mapMarkerInfo = use(mapMarkerInfoPromise);

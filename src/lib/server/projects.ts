@@ -1,10 +1,10 @@
 "use server";
 
 import {
-  getProjectDetailsDTO,
-  getProjectsDTO,
-  getProjectSlugsDTO,
-} from "@/lib/server/project-dto";
+  loadProjectDetails,
+  loadProjects,
+  loadProjectSlugs,
+} from "@/lib/server/content-load";
 import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
 
@@ -12,19 +12,19 @@ export const getProjectDetails = cache(async (slug: string) => {
   "use cache";
   cacheLife("hours");
   cacheTag("project_details", `project_${slug}`);
-  return await getProjectDetailsDTO(slug);
+  return await loadProjectDetails(slug);
 });
 
 export const getProjects = cache(async () => {
   "use cache";
   cacheLife("hours");
   cacheTag("projects");
-  return await getProjectsDTO();
+  return await loadProjects();
 });
 
 export const getProjectSlugs = cache(async () => {
   "use cache";
   cacheLife("hours");
   cacheTag("project_slugs");
-  return await getProjectSlugsDTO();
+  return await loadProjectSlugs();
 });

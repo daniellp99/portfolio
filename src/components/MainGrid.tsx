@@ -9,7 +9,7 @@ import ProjectCard from "@/components/ProjectCard";
 import SkillsCard from "@/components/SkillsCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { MapMarkerInfo, Project } from "@/lib/server/project-dto";
+import type { MapMarkerInfo, Project } from "@/lib/content/schemas";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { Suspense, use } from "react";
 import { ResponsiveLayouts } from "react-grid-layout";
@@ -37,7 +37,7 @@ export default function MainGrid({
 }: {
   projectsPromise: Promise<Project[]>;
   layoutsPromise: Promise<ResponsiveLayouts>;
-  mapMarkerInfoPromise: Promise<MapMarkerInfo>;
+  mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
 }) {
   const projects = use(projectsPromise);
   const layouts = use(layoutsPromise);

@@ -1,6 +1,6 @@
 "use server";
 import { jsonToLayouts } from "@/lib/schemas/layouts";
-import { Images } from "@/lib/server/project-dto";
+import type { Images } from "@/lib/content/schemas";
 import { getProjectSlugs } from "@/lib/server/projects";
 import {
   COOKIE_MAX_AGE,

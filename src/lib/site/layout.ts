@@ -1,6 +1,6 @@
 import { Layout } from "react-grid-layout";
 
-import { Images } from "@/lib/server/project-dto";
+import type { Images } from "@/lib/content/schemas";
 import { TabsType } from "@/lib/site/tabs";
 
 type Breakpoint = "lg" | "sm" | "xs";
