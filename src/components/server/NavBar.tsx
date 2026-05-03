@@ -3,7 +3,7 @@ import { Suspense, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import Logo, { LogoFallback } from "@/components/Logo";
+import Logo, { LogoFallback } from "@/components/server/Logo";
 import NavBarCenter from "@/components/NavBarCenter";
 
 import { getOwnerData } from "@/lib/server/owner";

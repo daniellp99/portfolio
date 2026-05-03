@@ -4,7 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
 
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/server/NavBar";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getOwnerData } from "@/lib/server/owner";

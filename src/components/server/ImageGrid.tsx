@@ -1,3 +1,5 @@
+import GridContainer from "@/components/GridContainer";
+import { Card } from "@/components/ui/card";
 import { getLayouts } from "@/lib/server/layouts";
 import type { Images } from "@/lib/content/display";
 import {
@@ -6,8 +8,6 @@ import {
 } from "@/lib/site/constants";
 import { imageGridCardSizes } from "@/lib/site/image-sizes";
 import Image from "next/image";
-import GridContainer from "./GridContainer";
-import { Card } from "./ui/card";
 
 export default async function ImageGrid({
   slug,

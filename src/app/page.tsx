@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ViewTransition } from "react";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
-import HomeJsonLd from "@/components/HomeJsonLd";
+import HomeJsonLd from "@/components/server/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/MainGrid";
 
 import { getLayouts } from "@/lib/server/layouts";

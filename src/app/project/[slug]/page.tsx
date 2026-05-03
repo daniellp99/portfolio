@@ -4,9 +4,9 @@ import { Suspense, ViewTransition } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
-import ImageGrid from "@/components/ImageGrid";
 import { CustomMDX } from "@/components/MdxRemote";
-import ProjectJsonLd from "@/components/ProjectJsonLd";
+import ImageGrid from "@/components/server/ImageGrid";
+import ProjectJsonLd from "@/components/server/ProjectJsonLd";
 
 import { getOwnerData } from "@/lib/server/owner";
 import { getProjectDetails, getProjectSlugs } from "@/lib/server/projects";

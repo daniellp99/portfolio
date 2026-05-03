@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import AboutMe from "@/components/AboutMe";
-import ContributionsCard from "@/components/ContributionsCard";
+import AboutMe from "@/components/server/AboutMe";
+import ContributionsCard from "@/components/server/ContributionsCard";
 import GridContainer from "@/components/GridContainer";
 import Map from "@/components/Map";
 import ProjectCard from "@/components/ProjectCard";
-import SkillsCard from "@/components/SkillsCard";
+import SkillsCard from "@/components/server/SkillsCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
 import type { MapMarkerInfo, Project } from "@/lib/content/display";
