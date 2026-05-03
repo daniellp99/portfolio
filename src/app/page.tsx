@@ -10,34 +10,11 @@ import { getLayouts } from "@/lib/server/layouts";
 import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
 import { getProjects } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { getCanonicalUrl } from "@/lib/site/metadata";
+import { buildHomeMetadata } from "@/lib/site/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerData();
-  const ownerName = ownerData?.name || "";
-  const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
-  const description = ownerData?.aboutMe || "";
-  const homeUrl = getCanonicalUrl("");
-
-  return {
-    description,
-    alternates: {
-      canonical: homeUrl,
-    },
-    openGraph: {
-      type: "website",
-      locale: "en_US",
-      url: homeUrl,
-      siteName: `${ownerName}'s Portfolio`,
-      title,
-      description,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+  return buildHomeMetadata(ownerData ?? undefined);
 }
 
 export default function HomePage() {

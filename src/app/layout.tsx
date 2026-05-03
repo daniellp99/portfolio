@@ -8,82 +8,13 @@ import NavBar from "@/components/NavBar";
 import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getOwnerData } from "@/lib/server/owner";
-import {
-  getCanonicalUrl,
-  getMetadataBase,
-  getOwnerAvatarPath,
-} from "@/lib/site/metadata";
+import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerData();
-
-  const ownerName = ownerData?.name || "";
-  const brandTitle = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
-  const description = ownerData?.aboutMe || "";
-
-  const avatarPath = getOwnerAvatarPath(ownerData?.avatar);
-
-  const homeUrl = getCanonicalUrl("");
-
-  return {
-    metadataBase: getMetadataBase(),
-    title: {
-      default: brandTitle,
-      template: `%s | ${brandTitle}`,
-    },
-    description,
-    icons: {
-      icon: avatarPath,
-      apple: avatarPath,
-    },
-    keywords: [
-      "web developer",
-      "full-stack developer",
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Shadcn UI",
-      "AuthJS",
-      "Drizzle ORM",
-      "portfolio",
-      ownerName,
-      "Cuba",
-    ],
-    authors: [{ name: ownerName }],
-    creator: ownerName,
-    applicationName: brandTitle,
-    category: "Portfolio",
-    alternates: {
-      canonical: homeUrl,
-    },
-    openGraph: {
-      type: "website",
-      locale: "en_US",
-      siteName: brandTitle,
-      title: brandTitle,
-      description,
-      url: homeUrl,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: brandTitle,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  return buildRootLayoutMetadata(ownerData ?? undefined);
 }
 
 export const viewport: Viewport = {
