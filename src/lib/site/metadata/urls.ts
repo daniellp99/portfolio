@@ -1,5 +1,5 @@
 /**
- * Metadata utility functions for SEO
+ * URL helpers for canonical tags, OG, JSON-LD, and Next metadataBase.
  */
 
 /**
@@ -43,7 +43,6 @@ export function getCanonicalUrl(path: string = ""): string {
  * or falls back to localhost for development
  */
 export function getMetadataBase(): URL {
-  // Try NEXT_PUBLIC_SITE_URL first (user-configured)
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     try {
       return new URL(process.env.NEXT_PUBLIC_SITE_URL);
@@ -52,7 +51,6 @@ export function getMetadataBase(): URL {
     }
   }
 
-  // Try VERCEL_URL (automatically set by Vercel)
   if (process.env.VERCEL_URL) {
     try {
       return new URL(`https://${process.env.VERCEL_URL}`);
@@ -61,13 +59,10 @@ export function getMetadataBase(): URL {
     }
   }
 
-  // Fallback to localhost for development
-  // Use PORT environment variable if available, otherwise default to 3000
   const port = process.env.PORT || "3000";
   try {
     return new URL(`http://localhost:${port}`);
   } catch {
-    // Last resort fallback
     return new URL("http://localhost:3000");
   }
 }
