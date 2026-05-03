@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import { getGithubContributionsForMonth } from "@/lib/server/github-contributions";
 import { getOwnerData } from "@/lib/server/owner";
 
@@ -9,7 +10,7 @@ export async function GET(req: Request) {
   const year = Number(yearParam);
   const monthParam = searchParams.get("month");
   const month = Number(monthParam);
-  const timeZone = searchParams.get("tz") ?? "UTC";
+  const timeZone = searchParams.get("tz") ?? CONTRIBUTIONS_TZ;
 
   if (!Number.isInteger(year) || year < 2000 || year > 3000) {
     return NextResponse.json(
