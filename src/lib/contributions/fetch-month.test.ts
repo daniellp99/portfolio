@@ -69,8 +69,9 @@ describe("getContributionsPromise", () => {
         json: () => Promise.resolve(json),
       } as Response);
 
-    const a = getContributionsPromise(2024, 1, CONTRIBUTIONS_TZ, fetchImpl);
-    const b = getContributionsPromise(2024, 1, CONTRIBUTIONS_TZ, fetchImpl);
+    const mockFetch = fetchImpl as unknown as typeof fetch;
+    const a = getContributionsPromise(2024, 1, CONTRIBUTIONS_TZ, mockFetch);
+    const b = getContributionsPromise(2024, 1, CONTRIBUTIONS_TZ, mockFetch);
     expect(a).toBe(b);
     await a;
   });
@@ -86,10 +87,11 @@ describe("getContributionsPromise", () => {
       } as Response);
     };
 
-    await getContributionsPromise(2024, 2, CONTRIBUTIONS_TZ, fetchImpl);
+    const mockFetch = fetchImpl as unknown as typeof fetch;
+    await getContributionsPromise(2024, 2, CONTRIBUTIONS_TZ, mockFetch);
     expect(calls).toBe(1);
     clearContributionsPromiseCache();
-    await getContributionsPromise(2024, 2, CONTRIBUTIONS_TZ, fetchImpl);
+    await getContributionsPromise(2024, 2, CONTRIBUTIONS_TZ, mockFetch);
     expect(calls).toBe(2);
   });
 });
