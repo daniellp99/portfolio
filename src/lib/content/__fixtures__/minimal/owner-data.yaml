@@ -1,0 +1,13 @@
+name: Fixture User
+email: fixture@example.com
+journeyStartAt: 2023-01-01T00:00:00Z
+githubUser: fixture
+aboutMe: About fixture user.
+avatar: https://example.com/avatar.webp
+avatarMarker: https://example.com/m1.webp
+avatarMarkerHover: https://example.com/m2.webp
+avatarMarkerTooltip: Hello
+skills:
+  - key: react
+    title: React
+    href: https://react.dev
