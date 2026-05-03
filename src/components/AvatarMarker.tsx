@@ -1,5 +1,5 @@
 "use client";
-import type { MapMarkerInfo } from "@/lib/content/schemas";
+import type { MapMarkerInfo } from "@/lib/content/display";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
 import L from "leaflet";
 import Image from "next/image";

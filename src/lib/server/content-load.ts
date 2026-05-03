@@ -9,7 +9,8 @@ import {
   readProject,
 } from "@/lib/content/projects";
 import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
-import type { MapMarkerInfo, OwnerData } from "@/lib/content/schemas";
+import type { MapMarkerInfo } from "@/lib/content/display";
+import type { OwnerData } from "@/lib/content/schemas";
 
 export async function loadProjectSlugs(): Promise<string[]> {
   try {

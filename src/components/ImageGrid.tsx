@@ -1,5 +1,5 @@
 import { getLayouts } from "@/lib/server/layouts";
-import type { Images } from "@/lib/content/schemas";
+import type { Images } from "@/lib/content/display";
 import {
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,

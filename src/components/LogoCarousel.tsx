@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/carousel";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
-import { Logo } from "@/lib/content/schemas";
+import type { Logo } from "@/lib/content/display";
 
 export function LogoCarousel({
   logos,

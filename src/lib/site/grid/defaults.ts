@@ -1,6 +1,6 @@
 import type { Layout } from "react-grid-layout";
 
-import type { Images } from "@/lib/content/schemas";
+import type { Images } from "@/lib/content/display";
 import type { LogicalLayoutBreakpoint } from "./config";
 import { SCALE_Y } from "./config";
 import { TabsType } from "@/lib/site/tabs";

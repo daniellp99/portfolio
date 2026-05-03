@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
 import { UI_SPRING } from "@/lib/motion";
-import type { Project } from "@/lib/content/schemas";
+import type { Project } from "@/lib/content/display";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 
 export default function ProjectCard({

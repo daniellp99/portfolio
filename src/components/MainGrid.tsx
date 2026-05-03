@@ -9,7 +9,7 @@ import ProjectCard from "@/components/ProjectCard";
 import SkillsCard from "@/components/SkillsCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import type { MapMarkerInfo, Project } from "@/lib/content/schemas";
+import type { MapMarkerInfo, Project } from "@/lib/content/display";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { Suspense, use } from "react";
 import { ResponsiveLayouts } from "react-grid-layout";

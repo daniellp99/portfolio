@@ -5,11 +5,8 @@ import matter from "gray-matter";
 import { flattenError } from "zod";
 
 import { createContentPaths, isENOENT, type ContentPaths } from "./paths";
-import {
-  projectFrontMatterSchema,
-  type Project,
-  type ProjectDetails,
-} from "./schemas";
+import type { Project } from "./display";
+import { projectFrontMatterSchema, type ProjectDetails } from "./schemas";
 
 export async function listProjectSlugs(
   paths: ContentPaths = createContentPaths(),

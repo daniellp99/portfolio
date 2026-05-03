@@ -8,7 +8,7 @@ import {
   useSkillHover,
 } from "@/components/SkillHoverContext";
 
-import type { Logo } from "@/lib/content/schemas";
+import type { Logo } from "@/lib/content/display";
 
 function SkillsHoverLabel() {
   const { hoveredTitle } = useSkillHover();

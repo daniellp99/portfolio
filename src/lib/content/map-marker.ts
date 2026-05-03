@@ -1,4 +1,5 @@
-import type { MapMarkerInfo, OwnerData } from "./schemas";
+import type { MapMarkerInfo } from "./display";
+import type { OwnerData } from "./schemas";
 
 export function mapOwnerToMapMarkerInfo(
   ownerData: OwnerData | null,

@@ -1,7 +1,7 @@
 import "server-only";
 
 import { jsonToLayouts } from "@/lib/schemas/layouts";
-import type { Images } from "@/lib/content/schemas";
+import type { Images } from "@/lib/content/display";
 import { getProjectSlugs } from "@/lib/server/projects";
 import {
   IMAGE_LAYOUTS_KEY,
