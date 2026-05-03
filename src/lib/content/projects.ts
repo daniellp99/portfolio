@@ -55,10 +55,13 @@ export async function readAllProjectSummaries(
   paths: ContentPaths = createContentPaths(),
 ): Promise<Project[]> {
   const slugs = await listProjectSlugs(paths);
-  const summaries: Project[] = [];
+  const details = await Promise.all(
+    slugs.map((slug) => readProject(slug, paths)),
+  );
 
-  for (const slug of slugs) {
-    const project = await readProject(slug, paths);
+  const summaries: Project[] = [];
+  for (let i = 0; i < slugs.length; i++) {
+    const project = details[i];
     if (project) {
       summaries.push({
         slug: project.slug,
