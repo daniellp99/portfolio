@@ -1,5 +1,3 @@
-import "server-only";
-
 import fs from "node:fs/promises";
 
 import { parse as parseYaml } from "yaml";
