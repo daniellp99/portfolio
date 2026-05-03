@@ -10,12 +10,13 @@ import {
   readProject,
 } from "./projects";
 
-const fixtureDir = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "__fixtures__/minimal",
-);
+const thisDir = path.dirname(fileURLToPath(import.meta.url));
+
+const fixtureDir = path.join(thisDir, "__fixtures__/minimal");
+const multiFixtureDir = path.join(thisDir, "__fixtures__/multi");
 
 const paths = createFixtureContentPaths(fixtureDir);
+const multiPaths = createFixtureContentPaths(multiFixtureDir);
 
 describe("listProjectSlugs", () => {
   it("lists mdx slugs from fixture dir", async () => {
@@ -51,6 +52,28 @@ describe("readAllProjectSummaries", () => {
         slug: "sample",
         name: "Sample Project",
         coverImage: "https://example.com/cover.webp",
+      },
+    ]);
+  });
+
+  it("orders summaries by sorted slug list and omits invalid front matter", async () => {
+    await expect(listProjectSlugs(multiPaths)).resolves.toEqual([
+      "alpha",
+      "invalid",
+      "zebra",
+    ]);
+
+    const rows = await readAllProjectSummaries(multiPaths);
+    expect(rows).toEqual([
+      {
+        slug: "alpha",
+        name: "Alpha Project",
+        coverImage: "https://example.com/alpha.webp",
+      },
+      {
+        slug: "zebra",
+        name: "Zebra Project",
+        coverImage: "https://example.com/zebra.webp",
       },
     ]);
   });
