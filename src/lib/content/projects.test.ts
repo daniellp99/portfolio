@@ -46,6 +46,14 @@ describe("readProject", () => {
       status: "missing",
     });
   });
+
+  it("returns missing for path traversal slugs", async () => {
+    await expect(
+      readProject("../../multi/projects/alpha", paths),
+    ).resolves.toEqual({
+      status: "missing",
+    });
+  });
 });
 
 describe("readAllProjectSummaries", () => {
