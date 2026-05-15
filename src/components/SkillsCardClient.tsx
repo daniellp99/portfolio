@@ -31,7 +31,7 @@ function SkillsHoverLabel() {
 
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center px-2"
+      className="pointer-events-none absolute inset-x-0 top-0.5 z-10 flex justify-center px-2"
       role="status"
       aria-live="polite"
       aria-atomic="true"
