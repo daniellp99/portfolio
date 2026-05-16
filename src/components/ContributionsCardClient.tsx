@@ -19,7 +19,10 @@ import {
 } from "@/components/ui/card";
 import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
-import { getContributionsPromise } from "@/lib/contributions/fetch-month";
+import {
+  contributionsMonthCacheKey,
+  getContributionsPromise,
+} from "@/lib/contributions/fetch-month";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import { ContributionsCount } from "./contributions/ContributionsCount";
@@ -69,8 +72,11 @@ export default function ContributionsCardClient({
           )}
         >
           <CardDescription className="text-center text-xs">
-            <Suspense fallback={<span key={`contributions-count`}>0</span>}>
-              <ContributionsCount contributionsPromise={contributionsPromise} />
+            <Suspense fallback={<span>0</span>}>
+              <ContributionsCount
+                key={contributionsMonthCacheKey(year, monthNumber)}
+                contributionsPromise={contributionsPromise}
+              />
             </Suspense>{" "}
             contributions in{" "}
             <span className="hidden md:inline">
