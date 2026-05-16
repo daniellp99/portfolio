@@ -37,8 +37,8 @@ export default function NavItems({
         const layouts = generateLayouts(value as TabsType, projectsSlugs);
         startTransition(async () => {
           await setLayouts(layouts, MAIN_LAYOUTS_KEY);
+          startTransition(() => setActiveTab(value as TabsType));
         });
-        setActiveTab(value as TabsType);
       }}
       className="flex flex-col items-center"
     >
