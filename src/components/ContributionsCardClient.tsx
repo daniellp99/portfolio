@@ -12,13 +12,18 @@ import { buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
+import { getContributionsPromise } from "@/lib/contributions/fetch-month";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
+import { ContributionsCount } from "./contributions/ContributionsCount";
+import { ContributionsLegend } from "./contributions/ContributionsLegend";
 
 export default function ContributionsCardClient({
   login,
@@ -40,6 +45,9 @@ export default function ContributionsCardClient({
     calendarEndMonth,
   } = useContributionsCardState({ years, defaultYear });
 
+  const contributionsPromise = getContributionsPromise(year, monthNumber);
+  const monthStart = getMonthStartInZone(year, monthNumber);
+
   return (
     <>
       <CardHeader className="px-1 pt-2 xl:px-2">
@@ -60,6 +68,18 @@ export default function ContributionsCardClient({
             />
           )}
         >
+          <CardDescription className="text-center text-xs">
+            <Suspense fallback={<span key={`contributions-count`}>0</span>}>
+              <ContributionsCount contributionsPromise={contributionsPromise} />
+            </Suspense>{" "}
+            contributions in{" "}
+            <span className="hidden md:inline">
+              {formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMMM yyyy")}
+            </span>
+            <span className="inline md:hidden">
+              {formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM")}
+            </span>
+          </CardDescription>
           <Suspense
             fallback={
               <ViewTransition exit="slide-down">
@@ -68,9 +88,12 @@ export default function ContributionsCardClient({
             }
           >
             <ViewTransition enter="slide-up" default="none">
-              <ContributionsHeatmap year={year} month={monthNumber} />
+              <ContributionsHeatmap
+                contributionsPromise={contributionsPromise}
+              />
             </ViewTransition>
           </Suspense>
+          <ContributionsLegend />
         </ContributionsErrorBoundary>
       </CardContent>
       <CardFooter className="items-end justify-between px-2 pb-2">

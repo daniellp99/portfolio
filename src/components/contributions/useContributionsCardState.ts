@@ -2,7 +2,7 @@
 
 import { getMonth, getYear, startOfMonth } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { useOptimistic, useState, useTransition } from "react";
+import { startTransition, useOptimistic, useState } from "react";
 
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import { evictContributionsMonthCache } from "@/lib/contributions/fetch-month";
@@ -28,7 +28,6 @@ export function useContributionsCardState({
 
   const [month, setMonth] = useState(initialMonth);
   const [optimisticMonth, setOptimisticMonth] = useOptimistic(month);
-  const [, startTransition] = useTransition();
   const [retryNonce, setRetryNonce] = useState(0);
   const year = getYear(optimisticMonth);
   const monthNumber = getMonth(optimisticMonth) + 1;
