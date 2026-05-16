@@ -17,12 +17,12 @@ import {
 import { createPortal } from "react-dom";
 import { Marker } from "react-leaflet";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
 import { cn } from "@/lib/utils";
@@ -110,12 +110,10 @@ export function AvatarMarkerIcon({
         }
       />
       <PopoverContent
+        variant="tooltip"
         side="top"
         align="center"
         sideOffset={4}
-        className={cn(
-          "z-50 w-fit max-w-xs flex-col gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100 outline-none",
-        )}
       >
         {avatarMarkerTooltip}
       </PopoverContent>

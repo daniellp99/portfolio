@@ -93,12 +93,10 @@ export function ContributionsHeatmap({
       <Popover handle={contributionsPopoverHandle}>
         {({ payload: Payload }) => (
           <PopoverContent
+            variant="tooltip"
             side="top"
             align="center"
             sideOffset={4}
-            className={cn(
-              "z-50 w-fit max-w-xs min-w-0 flex-col gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100 outline-none",
-            )}
           >
             {Payload as ReactNode}
           </PopoverContent>

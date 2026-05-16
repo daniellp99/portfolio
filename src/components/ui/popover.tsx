@@ -1,9 +1,41 @@
 "use client";
 
-import * as React from "react";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
+
+const popoverContentVariants = cva(
+  [
+    "z-50 flex min-h-0 min-w-0 flex-col outline-hidden",
+    "origin-(--transform-origin) transition-[opacity,transform,width,height] [transition-duration:var(--default-transition-duration)] [transition-timing-function:var(--default-transition-timing-function)] data-instant:transition-none",
+    "data-starting-style:scale-95 data-starting-style:opacity-0",
+    "data-ending-style:scale-95 data-ending-style:opacity-0",
+    "**:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
+  ],
+  {
+    variants: {
+      variant: {
+        default:
+          "w-72 max-w-[min(100vw-2rem,var(--positioner-width))] gap-4 rounded-md bg-popover p-4 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10",
+        tooltip: [
+          "relative w-fit max-w-xs gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100",
+          "before:pointer-events-none before:absolute before:z-50 before:size-2.5 before:translate-y-[calc(-50%-2px)] before:rotate-45 before:rounded-[2px] before:bg-foreground before:content-['']",
+          "data-[side=bottom]:before:top-1 data-[side=bottom]:before:left-1/2 data-[side=bottom]:before:-translate-x-1/2",
+          "data-[side=top]:before:-bottom-2.5 data-[side=top]:before:left-1/2 data-[side=top]:before:-translate-x-1/2",
+          "data-[side=left]:before:top-1/2! data-[side=left]:before:-right-1 data-[side=left]:before:-translate-y-1/2",
+          "data-[side=right]:before:top-1/2! data-[side=right]:before:-left-1 data-[side=right]:before:-translate-y-1/2",
+          "data-[side=inline-end]:before:top-1/2! data-[side=inline-end]:before:-left-1 data-[side=inline-end]:before:-translate-y-1/2",
+          "data-[side=inline-start]:before:top-1/2! data-[side=inline-start]:before:-right-1 data-[side=inline-start]:before:-translate-y-1/2",
+        ],
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
@@ -31,6 +63,7 @@ const popoverViewportClassName = cn(
 
 function PopoverContent({
   className,
+  variant = "default",
   align = "center",
   alignOffset = 0,
   side = "bottom",
@@ -41,7 +74,8 @@ function PopoverContent({
   Pick<
     PopoverPrimitive.Positioner.Props,
     "align" | "alignOffset" | "side" | "sideOffset"
-  >) {
+  > &
+  VariantProps<typeof popoverContentVariants>) {
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Positioner
@@ -53,14 +87,7 @@ function PopoverContent({
       >
         <PopoverPrimitive.Popup
           data-slot="popover-content"
-          className={cn(
-            "z-50 flex min-h-0 w-72 max-w-[min(100vw-2rem,var(--positioner-width))] min-w-0 flex-col gap-4 rounded-md bg-popover p-4 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10 outline-hidden",
-            "origin-(--transform-origin) transition-[opacity,transform,width,height] [transition-duration:var(--default-transition-duration)] [transition-timing-function:var(--default-transition-timing-function)] data-instant:transition-none",
-            "data-starting-style:scale-95 data-starting-style:opacity-0",
-            "data-ending-style:scale-95 data-ending-style:opacity-0",
-            "**:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
-            className,
-          )}
+          className={cn(popoverContentVariants({ variant }), className)}
           {...props}
         >
           <PopoverPrimitive.Viewport
@@ -111,6 +138,7 @@ function PopoverDescription({
 export {
   Popover,
   PopoverContent,
+  popoverContentVariants,
   PopoverDescription,
   PopoverHeader,
   PopoverTitle,
