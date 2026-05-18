@@ -1,5 +1,6 @@
-import { MDXComponents } from "mdx/types";
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
+
+type MDXComponents = NonNullable<MDXRemoteProps["components"]>;
 import Link from "next/link";
 import React from "react";
 import { highlight } from "sugar-high";
