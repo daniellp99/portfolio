@@ -4,14 +4,14 @@ import path from "node:path";
 import matter from "gray-matter";
 import { ZodError, flattenError } from "zod";
 
-import { createContentPaths, isENOENT, type ContentPaths } from "./paths";
 import type { Project } from "./display";
-import { projectFrontMatterSchema, type ProjectDetails } from "./schemas";
+import { createContentPaths, isENOENT, type ContentPaths } from "./paths";
 import {
   InvalidProjectFrontMatterError,
   isProjectContentStrict,
   type ReadProjectResult,
 } from "./projects-read";
+import { projectFrontMatterSchema, type ProjectDetails } from "./schemas";
 
 type ProjectFrontMatter = Omit<ProjectDetails, "slug" | "content">;
 
@@ -100,6 +100,36 @@ export async function readProject(
   return {
     status: "ok",
     project: { slug: resolvedSlug, ...frontMatter, content },
+  };
+}
+
+export async function readProjectSummary(
+  slug: string,
+  paths: ContentPaths = createContentPaths(),
+): Promise<Project | null> {
+  const result = await readProjectSource(slug, paths);
+  if (result.status === "missing") return null;
+  if (result.status === "invalid") {
+    if (isProjectContentStrict()) {
+      throw new InvalidProjectFrontMatterError(result.slug, result.cause);
+    }
+
+    if (result.kind === "zod") {
+      logInvalidProjectFrontMatterZod(result.slug, result.cause);
+    }
+
+    console.error(
+      `Skipping project "${result.slug}" due to invalid front matter:`,
+      result.cause,
+    );
+    return null;
+  }
+
+  const { slug: resolvedSlug, frontMatter } = result;
+  return {
+    slug: resolvedSlug,
+    name: frontMatter.name,
+    coverImage: frontMatter.coverImage,
   };
 }
 

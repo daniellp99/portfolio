@@ -1,22 +1,26 @@
+import { SearchParams } from "nuqs/server";
+import { Suspense } from "react";
+
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import AboutMe from "@/components/server/AboutMe";
-import ContributionsCard from "@/components/server/ContributionsCard";
-import GridContainer from "@/components/GridContainer";
-import Map from "@/components/Map";
-import ProjectCard from "@/components/ProjectCard";
-import SkillsCard from "@/components/server/SkillsCard";
-import ThemeToggle from "@/components/ThemeToggle";
-
-import type { MapMarkerInfo, Project } from "@/lib/content/display";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { Suspense, use } from "react";
-import { ResponsiveLayouts } from "react-grid-layout";
 import AvatarMarker, {
   AvatarMarkerIcon,
   AvatarMarkerSkeleton,
-} from "./AvatarMarker";
+} from "@/components/AvatarMarker";
+import GridContainer from "@/components/GridContainer";
+import Map from "@/components/Map";
+import ProjectCard from "@/components/ProjectCard";
+import AboutMe from "@/components/server/AboutMe";
+import ContributionsCard from "@/components/server/ContributionsCard";
+import SkillsCard from "@/components/server/SkillsCard";
+import ThemeToggle from "@/components/ThemeToggle";
+
+import { loadMainSearchParams } from "@/lib/schemas/search-params";
+import { getLayoutsFromSearchParams } from "@/lib/server/layouts";
+import { getMapMarkerInfo } from "@/lib/server/owner";
+import { getProjectSlugs, getProjectSummary } from "@/lib/server/projects";
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 
 export function MainGridFallback() {
   return (
@@ -30,20 +34,31 @@ export function MainGridFallback() {
   );
 }
 
-export default function MainGrid({
-  projectsPromise,
-  layoutsPromise,
-  mapMarkerInfoPromise,
+export default async function MainGrid({
+  searchParamsPromise,
 }: {
-  projectsPromise: Promise<Project[]>;
-  layoutsPromise: Promise<ResponsiveLayouts>;
-  mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
+  searchParamsPromise: Promise<SearchParams>;
 }) {
-  const projects = use(projectsPromise);
-  const layouts = use(layoutsPromise);
+  const projectSlugs = await getProjectSlugs();
+  const { tab, layout } =
+    await loadMainSearchParams(projectSlugs)(searchParamsPromise);
+
+  const layouts = getLayoutsFromSearchParams({
+    layoutKey: MAIN_LAYOUTS_KEY,
+    tab,
+    layout,
+    projectSlugs,
+  });
+
+  const mapMarkerInfoPromise = getMapMarkerInfo();
 
   return (
-    <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
+    <GridContainer
+      layouts={layouts}
+      layoutKey={MAIN_LAYOUTS_KEY}
+      projectSlugs={projectSlugs}
+      tab={tab}
+    >
       <Card variant="item" key="me">
         <AboutMe />
       </Card>
@@ -65,9 +80,11 @@ export default function MainGrid({
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />
       </Card>
-      {projects.map((project, index) => (
-        <Card variant="item" key={project.slug}>
-          <ProjectCard project={project} eager={index < 3} />
+      {projectSlugs.map((projectSlug) => (
+        <Card variant="item" key={projectSlug}>
+          <Suspense fallback={<Skeleton className="size-full" />}>
+            <ProjectCard projectPromise={getProjectSummary(projectSlug)} />
+          </Suspense>
         </Card>
       ))}
     </GridContainer>

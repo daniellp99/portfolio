@@ -1,7 +1,6 @@
 import * as z from "zod";
-import { jsonCodec } from "./json";
 
-const LayoutSchema = z.object({
+export const layoutItemSchema = z.object({
   i: z.string(),
   x: z.number(),
   y: z.number(),
@@ -14,8 +13,6 @@ const LayoutSchema = z.object({
   isResizable: z.boolean().optional(),
 });
 
-const LayoutsSchema = z.record(z.string(), z.array(LayoutSchema));
+const LayoutsSchema = z.record(z.string(), z.array(layoutItemSchema));
 
 export type DecodedLayouts = z.infer<typeof LayoutsSchema>;
-
-export const jsonToLayouts = jsonCodec(LayoutsSchema);

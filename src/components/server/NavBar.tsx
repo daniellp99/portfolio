@@ -1,18 +1,52 @@
 import Link from "next/link";
-import { Suspense, ViewTransition } from "react";
+import { Suspense, use, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import Logo, { LogoFallback } from "@/components/server/Logo";
 import NavBarCenter from "@/components/NavBarCenter";
+import NavItems, { NavItemsFallback } from "@/components/NavItems";
+import Logo, { LogoFallback } from "@/components/server/Logo";
 
 import { getOwnerData } from "@/lib/server/owner";
 import { getProjectSlugs } from "@/lib/server/projects";
 
-export default async function NavBar() {
-  const projectsSlugs = await getProjectSlugs();
-  const ownerData = await getOwnerData();
+function ContactButtonFallback() {
+  return (
+    <Button
+      variant="link"
+      className="hidden text-xl/6 sm:block"
+      disabled={true}
+      nativeButton={false}
+    >
+      Contact
+    </Button>
+  );
+}
+
+function ContactButton({
+  ownerDataPromise,
+}: {
+  ownerDataPromise: ReturnType<typeof getOwnerData>;
+}) {
+  const ownerData = use(ownerDataPromise);
   const email = ownerData?.email;
+  return (
+    <Button
+      variant="link"
+      className="hidden text-xl/6 sm:block"
+      render={<Link href={email ? `mailto:${email}` : "#"} />}
+      disabled={!email}
+      nativeButton={false}
+    >
+      Contact
+    </Button>
+  );
+}
+
+export default function NavBar() {
+  const ownerDataPromise = getOwnerData();
+  const projectsSlugsPromise = getProjectSlugs();
+
   return (
     <nav
       style={{ viewTransitionName: "persistent-nav" }}
@@ -29,16 +63,23 @@ export default async function NavBar() {
           <Logo />
         </ViewTransition>
       </Suspense>
-      <NavBarCenter projectsSlugs={projectsSlugs} />
-      <Button
-        variant="link"
-        className="hidden text-xl/6 sm:block"
-        render={<Link href={email ? `mailto:${email}` : "#"} />}
-        disabled={!email}
-        nativeButton={false}
-      >
-        Contact
-      </Button>
+      <NavBarCenter>
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <NavItemsFallback />
+            </ViewTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" default="none">
+            <NavItems projectsSlugsPromise={projectsSlugsPromise} />
+          </ViewTransition>
+        </Suspense>
+      </NavBarCenter>
+
+      <Suspense fallback={<ContactButtonFallback />}>
+        <ContactButton ownerDataPromise={ownerDataPromise} />
+      </Suspense>
     </nav>
   );
 }

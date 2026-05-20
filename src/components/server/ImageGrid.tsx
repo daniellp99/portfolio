@@ -1,30 +1,26 @@
-import GridContainer from "@/components/GridContainer";
-import { Card } from "@/components/ui/card";
-import { getLayouts } from "@/lib/server/layouts";
-import type { Images } from "@/lib/content/display";
-import {
-  IMAGE_LAYOUTS_KEY,
-  imageLayoutsKeyForSlug,
-} from "@/lib/site/constants";
-import { imageGridCardSizes } from "@/lib/site/image-sizes";
 import Image from "next/image";
+import type { ResponsiveLayouts } from "react-grid-layout";
 
-export default async function ImageGrid({
-  slug,
+import { Card } from "@/components/ui/card";
+
+import GridContainer from "@/components/GridContainer";
+
+import type { Images } from "@/lib/content/display";
+import { imageLayoutsKeyForSlug } from "@/lib/site/constants";
+import { imageGridCardSizes } from "@/lib/site/image-sizes";
+
+export default function ImageGrid({
   images,
+  layouts,
+  slug,
 }: {
-  slug: string | undefined;
   images: Images;
+  layouts: ResponsiveLayouts;
+  slug: string;
 }) {
-  const layouts = await getLayouts({
-    layoutKey: IMAGE_LAYOUTS_KEY,
-    projectSlug: slug,
-    images,
-  });
   const layoutKey = imageLayoutsKeyForSlug(slug, images);
-
   return (
-    <GridContainer layouts={layouts} layoutKey={layoutKey}>
+    <GridContainer layouts={layouts} layoutKey={layoutKey} images={images}>
       {images.map((image) => (
         <Card
           key={image.src}

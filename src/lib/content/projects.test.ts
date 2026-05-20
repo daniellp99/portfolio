@@ -9,6 +9,7 @@ import {
   listProjectSlugs,
   readAllProjectSummaries,
   readProject,
+  readProjectSummary,
 } from "./projects";
 
 const thisDir = path.dirname(fileURLToPath(import.meta.url));
@@ -45,6 +46,20 @@ describe("readProject", () => {
     await expect(readProject("missing", paths)).resolves.toEqual({
       status: "missing",
     });
+  });
+});
+
+describe("readProjectSummary", () => {
+  it("returns summary for fixture project", async () => {
+    await expect(readProjectSummary("sample", paths)).resolves.toEqual({
+      slug: "sample",
+      name: "Sample Project",
+      coverImage: "https://example.com/cover.webp",
+    });
+  });
+
+  it("returns null for unknown slug", async () => {
+    await expect(readProjectSummary("missing", paths)).resolves.toBeNull();
   });
 });
 

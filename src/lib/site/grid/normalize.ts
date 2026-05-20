@@ -38,11 +38,11 @@ export function fillMissingLayoutBreakpoints(
   return out;
 }
 
-/** Cookie read path: strip unknown keys, then fill gaps from generated defaults. */
-export function normalizeLayoutsFromCookie(
-  decoded: ResponsiveLayouts,
+/** Strip unknown keys, then fill gaps from generated defaults. */
+export function normalizeLayouts(
+  stored: ResponsiveLayouts | DecodedLayouts,
   defaults: ResponsiveLayouts,
 ): ResponsiveLayouts {
-  const stripped = stripUnknownLayoutBreakpoints(decoded);
+  const stripped = stripUnknownLayoutBreakpoints(stored);
   return fillMissingLayoutBreakpoints(stripped, defaults);
 }

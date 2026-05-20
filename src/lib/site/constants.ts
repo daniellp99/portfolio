@@ -1,12 +1,9 @@
 import { LatLngExpression } from "leaflet";
 
 export const DEFAULT_CENTER = [20.89689, -76.26652] satisfies LatLngExpression;
-export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
-/** Discriminator for getLayouts image branch; cookie key is per-slug via imageLayoutsKeyForSlug */
-export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
-
-const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;
-type ImageLayoutsCookieKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
+export const DEFAULT_ZOOM = 4.49;
+const IMAGE_LAYOUTS_PREFIX = "image-layouts__" as const;
+export type ImageLayoutsKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
 
 function imageLayoutDimensionHash(
   images: readonly { src: string; width: number; height: number }[],
@@ -19,11 +16,11 @@ function imageLayoutDimensionHash(
   return (h >>> 0).toString(36);
 }
 
-/** Cookie-safe per-project key for image grid layouts (dims invalidate stale cookies). */
+/** -safe per-project key for image grid layouts (dims invalidate stale s). */
 export function imageLayoutsKeyForSlug(
   slug: string | undefined | null,
   images?: readonly { src: string; width: number; height: number }[],
-): ImageLayoutsCookieKey {
+): ImageLayoutsKey {
   const srcList = images?.map((i) => i.src);
   let raw =
     typeof slug === "string" && slug.length > 0
@@ -39,9 +36,7 @@ export function imageLayoutsKeyForSlug(
     images?.length && images.length > 0
       ? `_${imageLayoutDimensionHash(images)}`
       : "";
-  return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}` as ImageLayoutsCookieKey;
+  return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}` as ImageLayoutsKey;
 }
 
-export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;
-export const COOKIE_MAX_AGE = 31536000; // 1 year in seconds
-export const DEFAULT_ZOOM = 4.49;
+export const MAIN_LAYOUTS_KEY = "main-layouts" as const;

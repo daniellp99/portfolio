@@ -8,9 +8,14 @@ import { CustomMDX } from "@/components/MdxRemote";
 import ImageGrid from "@/components/server/ImageGrid";
 import ProjectJsonLd from "@/components/server/ProjectJsonLd";
 
+import { loadImageSearchParams } from "@/lib/schemas/search-params";
+import { getLayoutsFromSearchParams } from "@/lib/server/layouts";
 import { getOwnerData } from "@/lib/server/owner";
 import { getProjectDetails, getProjectSlugs } from "@/lib/server/projects";
+
+import { imageLayoutsKeyForSlug } from "@/lib/site/constants";
 import { buildProjectPageMetadata } from "@/lib/site/metadata";
+import { SearchParams } from "nuqs/server";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
@@ -35,9 +40,18 @@ export async function generateStaticParams() {
 
 export default async function ProjectPage(props: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<SearchParams>;
 }) {
   const { slug } = await props.params;
   const project = await getProjectDetails(slug);
+  const { layout } = await loadImageSearchParams(project.images)(
+    props.searchParams,
+  );
+  const layouts = getLayoutsFromSearchParams({
+    layoutKey: imageLayoutsKeyForSlug(slug, project.images),
+    layout,
+    images: project.images,
+  });
 
   return (
     <DirectionalTransition>
@@ -79,7 +93,11 @@ export default async function ProjectPage(props: {
             }
           >
             <ViewTransition enter="slide-up" default="none">
-              <ImageGrid slug={slug} images={project.images} />
+              <ImageGrid
+                slug={slug}
+                images={project.images}
+                layouts={layouts}
+              />
             </ViewTransition>
           </Suspense>
         </section>

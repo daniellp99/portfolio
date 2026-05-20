@@ -1,27 +1,24 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { ViewTransition } from "react";
+import { Suspense, ViewTransition } from "react";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
 import HomeJsonLd from "@/components/server/HomeJsonLd";
-import MainGrid, { MainGridFallback } from "@/components/MainGrid";
+import MainGrid, { MainGridFallback } from "@/components/server/MainGrid";
 
-import { getLayouts } from "@/lib/server/layouts";
-import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
-import { getProjects } from "@/lib/server/projects";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { getOwnerData } from "@/lib/server/owner";
 import { buildHomeMetadata } from "@/lib/site/metadata";
+import { SearchParams } from "nuqs/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = await getOwnerData();
   return buildHomeMetadata(ownerData ?? undefined);
 }
 
-export default function HomePage() {
-  const projectsPromise = getProjects();
-  const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-  const mapMarkerInfoPromise = getMapMarkerInfo();
-
+export default function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   return (
     <DirectionalTransition>
       <HomeJsonLd />
@@ -34,11 +31,7 @@ export default function HomePage() {
           }
         >
           <ViewTransition enter="slide-up" default="none">
-            <MainGrid
-              projectsPromise={projectsPromise}
-              layoutsPromise={layoutsPromise}
-              mapMarkerInfoPromise={mapMarkerInfoPromise}
-            />
+            <MainGrid searchParamsPromise={searchParams} />
           </ViewTransition>
         </Suspense>
       </section>

@@ -1,30 +1,34 @@
 "use client";
 
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { useState, useTransition } from "react";
+import { use, useOptimistic, useTransition } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UI_SPRING } from "@/lib/motion";
-import { cn } from "@/lib/utils";
-
-import { setLayouts } from "@/lib/actions/set-layouts";
 import type { ProjectSlugs } from "@/lib/content/display";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { generateLayouts } from "@/lib/site/grid";
-import { tabs, TabsType } from "@/lib/site/tabs";
+import { UI_SPRING } from "@/lib/motion";
+import { getMainSearchParamsParsers } from "@/lib/schemas/search-params";
+import { tabs, type TabsType } from "@/lib/site/tabs";
+import { cn } from "@/lib/utils";
+import { useQueryStates } from "nuqs";
 
 export function NavItemsFallback() {
   return <Skeleton className="h-12 w-68.25 rounded-full" />;
 }
 
 export default function NavItems({
-  projectsSlugs,
+  projectsSlugsPromise,
 }: {
-  projectsSlugs: ProjectSlugs;
+  projectsSlugsPromise: Promise<ProjectSlugs>;
 }) {
+  const projectsSlugs = use(projectsSlugsPromise);
   const [pending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [{ tab }, setSearchParams] = useQueryStates(
+    getMainSearchParamsParsers(projectsSlugs),
+    { shallow: false, startTransition },
+  );
+
+  const [optimisticTab, setOptimisticTab] = useOptimistic(tab);
   const reduceMotion = useReducedMotion() ?? false;
 
   const indicatorTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
@@ -32,12 +36,15 @@ export default function NavItems({
   return (
     <Tabs
       data-pending={pending}
-      value={activeTab}
+      value={optimisticTab}
       onValueChange={(value) => {
-        const layouts = generateLayouts(value as TabsType, projectsSlugs);
-        startTransition(async () => {
-          await setLayouts(layouts, MAIN_LAYOUTS_KEY);
-          startTransition(() => setActiveTab(value as TabsType));
+        const nextTab = value as TabsType;
+        startTransition(() => {
+          setOptimisticTab(nextTab);
+          void setSearchParams({
+            tab: nextTab,
+            layout: null,
+          });
         });
       }}
       className="flex flex-col items-center"
@@ -52,7 +59,7 @@ export default function NavItems({
                 "relative z-0 rounded-full px-4 text-xl data-active:bg-transparent data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
               )}
             >
-              {activeTab === tabId ? (
+              {optimisticTab === tabId ? (
                 <motion.span
                   layoutId="nav-tab-indicator"
                   className="pointer-events-none absolute inset-0 z-0 rounded-full bg-foreground"

@@ -3,7 +3,7 @@ import type { ResponsiveLayouts } from "react-grid-layout";
 
 import {
   fillMissingLayoutBreakpoints,
-  normalizeLayoutsFromCookie,
+  normalizeLayouts,
   stripUnknownLayoutBreakpoints,
 } from "./normalize";
 
@@ -46,7 +46,7 @@ describe("fillMissingLayoutBreakpoints", () => {
   });
 });
 
-describe("normalizeLayoutsFromCookie", () => {
+describe("normalizeLayouts", () => {
   it("strips unknown keys then fills missing", () => {
     const defaults: ResponsiveLayouts = {
       lg: [{ i: "d-lg", x: 0, y: 0, w: 1, h: 1 }],
@@ -59,7 +59,7 @@ describe("normalizeLayoutsFromCookie", () => {
       sm: [{ i: "user-sm", x: 2, y: 2, w: 1, h: 1 }],
       extra: [{ i: "x", x: 0, y: 0, w: 1, h: 1 }],
     };
-    const out = normalizeLayoutsFromCookie(decoded, defaults);
+    const out = normalizeLayouts(decoded, defaults);
     expect(out.extra).toBeUndefined();
     expect(out.sm?.[0]?.i).toBe("user-sm");
     expect(out.lg?.[0]?.i).toBe("d-lg");
