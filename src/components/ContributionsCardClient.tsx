@@ -54,7 +54,7 @@ export default function ContributionsCardClient({
   return (
     <>
       <CardHeader className="px-1 pt-2 xl:px-2">
-        <CardTitle className="text-center xl:text-lg">
+        <CardTitle className="text-center leading-tight xl:text-lg xl:leading-normal">
           GitHub <span className="hidden xl:inline">Contributions</span>
         </CardTitle>
       </CardHeader>
@@ -79,10 +79,10 @@ export default function ContributionsCardClient({
               />
             </Suspense>{" "}
             contributions in{" "}
-            <span className="hidden md:inline">
+            <span className="hidden xl:inline">
               {formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMMM yyyy")}
             </span>
-            <span className="inline md:hidden">
+            <span className="inline xl:hidden">
               {formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM")}
             </span>
           </CardDescription>
