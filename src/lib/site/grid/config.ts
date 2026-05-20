@@ -7,6 +7,12 @@ export const CANONICAL_LAYOUT_BREAKPOINT_KEYS = [
   "xxs",
 ] as const;
 
+export const LOGICAL_LAYOUT_BREAKPOINT_KEYS = [
+  "lg",
+  "sm",
+  "xs",
+] as const satisfies readonly LogicalLayoutBreakpoint[];
+
 /** Slot tables and Y scaling use lg/sm/xs only; md mirrors lg, xxs mirrors xs in outputs. */
 export type LogicalLayoutBreakpoint = "lg" | "sm" | "xs";
 
@@ -17,6 +23,8 @@ export const SCALE_Y: Record<LogicalLayoutBreakpoint, number> = {
 };
 
 const GRID_ROW_HEIGHT = 164;
+
+export const MAIN_GRID_PROJECT_SLOT_COUNT = 3;
 
 const GRID_RGL_BREAKPOINTS = {
   lg: 1200,

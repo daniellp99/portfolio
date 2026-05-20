@@ -1,6 +1,5 @@
 import "server-only";
 
-import { jsonToLayouts } from "@/lib/schemas/layouts";
 import type { Images } from "@/lib/content/display";
 import { getProjectSlugs } from "@/lib/server/projects";
 import {
@@ -9,8 +8,10 @@ import {
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import {
+  expandFromCookie,
   generateImageLayouts,
   generateLayouts,
+  imageSrcsFromImages,
   normalizeLayoutsFromCookie,
 } from "@/lib/site/grid";
 import { cookies } from "next/headers";
@@ -52,9 +53,13 @@ export async function getLayouts(
   }
 
   if (layoutsCookie?.value) {
-    const parsed = jsonToLayouts.safeDecode(layoutsCookie.value);
-    if (parsed.success) {
-      return normalizeLayoutsFromCookie(parsed.data, defaultLayouts);
+    const expandOptions =
+      params.layoutKey === IMAGE_LAYOUTS_KEY
+        ? { imageSrcs: imageSrcsFromImages(params.images) }
+        : {};
+    const expanded = expandFromCookie(layoutsCookie.value, expandOptions);
+    if (expanded !== null) {
+      return normalizeLayoutsFromCookie(expanded, defaultLayouts, true);
     }
   }
 

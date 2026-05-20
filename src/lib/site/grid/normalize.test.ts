@@ -65,4 +65,19 @@ describe("normalizeLayoutsFromCookie", () => {
     expect(out.lg?.[0]?.i).toBe("d-lg");
     expect(out.xxs?.[0]?.i).toBe("d-xxs");
   });
+
+  it("reuses expanded layouts without a second clone when fromExpand", () => {
+    const defaults: ResponsiveLayouts = {
+      lg: [{ i: "d-lg", x: 0, y: 0, w: 1, h: 1 }],
+      md: [{ i: "d-md", x: 0, y: 0, w: 1, h: 1 }],
+    };
+    const expanded: ResponsiveLayouts = {
+      lg: [{ i: "user-lg", x: 1, y: 1, w: 1, h: 1 }],
+      md: [{ i: "user-lg", x: 1, y: 1, w: 1, h: 1 }],
+    };
+    const out = normalizeLayoutsFromCookie(expanded, defaults, true);
+    expect(out.lg).toBe(expanded.lg);
+    expect(out.md).toBe(expanded.md);
+    expect(out.lg?.[0]?.i).toBe("user-lg");
+  });
 });

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { setLayouts } from "@/lib/actions/set-layouts";
 import type { ProjectSlugs } from "@/lib/content/display";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { generateLayouts } from "@/lib/site/grid";
+import { generateLayouts, mainGridAllowedLayoutIds } from "@/lib/site/grid";
 import { tabs, TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
@@ -35,8 +35,9 @@ export default function NavItems({
       value={activeTab}
       onValueChange={(value) => {
         const layouts = generateLayouts(value as TabsType, projectsSlugs);
+        const allowedLayoutIds = mainGridAllowedLayoutIds(projectsSlugs);
         startTransition(async () => {
-          await setLayouts(layouts, MAIN_LAYOUTS_KEY);
+          await setLayouts(layouts, MAIN_LAYOUTS_KEY, { allowedLayoutIds });
           startTransition(() => setActiveTab(value as TabsType));
         });
       }}

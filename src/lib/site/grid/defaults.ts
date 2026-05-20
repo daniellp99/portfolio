@@ -1,9 +1,10 @@
 import type { Layout } from "react-grid-layout";
 
 import type { Images } from "@/lib/content/display";
+import { TabsType } from "@/lib/site/tabs";
 import type { LogicalLayoutBreakpoint } from "./config";
 import { SCALE_Y } from "./config";
-import { TabsType } from "@/lib/site/tabs";
+import { withRglBreakpointAliases } from "./layout-copy";
 
 type Variant = "default" | "about" | "projects";
 type LayoutItem = Layout[number];
@@ -74,13 +75,13 @@ const PROJECT_SLOTS: Record<
   },
 };
 
-const BASE_ITEM_ORDER: BaseItemId[] = [
+export const BASE_ITEM_ORDER = [
   "me",
   "toggle-theme",
   "skills",
   "maps",
   "contributions",
-];
+] as const satisfies readonly BaseItemId[];
 
 const BASE_SLOTS: Record<
   Variant,
@@ -157,12 +158,33 @@ const BASE_SLOTS: Record<
   },
 };
 
-function withRglAliases(x: { lg: Layout; sm: Layout; xs: Layout }) {
-  return { ...x, md: x.lg, xxs: x.xs };
-}
-
 function scale(size: LogicalLayoutBreakpoint, units: number) {
   return SCALE_Y[size] * units;
+}
+
+function layoutItemFromSlot(
+  id: string,
+  slot: Slot,
+  size: LogicalLayoutBreakpoint,
+): LayoutItem {
+  return {
+    i: id,
+    x: slot.x,
+    y: scale(size, slot.y),
+    w: slot.w,
+    h: scale(size, slot.h),
+    isResizable: IS_RESIZABLE,
+  };
+}
+
+function logicalLayoutsFromSizes(
+  build: (size: LogicalLayoutBreakpoint) => Layout,
+): ReturnType<typeof withRglBreakpointAliases> {
+  return withRglBreakpointAliases({
+    lg: build("lg"),
+    sm: build("sm"),
+    xs: build("xs"),
+  });
 }
 
 function layoutForVariant(
@@ -172,49 +194,40 @@ function layoutForVariant(
 ): Layout {
   const baseSlots = BASE_SLOTS[variant][size];
   const projectSlots = PROJECT_SLOTS[variant][size];
+  const projectCount = Math.min(projectKeys.length, projectSlots.length);
+  const out: LayoutItem[] = new Array(BASE_ITEM_ORDER.length + projectCount);
 
-  const baseItems = BASE_ITEM_ORDER.map((id): LayoutItem => {
-    const slot = baseSlots[id];
-    return {
-      i: id,
-      x: slot.x,
-      y: scale(size, slot.y),
-      w: slot.w,
-      h: scale(size, slot.h),
-      isResizable: IS_RESIZABLE,
-    };
-  });
+  for (let i = 0; i < BASE_ITEM_ORDER.length; i++) {
+    const id = BASE_ITEM_ORDER[i]!;
+    out[i] = layoutItemFromSlot(id, baseSlots[id], size);
+  }
 
-  const projectItems = projectKeys
-    .slice(0, projectSlots.length)
-    .map((key, index): LayoutItem => {
-      const slot = projectSlots[index];
-      return {
-        i: key,
-        x: slot.x,
-        y: scale(size, slot.y),
-        w: slot.w,
-        h: scale(size, slot.h),
-        isResizable: IS_RESIZABLE,
-      };
-    });
-  return [...baseItems, ...projectItems];
+  for (let index = 0; index < projectCount; index++) {
+    out[BASE_ITEM_ORDER.length + index] = layoutItemFromSlot(
+      projectKeys[index]!,
+      projectSlots[index]!,
+      size,
+    );
+  }
+
+  return out as Layout;
 }
 
 function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
   const colsNumber = size === "xs" ? 2 : 4;
+  const len = images.length;
+  const out: LayoutItem[] = new Array(len);
   let totalWSoFar = 0;
 
-  return images.map((image): LayoutItem => {
+  for (let i = 0; i < len; i++) {
+    const image = images[i]!;
     let x = 0;
     let y = 0;
-
     const totalW = totalWSoFar;
+
     if (totalW < colsNumber) {
       x = totalW;
-      y = 0;
     } else if (totalW === colsNumber) {
-      x = 0;
       y = 1;
     } else {
       x = Math.ceil(totalW % colsNumber);
@@ -222,8 +235,7 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
     }
 
     totalWSoFar += image.width;
-
-    return {
+    out[i] = {
       i: image.src,
       x,
       y: scale(size, y),
@@ -231,20 +243,18 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
       h: scale(size, image.height),
       isResizable: IS_RESIZABLE,
     };
-  });
+  }
+
+  return out as Layout;
 }
 
 export function generateLayouts(tab: TabsType, projectKeys: string[]) {
   const variant = TAB_TO_VARIANT[tab];
-  const lg = layoutForVariant("lg", variant, projectKeys);
-  const sm = layoutForVariant("sm", variant, projectKeys);
-  const xs = layoutForVariant("xs", variant, projectKeys);
-  return withRglAliases({ lg, sm, xs });
+  return logicalLayoutsFromSizes((size) =>
+    layoutForVariant(size, variant, projectKeys),
+  );
 }
 
 export function generateImageLayouts(images: Images) {
-  const lg = imageLayout("lg", images);
-  const sm = imageLayout("sm", images);
-  const xs = imageLayout("xs", images);
-  return withRglAliases({ lg, sm, xs });
+  return logicalLayoutsFromSizes((size) => imageLayout(size, images));
 }

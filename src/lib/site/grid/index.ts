@@ -1,6 +1,15 @@
 export { GRID_RESPONSIVE_STATIC_PROPS } from "./config";
-export { generateImageLayouts, generateLayouts } from "./defaults";
 export {
-  normalizeLayoutsFromCookie,
-  stripUnknownLayoutBreakpoints,
-} from "./normalize";
+  compactForCookie,
+  cookieValueWithinLimit,
+  expandFromCookie,
+  syncLayoutsForPersistence,
+} from "./cookie-layouts";
+export { generateImageLayouts, generateLayouts } from "./defaults";
+export { normalizeLayoutsFromCookie } from "./normalize";
+export {
+  imageSrcsFromImages,
+  mainGridAllowedLayoutIds,
+  mergeCanonicalBreakpoints,
+  type LayoutPersistenceOptions,
+} from "./layout-persistence";

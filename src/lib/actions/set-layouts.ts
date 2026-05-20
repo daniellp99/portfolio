@@ -1,27 +1,33 @@
 "use server";
 
-import { jsonToLayouts } from "@/lib/schemas/layouts";
 import { COOKIE_MAX_AGE, type LayoutKey } from "@/lib/site/constants";
-import { stripUnknownLayoutBreakpoints } from "@/lib/site/grid";
+import {
+  compactForCookie,
+  cookieValueWithinLimit,
+  type LayoutPersistenceOptions,
+} from "@/lib/site/grid";
 import { cookies } from "next/headers";
 import type { ResponsiveLayouts } from "react-grid-layout";
+
+export type SetLayoutsOptions = LayoutPersistenceOptions;
 
 export async function setLayouts(
   layouts: ResponsiveLayouts,
   layoutKey: LayoutKey,
+  options: SetLayoutsOptions = {},
 ): Promise<void> {
   try {
-    const filteredLayouts = stripUnknownLayoutBreakpoints(
-      Object.fromEntries(
-        Object.entries(layouts)
-          .filter(
-            (entry): entry is [string, NonNullable<(typeof entry)[1]>] =>
-              entry[1] !== undefined,
-          )
-          .map(([key, value]) => [key, [...value]]),
-      ),
-    );
-    const encoded = jsonToLayouts.encode(filteredLayouts);
+    const encoded = compactForCookie(layouts, options);
+
+    if (!cookieValueWithinLimit(layoutKey, encoded)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          `Skipping layout cookie "${layoutKey}": encoded length ${layoutKey.length + encoded.length} exceeds 4096`,
+        );
+      }
+      return;
+    }
+
     const expires = new Date();
     expires.setTime(expires.getTime() + COOKIE_MAX_AGE * 1000);
 

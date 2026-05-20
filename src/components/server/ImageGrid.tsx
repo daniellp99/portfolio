@@ -6,6 +6,7 @@ import {
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
 } from "@/lib/site/constants";
+import { imageSrcsFromImages } from "@/lib/site/grid";
 import { imageGridCardSizes } from "@/lib/site/image-sizes";
 import Image from "next/image";
 
@@ -24,7 +25,11 @@ export default async function ImageGrid({
   const layoutKey = imageLayoutsKeyForSlug(slug, images);
 
   return (
-    <GridContainer layouts={layouts} layoutKey={layoutKey}>
+    <GridContainer
+      layouts={layouts}
+      layoutKey={layoutKey}
+      imageSrcs={imageSrcsFromImages(images)}
+    >
       {images.map((image) => (
         <Card
           key={image.src}

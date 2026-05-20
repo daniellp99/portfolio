@@ -11,6 +11,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 import type { MapMarkerInfo, Project } from "@/lib/content/display";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
 import { Suspense, use } from "react";
 import { ResponsiveLayouts } from "react-grid-layout";
 import AvatarMarker, {
@@ -41,9 +42,16 @@ export default function MainGrid({
 }) {
   const projects = use(projectsPromise);
   const layouts = use(layoutsPromise);
+  const allowedLayoutIds = mainGridAllowedLayoutIds(
+    projects.map((project) => project.slug),
+  );
 
   return (
-    <GridContainer layouts={layouts} layoutKey={MAIN_LAYOUTS_KEY}>
+    <GridContainer
+      layouts={layouts}
+      layoutKey={MAIN_LAYOUTS_KEY}
+      allowedLayoutIds={allowedLayoutIds}
+    >
       <Card variant="item" key="me">
         <AboutMe />
       </Card>
