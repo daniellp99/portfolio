@@ -1,12 +1,13 @@
 "use server";
-
-import {
-  loadProjectDetails,
-  loadProjects,
-  loadProjectSlugs,
-} from "@/lib/server/content-load";
 import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
+
+import type { Project } from "@/lib/content/display";
+import {
+  loadProjectDetails,
+  loadProjectSlugs,
+  loadProjectSummary,
+} from "@/lib/server/content-load";
 
 export const getProjectDetails = cache(async (slug: string) => {
   "use cache";
@@ -15,12 +16,14 @@ export const getProjectDetails = cache(async (slug: string) => {
   return await loadProjectDetails(slug);
 });
 
-export const getProjects = cache(async () => {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("projects");
-  return await loadProjects();
-});
+export const getProjectSummary = cache(
+  async (slug: string): Promise<Project> => {
+    "use cache";
+    cacheLife("hours");
+    cacheTag("projects", `project_${slug}`);
+    return await loadProjectSummary(slug);
+  },
+);
 
 export const getProjectSlugs = cache(async () => {
   "use cache";

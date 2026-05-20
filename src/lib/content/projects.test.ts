@@ -4,12 +4,13 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "bun:test";
 
 import { createFixtureContentPaths } from "./paths";
-import { InvalidProjectFrontMatterError } from "./projects-read";
 import {
   listProjectSlugs,
   readAllProjectSummaries,
   readProject,
+  readProjectSummary,
 } from "./projects";
+import { InvalidProjectFrontMatterError } from "./projects-read";
 
 const thisDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +46,20 @@ describe("readProject", () => {
     await expect(readProject("missing", paths)).resolves.toEqual({
       status: "missing",
     });
+  });
+});
+
+describe("readProjectSummary", () => {
+  it("returns summary for fixture project", async () => {
+    await expect(readProjectSummary("sample", paths)).resolves.toEqual({
+      slug: "sample",
+      name: "Sample Project",
+      coverImage: "https://example.com/cover.webp",
+    });
+  });
+
+  it("returns null for unknown slug", async () => {
+    await expect(readProjectSummary("missing", paths)).resolves.toBeNull();
   });
 });
 

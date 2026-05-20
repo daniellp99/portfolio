@@ -2,18 +2,18 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
+import type { MapMarkerInfo, Project } from "@/lib/content/display";
+import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
 import { readOwnerData } from "@/lib/content/owner";
 import {
   listProjectSlugs,
-  readAllProjectSummaries,
   readProject,
+  readProjectSummary,
 } from "@/lib/content/projects";
 import {
   InvalidProjectFrontMatterError,
   type ReadProjectResult,
 } from "@/lib/content/projects-read";
-import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
-import type { MapMarkerInfo } from "@/lib/content/display";
 import type { OwnerData, ProjectDetails } from "@/lib/content/schemas";
 
 export async function loadProjectSlugs(): Promise<string[]> {
@@ -25,15 +25,17 @@ export async function loadProjectSlugs(): Promise<string[]> {
   }
 }
 
-export async function loadProjects() {
+export async function loadProjectSummary(slug: string): Promise<Project> {
   try {
-    return await readAllProjectSummaries();
+    const summary = await readProjectSummary(slug);
+    if (!summary) notFound();
+    return summary;
   } catch (error) {
     if (error instanceof InvalidProjectFrontMatterError) {
       throw error;
     }
-    console.error("Failed to fetch projects:", error);
-    return [];
+    console.error("Failed to fetch project summary:", error);
+    notFound();
   }
 }
 
