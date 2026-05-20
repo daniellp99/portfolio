@@ -8,21 +8,23 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { switchMainGridTab } from "@/lib/actions/switch-main-grid-tab";
 import type { ProjectSlugs } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
-import { cn } from "@/lib/utils";
 import { tabs, type TabsType } from "@/lib/site/tabs";
+import { cn } from "@/lib/utils";
 
 export function NavItemsFallback() {
   return <Skeleton className="h-12 w-68.25 rounded-full" />;
 }
 
 export default function NavItems({
-  projectsSlugs,
+  projectsSlugsPromise,
   activeTabPromise,
 }: {
-  projectsSlugs: ProjectSlugs;
+  projectsSlugsPromise: Promise<ProjectSlugs>;
   activeTabPromise: Promise<TabsType>;
 }) {
+  const projectsSlugs = use(projectsSlugsPromise);
   const resolvedTab = use(activeTabPromise);
+
   const [pending, startTransition] = useTransition();
   const [activeTab, setOptimisticTab] = useOptimistic(
     resolvedTab,
