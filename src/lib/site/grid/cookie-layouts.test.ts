@@ -142,6 +142,7 @@ describe("compactForCookie / expandFromCookie", () => {
 
   it("keeps 15 image layouts under 4KB with long src paths", () => {
     const images = Array.from({ length: 15 }, (_, i) => ({
+      alt: `image-${i}`,
       src: "/_next/image?url=" + "x".repeat(80) + i,
       width: 1,
       height: 1,
