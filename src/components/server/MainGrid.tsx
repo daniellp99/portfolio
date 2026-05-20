@@ -19,7 +19,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { loadMainSearchParams } from "@/lib/schemas/search-params";
 import { getLayoutsFromSearchParams } from "@/lib/server/layouts";
 import { getMapMarkerInfo } from "@/lib/server/owner";
-import { getProjectSlugs, getProjectSummary } from "@/lib/server/projects";
+import { getProjects } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 
 export function MainGridFallback() {
@@ -39,7 +39,8 @@ export default async function MainGrid({
 }: {
   searchParamsPromise: Promise<SearchParams>;
 }) {
-  const projectSlugs = await getProjectSlugs();
+  const projects = await getProjects();
+  const projectSlugs = projects.map((project) => project.slug);
   const { tab, layout } =
     await loadMainSearchParams(projectSlugs)(searchParamsPromise);
 
@@ -80,11 +81,9 @@ export default async function MainGrid({
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />
       </Card>
-      {projectSlugs.map((projectSlug) => (
-        <Card variant="item" key={projectSlug}>
-          <Suspense fallback={<Skeleton className="size-full" />}>
-            <ProjectCard projectPromise={getProjectSummary(projectSlug)} />
-          </Suspense>
+      {projects.map((project, index) => (
+        <Card variant="item" key={project.slug}>
+          <ProjectCard project={project} eager={index < 3} />
         </Card>
       ))}
     </GridContainer>

@@ -3,8 +3,8 @@
 import type { Project } from "@/lib/content/display";
 import {
   loadProjectDetails,
+  loadProjects,
   loadProjectSlugs,
-  loadProjectSummary,
 } from "@/lib/server/content-load";
 import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
@@ -16,14 +16,12 @@ export const getProjectDetails = cache(async (slug: string) => {
   return await loadProjectDetails(slug);
 });
 
-export const getProjectSummary = cache(
-  async (slug: string): Promise<Project> => {
-    "use cache";
-    cacheLife("hours");
-    cacheTag("projects", `project_${slug}`);
-    return await loadProjectSummary(slug);
-  },
-);
+export const getProjects = cache(async (): Promise<Project[]> => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("projects");
+  return await loadProjects();
+});
 
 export const getProjectSlugs = cache(async () => {
   "use cache";

@@ -4,7 +4,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import { use, useState, ViewTransition } from "react";
+import { useState, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { CardGrayscale } from "@/components/ui/grayscale";
@@ -14,11 +14,13 @@ import { UI_SPRING } from "@/lib/motion";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 
 export default function ProjectCard({
-  projectPromise,
+  project,
+  eager = false,
 }: {
-  projectPromise: Promise<Project>;
+  project: Project;
+  /** First visible project tiles: eager load (avoid `preload` when several may be LCP). */
+  eager?: boolean;
 }) {
-  const project = use(projectPromise);
   const reduceMotion = useReducedMotion() ?? false;
   const [isHovered, setIsHovered] = useState(false);
 
@@ -37,7 +39,7 @@ export default function ProjectCard({
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
-        loading="eager"
+        loading={eager ? "eager" : "lazy"}
         sizes={MAIN_GRID_CARD_IMAGE_SIZES}
         quality={92}
         style={{

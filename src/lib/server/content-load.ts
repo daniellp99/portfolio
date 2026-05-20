@@ -6,9 +6,8 @@ import type { MapMarkerInfo, Project } from "@/lib/content/display";
 import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
 import { readOwnerData } from "@/lib/content/owner";
 import {
-  listProjectSlugs,
+  readAllProjectSummaries,
   readProject,
-  readProjectSummary,
 } from "@/lib/content/projects";
 import {
   InvalidProjectFrontMatterError,
@@ -18,24 +17,26 @@ import type { OwnerData, ProjectDetails } from "@/lib/content/schemas";
 
 export async function loadProjectSlugs(): Promise<string[]> {
   try {
-    return await listProjectSlugs();
+    const projects = await readAllProjectSummaries();
+    return projects.map((project) => project.slug);
   } catch (error) {
+    if (error instanceof InvalidProjectFrontMatterError) {
+      throw error;
+    }
     console.error("Failed to fetch project slugs:", error);
     return [];
   }
 }
 
-export async function loadProjectSummary(slug: string): Promise<Project> {
+export async function loadProjects(): Promise<Project[]> {
   try {
-    const summary = await readProjectSummary(slug);
-    if (!summary) notFound();
-    return summary;
+    return await readAllProjectSummaries();
   } catch (error) {
     if (error instanceof InvalidProjectFrontMatterError) {
       throw error;
     }
-    console.error("Failed to fetch project summary:", error);
-    notFound();
+    console.error("Failed to fetch projects:", error);
+    return [];
   }
 }
 
