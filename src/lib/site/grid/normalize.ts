@@ -58,9 +58,7 @@ export function normalizeLayoutsFromCookie(
     const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
     const fromCookie = decoded[key];
     if (fromCookie !== undefined) {
-      out[key] = fromExpand
-        ? fromCookie
-        : cloneBreakpointLayout(fromCookie);
+      out[key] = fromExpand ? fromCookie : cloneBreakpointLayout(fromCookie);
       continue;
     }
     const fallback = defaults[key];

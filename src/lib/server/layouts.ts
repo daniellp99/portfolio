@@ -2,11 +2,14 @@ import "server-only";
 
 import type { Images } from "@/lib/content/display";
 import { getProjectSlugs } from "@/lib/server/projects";
+import { parseActiveTab } from "@/lib/schemas/active-tab";
 import {
+  ACTIVE_TAB_KEY,
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
+import type { TabsType } from "@/lib/site/tabs";
 import {
   expandFromCookie,
   generateImageLayouts,
@@ -27,6 +30,11 @@ type GetImageLayoutsParams = {
 
 type GetLayoutsParams = GetMainLayoutsParams | GetImageLayoutsParams;
 
+export async function getActiveTab(): Promise<TabsType> {
+  const cookieStore = await cookies();
+  return parseActiveTab(cookieStore.get(ACTIVE_TAB_KEY)?.value);
+}
+
 function layoutsCookieName(params: GetLayoutsParams): string {
   if (params.layoutKey === MAIN_LAYOUTS_KEY) {
     return MAIN_LAYOUTS_KEY;
@@ -44,7 +52,8 @@ export async function getLayouts(
   switch (params.layoutKey) {
     case MAIN_LAYOUTS_KEY: {
       const projectKeys = await getProjectSlugs();
-      defaultLayouts = generateLayouts("All", projectKeys);
+      const activeTab = await getActiveTab();
+      defaultLayouts = generateLayouts(activeTab, projectKeys);
       break;
     }
     case IMAGE_LAYOUTS_KEY:

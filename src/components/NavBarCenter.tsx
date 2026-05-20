@@ -6,11 +6,14 @@ import { Suspense, ViewTransition } from "react";
 import GoBackButton from "@/components/GoBackButton";
 import NavItems, { NavItemsFallback } from "@/components/NavItems";
 import type { ProjectSlugs } from "@/lib/content/display";
+import type { TabsType } from "@/lib/site/tabs";
 
 export default function NavBarCenter({
   projectsSlugs,
+  activeTabPromise,
 }: {
   projectsSlugs: ProjectSlugs;
+  activeTabPromise: Promise<TabsType>;
 }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
@@ -33,7 +36,10 @@ export default function NavBarCenter({
             }
           >
             <ViewTransition enter="slide-up" default="none">
-              <NavItems projectsSlugs={projectsSlugs} />
+              <NavItems
+                projectsSlugs={projectsSlugs}
+                activeTabPromise={activeTabPromise}
+              />
             </ViewTransition>
           </Suspense>
         </ViewTransition>

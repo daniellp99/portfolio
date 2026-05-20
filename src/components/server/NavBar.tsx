@@ -3,16 +3,20 @@ import { Suspense, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 
-import Logo, { LogoFallback } from "@/components/server/Logo";
 import NavBarCenter from "@/components/NavBarCenter";
+import Logo, { LogoFallback } from "@/components/server/Logo";
 
+import { getActiveTab } from "@/lib/server/layouts";
 import { getOwnerData } from "@/lib/server/owner";
 import { getProjectSlugs } from "@/lib/server/projects";
 
 export default async function NavBar() {
   const projectsSlugs = await getProjectSlugs();
   const ownerData = await getOwnerData();
+  const activeTabPromise = getActiveTab();
+
   const email = ownerData?.email;
+
   return (
     <nav
       style={{ viewTransitionName: "persistent-nav" }}
@@ -29,7 +33,10 @@ export default async function NavBar() {
           <Logo />
         </ViewTransition>
       </Suspense>
-      <NavBarCenter projectsSlugs={projectsSlugs} />
+      <NavBarCenter
+        projectsSlugs={projectsSlugs}
+        activeTabPromise={activeTabPromise}
+      />
       <Button
         variant="link"
         className="hidden text-xl/6 sm:block"

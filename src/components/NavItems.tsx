@@ -1,18 +1,15 @@
 "use client";
 
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { useState, useTransition } from "react";
+import { use, useOptimistic, useTransition } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { switchMainGridTab } from "@/lib/actions/switch-main-grid-tab";
+import type { ProjectSlugs } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-
-import { setLayouts } from "@/lib/actions/set-layouts";
-import type { ProjectSlugs } from "@/lib/content/display";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { generateLayouts, mainGridAllowedLayoutIds } from "@/lib/site/grid";
-import { tabs, TabsType } from "@/lib/site/tabs";
+import { tabs, type TabsType } from "@/lib/site/tabs";
 
 export function NavItemsFallback() {
   return <Skeleton className="h-12 w-68.25 rounded-full" />;
@@ -20,11 +17,17 @@ export function NavItemsFallback() {
 
 export default function NavItems({
   projectsSlugs,
+  activeTabPromise,
 }: {
   projectsSlugs: ProjectSlugs;
+  activeTabPromise: Promise<TabsType>;
 }) {
+  const resolvedTab = use(activeTabPromise);
   const [pending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setOptimisticTab] = useOptimistic(
+    resolvedTab,
+    (_current, next: TabsType) => next,
+  );
   const reduceMotion = useReducedMotion() ?? false;
 
   const indicatorTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
@@ -34,11 +37,10 @@ export default function NavItems({
       data-pending={pending}
       value={activeTab}
       onValueChange={(value) => {
-        const layouts = generateLayouts(value as TabsType, projectsSlugs);
-        const allowedLayoutIds = mainGridAllowedLayoutIds(projectsSlugs);
+        const tab = value as TabsType;
         startTransition(async () => {
-          await setLayouts(layouts, MAIN_LAYOUTS_KEY, { allowedLayoutIds });
-          startTransition(() => setActiveTab(value as TabsType));
+          setOptimisticTab(tab);
+          await switchMainGridTab(tab, projectsSlugs);
         });
       }}
       className="flex flex-col items-center"

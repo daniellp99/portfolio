@@ -1,4 +1,4 @@
-const TABS = {
+export const TABS = {
   ALL: "All",
   ABOUT: "About",
   PROJECTS: "Projects",

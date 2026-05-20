@@ -2,6 +2,7 @@ import { LatLngExpression } from "leaflet";
 
 export const DEFAULT_CENTER = [20.89689, -76.26652] satisfies LatLngExpression;
 export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
+export const ACTIVE_TAB_KEY = "portfolio-active-tab" as const;
 /** Discriminator for getLayouts image branch; cookie key is per-slug via imageLayoutsKeyForSlug */
 export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 
