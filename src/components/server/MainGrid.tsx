@@ -1,23 +1,24 @@
+import { Suspense, use } from "react";
+import { ResponsiveLayouts } from "react-grid-layout";
+
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import AboutMe from "@/components/server/AboutMe";
-import ContributionsCard from "@/components/server/ContributionsCard";
-import GridContainer from "@/components/GridContainer";
-import Map from "@/components/Map";
-import ProjectCard from "@/components/ProjectCard";
-import SkillsCard from "@/components/server/SkillsCard";
-import ThemeToggle from "@/components/ThemeToggle";
-
-import type { MapMarkerInfo, Project } from "@/lib/content/display";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
-import { Suspense, use } from "react";
-import { ResponsiveLayouts } from "react-grid-layout";
 import AvatarMarker, {
   AvatarMarkerIcon,
   AvatarMarkerSkeleton,
-} from "./AvatarMarker";
+} from "@/components/AvatarMarker";
+import GridContainer from "@/components/GridContainer";
+import Map from "@/components/Map";
+import AboutMe from "@/components/server/AboutMe";
+import ContributionsCard from "@/components/server/ContributionsCard";
+import ProjectCard from "@/components/server/ProjectCard";
+import SkillsCard from "@/components/server/SkillsCard";
+import ThemeToggle from "@/components/ThemeToggle";
+
+import type { MapMarkerInfo, ProjectSlugs } from "@/lib/content/display";
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
 
 export function MainGridFallback() {
   return (
@@ -32,19 +33,17 @@ export function MainGridFallback() {
 }
 
 export default function MainGrid({
-  projectsPromise,
+  projectsSlugsPromise,
   layoutsPromise,
   mapMarkerInfoPromise,
 }: {
-  projectsPromise: Promise<Project[]>;
+  projectsSlugsPromise: Promise<ProjectSlugs>;
   layoutsPromise: Promise<ResponsiveLayouts>;
   mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
 }) {
-  const projects = use(projectsPromise);
+  const projectsSlugs = use(projectsSlugsPromise);
   const layouts = use(layoutsPromise);
-  const allowedLayoutIds = mainGridAllowedLayoutIds(
-    projects.map((project) => project.slug),
-  );
+  const allowedLayoutIds = mainGridAllowedLayoutIds(projectsSlugs);
 
   return (
     <GridContainer
@@ -73,9 +72,9 @@ export default function MainGrid({
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />
       </Card>
-      {projects.map((project, index) => (
-        <Card variant="item" key={project.slug}>
-          <ProjectCard project={project} eager={index < 3} />
+      {projectsSlugs.map((projectSlug) => (
+        <Card variant="item" key={projectSlug}>
+          <ProjectCard projectSlug={projectSlug} />
         </Card>
       ))}
     </GridContainer>

@@ -1,14 +1,14 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { ViewTransition } from "react";
+import { Suspense, ViewTransition } from "react";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
 import HomeJsonLd from "@/components/server/HomeJsonLd";
-import MainGrid, { MainGridFallback } from "@/components/MainGrid";
+import MainGrid, { MainGridFallback } from "@/components/server/MainGrid";
 
 import { getLayouts } from "@/lib/server/layouts";
 import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
-import { getProjects } from "@/lib/server/projects";
+
+import { getProjectSlugs } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
 
@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function HomePage() {
-  const projectsPromise = getProjects();
+  const projectsSlugsPromise = getProjectSlugs();
   const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
   const mapMarkerInfoPromise = getMapMarkerInfo();
 
@@ -35,7 +35,7 @@ export default function HomePage() {
         >
           <ViewTransition enter="slide-up" default="none">
             <MainGrid
-              projectsPromise={projectsPromise}
+              projectsSlugsPromise={projectsSlugsPromise}
               layoutsPromise={layoutsPromise}
               mapMarkerInfoPromise={mapMarkerInfoPromise}
             />
