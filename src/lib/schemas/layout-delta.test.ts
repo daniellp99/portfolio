@@ -145,7 +145,7 @@ describe("layout delta codec", () => {
     const baseline = toDecodedLayouts(
       generateLayouts("All", ["a", "b", "c", "d", "e"]),
     );
-    let current = structuredClone(baseline);
+    const current = structuredClone(baseline);
     for (const bp of ["lg", "sm", "xs"] as const) {
       for (const item of current[bp] ?? []) {
         item.x = (item.x + 1) % 4;
@@ -168,7 +168,7 @@ describe("layout delta codec", () => {
       height: 600,
     }));
     const baseline = toDecodedLayouts(generateImageLayouts(images));
-    let current = structuredClone(baseline);
+    const current = structuredClone(baseline);
     for (const bp of ["lg", "sm", "xs"] as const) {
       for (const item of current[bp] ?? []) {
         item.x = (item.x + 1) % 4;
