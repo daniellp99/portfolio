@@ -1,20 +1,17 @@
 "use client";
 
-import { setLayouts, type SetLayoutsOptions } from "@/lib/actions/set-layouts";
+import dynamic from "next/dynamic";
+import { type SetLayoutsOptions } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
-import {
-  GRID_RESPONSIVE_STATIC_PROPS,
-  mergeCanonicalBreakpoints,
-  syncLayoutsForPersistence,
-} from "@/lib/site/grid";
-import { ReactNode, startTransition, useOptimistic } from "react";
-import {
-  getBreakpointFromWidth,
-  Layout,
-  Responsive,
-  ResponsiveLayouts,
-  useContainerWidth,
-} from "react-grid-layout";
+import { ReactNode } from "react";
+import type { ResponsiveLayouts } from "react-grid-layout";
+
+import GridStaticShell from "@/components/GridStaticShell";
+import { useGridContainerWidth } from "@/hooks/use-grid-container-width";
+
+const GridResponsive = dynamic(() => import("@/components/GridResponsive"), {
+  ssr: false,
+});
 
 export default function GridContainer({
   children,
@@ -33,41 +30,21 @@ export default function GridContainer({
     allowedLayoutIds !== undefined || imageSrcs !== undefined
       ? { allowedLayoutIds, imageSrcs }
       : {};
-  const [optimisticLayouts, addOptimisticLayouts] = useOptimistic(
-    layouts,
-    (state, newLayouts: ResponsiveLayouts) =>
-      mergeCanonicalBreakpoints(state, newLayouts),
-  );
-  const { width, containerRef, mounted } = useContainerWidth({
-    measureBeforeMount: true,
-  });
-  const changeLayoutAction = (layout: Layout, layouts: ResponsiveLayouts) => {
-    const breakpoint = mounted
-      ? getBreakpointFromWidth(GRID_RESPONSIVE_STATIC_PROPS.breakpoints, width)
-      : "lg";
-    const synced = syncLayoutsForPersistence(layout, breakpoint, layouts);
-    startTransition(() => {
-      addOptimisticLayouts(synced);
-      startTransition(async () => {
-        await setLayouts(synced, layoutKey, setLayoutsOptions);
-      });
-    });
-  };
+  const { width, containerRef, mounted } = useGridContainerWidth();
 
   return (
-    <div ref={containerRef}>
-      {mounted && (
-        <Responsive
-          dragConfig={{ cancel: ".cancelDrag" }}
+    <div ref={containerRef} className="relative">
+      {!mounted ? (
+        <GridStaticShell layouts={layouts}>{children}</GridStaticShell>
+      ) : (
+        <GridResponsive
+          layouts={layouts}
+          layoutKey={layoutKey}
           width={width}
-          className="layout duration-1000 animate-in fade-in"
-          layouts={optimisticLayouts}
-          onLayoutChange={changeLayoutAction}
-          {...GRID_RESPONSIVE_STATIC_PROPS}
-          // isBounded={true}
+          setLayoutsOptions={setLayoutsOptions}
         >
           {children}
-        </Responsive>
+        </GridResponsive>
       )}
     </div>
   );
