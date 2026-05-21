@@ -1,7 +1,6 @@
 "use client";
-import type { MapMarkerInfo } from "@/lib/content/display";
 import { DEFAULT_CENTER } from "@/lib/site/constants";
-import L from "leaflet";
+import type { DivIcon, Marker as LeafletMarkerType } from "leaflet";
 import Image from "next/image";
 import {
   Activity,
@@ -22,20 +21,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
 import { cn } from "@/lib/utils";
 
+import { MapMarkerInfo } from "@/lib/content/display";
+import face1 from "../../public/face-1.webp";
+import face2 from "../../public/face-2.webp";
+
 const MarkerRootIdContext = createContext<string | null>(null);
 
 export function AvatarMarkerIcon({
-  mapMarkerInfoPromise,
+  mapMarkerInfo,
 }: {
-  mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
+  mapMarkerInfo: MapMarkerInfo;
 }) {
   const markerRootId = use(MarkerRootIdContext);
-  const mapMarkerInfo = use(mapMarkerInfoPromise);
+
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [isActive, setIsActive] = useState(false);
   const openOnHover = usePrefersFinePointer();
@@ -56,11 +58,9 @@ export function AvatarMarkerIcon({
     return () => window.cancelAnimationFrame(raf);
   }, [markerRootId]);
 
-  const avatarMarker = mapMarkerInfo?.avatarMarker ?? "";
-  const avatarMarkerHover = mapMarkerInfo?.avatarMarkerHover ?? "";
-  const avatarMarkerTooltip = mapMarkerInfo?.avatarMarkerTooltip ?? "";
+  const avatarMarkerTooltip = mapMarkerInfo.avatarMarkerTooltip;
 
-  if (!markerRootId || !portalTarget || !mapMarkerInfo) {
+  if (!markerRootId || !portalTarget) {
     return null;
   }
 
@@ -82,11 +82,10 @@ export function AvatarMarkerIcon({
             <Activity mode={isActive ? "hidden" : "visible"}>
               <ViewTransition default="avatar-marker-fade">
                 <Image
-                  src={avatarMarker}
-                  alt=""
+                  src={face1}
+                  alt="Avatar marker"
                   width={40}
                   height={40}
-                  unoptimized
                   className="pointer-events-none relative z-10 size-10 rounded-full object-cover"
                   draggable={false}
                 />
@@ -96,11 +95,10 @@ export function AvatarMarkerIcon({
             <Activity mode={isActive ? "visible" : "hidden"}>
               <ViewTransition default="avatar-marker-fade">
                 <Image
-                  src={avatarMarkerHover}
-                  alt=""
+                  src={face2}
+                  alt="Avatar marker hover"
                   width={40}
                   height={40}
-                  unoptimized
                   className="pointer-events-none relative z-10 size-10 -translate-x-px rounded-full object-cover"
                   draggable={false}
                 />
@@ -122,40 +120,52 @@ export function AvatarMarkerIcon({
   );
 }
 
+function useAvatarMarkerIcon(markerRootId: string): DivIcon | null {
+  const [icon, setIcon] = useState<DivIcon | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void import("leaflet").then((leaflet) => {
+      if (cancelled) return;
+      const size = 44;
+      const tipY = Math.round(size / 2 + size / Math.SQRT2);
+      setIcon(
+        leaflet.default.divIcon({
+          className: "avatar-marker-div-icon",
+          html: `<div id="${markerRootId}" class="size-11"></div>`,
+          iconSize: [size, size],
+          iconAnchor: [size / 2, tipY],
+        }),
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [markerRootId]);
+
+  return icon;
+}
+
 export default function AvatarMarker({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const markerRef = useRef<L.Marker | null>(null);
+  const markerRef = useRef<LeafletMarkerType | null>(null);
   const reactId = useId();
   const markerRootId = useMemo(
     () => `avatar-marker-${reactId.replace(/[:]/g, "")}`,
     [reactId],
   );
-  const icon = useMemo(() => {
-    // Visual marker is a square rotated -45deg, whose tip extends past the box.
-    // For a square of side `size` rotated 45deg, the bottom tip is at:
-    // y = size/2 + size/sqrt(2) from the top-left origin of the unrotated box.
-    const size = 44; // Tailwind `size-11`
-    const tipY = Math.round(size / 2 + size / Math.SQRT2);
-    return L.divIcon({
-      className: "avatar-marker-div-icon",
-      html: `<div id="${markerRootId}" class="size-11"></div>`,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, tipY],
-    });
-  }, [markerRootId]);
+  const icon = useAvatarMarkerIcon(markerRootId);
+
+  if (!icon) {
+    return null;
+  }
 
   return (
     <Marker position={DEFAULT_CENTER} ref={markerRef} icon={icon}>
       <MarkerRootIdContext value={markerRootId}>{children}</MarkerRootIdContext>
     </Marker>
-  );
-}
-
-export function AvatarMarkerSkeleton() {
-  return (
-    <Skeleton className="absolute top-1/2 left-1/2 z-100000 size-11 -translate-x-1/2 -translate-y-[calc(50%+30px)] -rotate-45 rounded-[50%_50%_50%_0] before:-inset-10 before:rotate-45" />
   );
 }

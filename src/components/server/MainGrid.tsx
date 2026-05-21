@@ -1,22 +1,21 @@
-import { Suspense, use } from "react";
-import { ResponsiveLayouts } from "react-grid-layout";
+import { use } from "react";
+import type { ResponsiveLayouts } from "react-grid-layout";
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import AvatarMarker, {
-  AvatarMarkerIcon,
-  AvatarMarkerSkeleton,
-} from "@/components/AvatarMarker";
+import AvatarMarker, { AvatarMarkerIcon } from "@/components/AvatarMarker";
+import DeferredMapCard from "@/components/DeferredMapCard";
 import GridContainer from "@/components/GridContainer";
-import Map from "@/components/Map";
+import MapPreviewStatic from "@/components/MapPreviewStatic";
 import AboutMe from "@/components/server/AboutMe";
 import ContributionsCard from "@/components/server/ContributionsCard";
 import ProjectCard from "@/components/server/ProjectCard";
 import SkillsCard from "@/components/server/SkillsCard";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import type { MapMarkerInfo, ProjectSlugs } from "@/lib/content/display";
+import type { ProjectSlugs } from "@/lib/content/display";
+import { loadOwnerData } from "@/lib/server/content-load";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
 
@@ -35,14 +34,13 @@ export function MainGridFallback() {
 export default function MainGrid({
   projectsSlugsPromise,
   layoutsPromise,
-  mapMarkerInfoPromise,
 }: {
   projectsSlugsPromise: Promise<ProjectSlugs>;
   layoutsPromise: Promise<ResponsiveLayouts>;
-  mapMarkerInfoPromise: Promise<MapMarkerInfo | null>;
 }) {
   const projectsSlugs = use(projectsSlugsPromise);
   const layouts = use(layoutsPromise);
+  const ownerData = loadOwnerData();
   const allowedLayoutIds = mainGridAllowedLayoutIds(projectsSlugs);
 
   return (
@@ -61,13 +59,11 @@ export default function MainGrid({
         <SkillsCard />
       </Card>
       <Card variant="item" key="maps" className="relative">
-        <Map>
+        <DeferredMapCard preview={<MapPreviewStatic />}>
           <AvatarMarker>
-            <Suspense fallback={<AvatarMarkerSkeleton />}>
-              <AvatarMarkerIcon mapMarkerInfoPromise={mapMarkerInfoPromise} />
-            </Suspense>
+            <AvatarMarkerIcon mapMarkerInfo={ownerData} />
           </AvatarMarker>
-        </Map>
+        </DeferredMapCard>
       </Card>
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />
