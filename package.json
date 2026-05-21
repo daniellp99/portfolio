@@ -13,7 +13,7 @@
     "test": "bun test --conditions react-server",
     "measure:project-listing": "bun run scripts/measure-project-listing.ts",
     "extract:stack-icons": "bun run scripts/extract-stack-icons.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
