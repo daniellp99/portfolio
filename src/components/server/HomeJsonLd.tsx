@@ -1,18 +1,16 @@
-import { getOwnerData } from "@/lib/server/owner";
+import { loadOwnerData } from "@/lib/server/content-load";
 import {
   getAbsoluteImageUrl,
   getCanonicalUrl,
   getOwnerAvatarPath,
 } from "@/lib/site/metadata";
 
-export default async function HomeJsonLd() {
-  const ownerData = await getOwnerData();
-  const ownerName = ownerData?.name || "Portfolio Owner";
+export default function HomeJsonLd() {
+  const ownerData = loadOwnerData();
+  const ownerName = ownerData.name;
   const homeUrl = getCanonicalUrl("");
-  const brandName = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
-  const profileImage = getAbsoluteImageUrl(
-    getOwnerAvatarPath(ownerData?.avatar),
-  );
+  const brandName = `${ownerName}'s Portfolio`;
+  const profileImage = getAbsoluteImageUrl(getOwnerAvatarPath());
 
   const personId = `${homeUrl}#person`;
   const websiteId = `${homeUrl}#website`;
@@ -24,19 +22,17 @@ export default async function HomeJsonLd() {
         "@type": "Person",
         "@id": personId,
         name: ownerName,
-        description: ownerData?.aboutMe || brandName,
+        description: ownerData.aboutMe || brandName,
         url: homeUrl,
         image: profileImage,
-        ...(ownerData?.githubUser && {
-          sameAs: [`https://github.com/${ownerData.githubUser}`],
-        }),
+        sameAs: [`https://github.com/${ownerData.githubUser}`],
       },
       {
         "@type": "WebSite",
         "@id": websiteId,
         url: homeUrl,
         name: brandName,
-        description: ownerData?.aboutMe || brandName,
+        description: ownerData.aboutMe || brandName,
         publisher: { "@id": personId },
       },
     ],

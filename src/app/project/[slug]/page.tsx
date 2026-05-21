@@ -8,7 +8,7 @@ import { CustomMDX } from "@/components/MdxRemote";
 import ImageGrid from "@/components/server/ImageGrid";
 import ProjectJsonLd from "@/components/server/ProjectJsonLd";
 
-import { getOwnerData } from "@/lib/server/owner";
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getProjectDetails, getProjectSlugs } from "@/lib/server/projects";
 import { buildProjectPageMetadata } from "@/lib/site/metadata";
 
@@ -17,13 +17,13 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const params = await props.params;
   const project = await getProjectDetails(params.slug);
-  const ownerData = await getOwnerData();
+  const ownerData = loadOwnerData();
 
   return buildProjectPageMetadata({
     slug: params.slug,
     projectName: project.name,
     projectDescription: project.description,
-    owner: ownerData ?? undefined,
+    owner: ownerData,
   });
 }
 

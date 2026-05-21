@@ -1,7 +1,6 @@
 import { CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
-import { getOwnerData } from "@/lib/server/owner";
+import { loadOwnerData } from "@/lib/server/content-load";
 
 function formatExperienceYears(journeyStartAtIso: string) {
   const start = new Date(journeyStartAtIso);
@@ -18,12 +17,8 @@ function formatExperienceYears(journeyStartAtIso: string) {
   return `${years}+ years`;
 }
 
-export default async function AboutMe() {
-  const ownerData = await getOwnerData();
-  if (!ownerData) {
-    return <Skeleton className="size-full" />;
-  }
-  const { aboutMe, name, journeyStartAt } = ownerData;
+export default function AboutMe() {
+  const { aboutMe, name, journeyStartAt } = loadOwnerData();
   const experience = formatExperienceYears(journeyStartAt);
   const renderedAboutMe = aboutMe
     .replace("{name}", name)

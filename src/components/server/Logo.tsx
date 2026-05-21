@@ -1,31 +1,22 @@
 import Image from "next/image";
 
-import { Skeleton } from "@/components/ui/skeleton";
+import { loadOwnerData } from "@/lib/server/content-load";
 
-import { getOwnerData } from "@/lib/server/owner";
-import { getOwnerAvatarPath } from "@/lib/site/metadata";
+import logo from "../../../public/Avatar-lg.webp";
 
-export function LogoFallback() {
-  return <Skeleton className="size-20 rounded-full" />;
-}
+export default function Logo() {
+  const ownerData = loadOwnerData();
 
-export default async function Logo() {
-  const ownerData = await getOwnerData();
-  const ownerName = ownerData?.name || "Portfolio";
-  const altText = `${ownerName} Logo`;
-
-  if (!ownerData) {
-    return null;
-  }
-
+  const altText = `${ownerData.name} Logo`;
   return (
     <Image
-      src={getOwnerAvatarPath(ownerData.avatar)}
+      src={logo}
       alt={altText}
       width={80}
       height={80}
       preload
       sizes="80px"
+      fetchPriority="high"
       quality={90}
       className="size-20 rounded-full border border-foreground bg-foreground"
     />

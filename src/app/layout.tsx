@@ -4,23 +4,30 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
 
-import NavBar from "@/components/server/NavBar";
-import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getOwnerData } from "@/lib/server/owner";
+
+import { ThemeProvider } from "@/components/Providers";
+import NavBar from "@/components/server/NavBar";
+
+import { loadOwnerData } from "@/lib/server/content-load";
 import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerData();
-  return buildRootLayoutMetadata(ownerData ?? undefined);
+export function generateMetadata(): Metadata {
+  const ownerData = loadOwnerData();
+
+  return buildRootLayoutMetadata(ownerData);
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
@@ -30,6 +37,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://c.basemaps.cartocdn.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <a
           href="#main"

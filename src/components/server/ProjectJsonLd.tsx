@@ -1,12 +1,11 @@
-import { getOwnerData } from "@/lib/server/owner";
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getProjectDetails } from "@/lib/server/projects";
 import { getAbsoluteImageUrl, getCanonicalUrl } from "@/lib/site/metadata";
 
 export default async function ProjectJsonLd({ slug }: { slug: string }) {
   const project = await getProjectDetails(slug);
-  const ownerData = await getOwnerData();
-
-  const ownerName = ownerData?.name || "Daniel";
+  const ownerData = loadOwnerData();
+  const ownerName = ownerData.name;
   const homeUrl = getCanonicalUrl("");
   const projectUrl = getCanonicalUrl(`/project/${slug}`);
   const coverImagePath = project.coverImage
@@ -16,7 +15,7 @@ export default async function ProjectJsonLd({ slug }: { slug: string }) {
     : "/Avatar.webp";
   const projectImage = getAbsoluteImageUrl(coverImagePath);
 
-  const authorUrl = ownerData?.githubUser
+  const authorUrl = ownerData.githubUser
     ? `https://github.com/${ownerData.githubUser}`
     : undefined;
 

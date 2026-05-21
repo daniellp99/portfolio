@@ -1,7 +1,6 @@
-import { getOwnerData } from "@/lib/server/owner";
-
 import ContributionsCardClient from "@/components/ContributionsCardClient";
 import { CardHeader, CardTitle } from "@/components/ui/card";
+import { loadOwnerData } from "@/lib/server/content-load";
 
 function buildYearOptions(startIso: string) {
   const startYear = new Date(startIso).getUTCFullYear();
@@ -11,11 +10,11 @@ function buildYearOptions(startIso: string) {
   return { years, defaultYear: currentYear };
 }
 
-export default async function ContributionsCard() {
-  const owner = await getOwnerData();
-  const login = owner?.githubUser?.trim();
+export default function ContributionsCard() {
+  const ownerData = loadOwnerData();
+  const login = ownerData.githubUser.trim();
 
-  if (!owner || !login) {
+  if (!login) {
     return (
       <CardHeader className="h-full place-content-center place-items-center justify-evenly">
         <CardTitle>No GitHub Username</CardTitle>
@@ -23,7 +22,7 @@ export default async function ContributionsCard() {
     );
   }
 
-  const { years, defaultYear } = buildYearOptions(owner.journeyStartAt);
+  const { years, defaultYear } = buildYearOptions(ownerData.journeyStartAt);
 
   return (
     <ContributionsCardClient

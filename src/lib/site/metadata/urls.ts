@@ -2,12 +2,13 @@
  * URL helpers for canonical tags, OG, JSON-LD, and Next metadataBase.
  */
 
+import { OWNER_AVATAR_PATH } from "@/content/owner-assets";
+
 /**
  * Public avatar path for OG, icons, and JSON-LD (leading slash, under /public).
  */
-export function getOwnerAvatarPath(avatar: string | null | undefined): string {
-  const raw = avatar || "/Avatar.webp";
-  return raw.startsWith("/") ? raw : `/${raw}`;
+export function getOwnerAvatarPath(): string {
+  return OWNER_AVATAR_PATH;
 }
 
 /**

@@ -6,12 +6,13 @@ import {
   openGraphWebsiteFragment,
   twitterSummaryLargeImage,
 } from "./fragments";
-import { getCanonicalUrl, getMetadataBase, getOwnerAvatarPath } from "./urls";
+import { OWNER_AVATAR_PATH } from "@/content/owner-assets";
+
+import { getCanonicalUrl, getMetadataBase } from "./urls";
 
 type OwnerForMetadata = {
   name?: string | null;
   aboutMe?: string | null;
-  avatar?: string | null;
   githubUser?: string | null;
 };
 
@@ -21,7 +22,7 @@ export function buildRootLayoutMetadata(
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
   const description = owner?.aboutMe || "";
-  const avatarPath = getOwnerAvatarPath(owner?.avatar);
+  const avatarPath = OWNER_AVATAR_PATH;
   const homeUrl = getCanonicalUrl("");
 
   return {

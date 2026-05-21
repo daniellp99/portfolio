@@ -5,22 +5,21 @@ import DirectionalTransition from "@/components/DirectionalTransition";
 import HomeJsonLd from "@/components/server/HomeJsonLd";
 import MainGrid, { MainGridFallback } from "@/components/server/MainGrid";
 
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getLayouts } from "@/lib/server/layouts";
-import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
-
 import { getProjectSlugs } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerData();
-  return buildHomeMetadata(ownerData ?? undefined);
+export function generateMetadata(): Metadata {
+  const ownerData = loadOwnerData();
+
+  return buildHomeMetadata(ownerData);
 }
 
 export default function HomePage() {
   const projectsSlugsPromise = getProjectSlugs();
   const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-  const mapMarkerInfoPromise = getMapMarkerInfo();
 
   return (
     <DirectionalTransition>
@@ -37,7 +36,6 @@ export default function HomePage() {
             <MainGrid
               projectsSlugsPromise={projectsSlugsPromise}
               layoutsPromise={layoutsPromise}
-              mapMarkerInfoPromise={mapMarkerInfoPromise}
             />
           </ViewTransition>
         </Suspense>

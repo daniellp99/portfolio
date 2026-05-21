@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getGithubContributionsForMonth } from "@/lib/server/github-contributions";
-import { getOwnerData } from "@/lib/server/owner";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const owner = await getOwnerData();
+  const owner = loadOwnerData();
   const login = owner?.githubUser?.trim();
   if (!login) {
     return NextResponse.json(
