@@ -1,15 +1,14 @@
+"use server";
+import { ResponsiveLayouts } from "react-grid-layout";
 import "server-only";
 
 import type { Images } from "@/lib/content/display";
 import { getProjectSlugs } from "@/lib/server/projects";
-import { parseActiveTab } from "@/lib/schemas/active-tab";
 import {
-  ACTIVE_TAB_KEY,
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
-import type { TabsType } from "@/lib/site/tabs";
 import {
   expandFromCookie,
   generateImageLayouts,
@@ -17,8 +16,8 @@ import {
   imageSrcsFromImages,
   normalizeLayoutsFromCookie,
 } from "@/lib/site/grid";
-import { cookies } from "next/headers";
-import { ResponsiveLayouts } from "react-grid-layout";
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { getActiveTab } from "../site/tabs";
 
 type GetMainLayoutsParams = { layoutKey: typeof MAIN_LAYOUTS_KEY };
 type GetImageLayoutsParams = {
@@ -30,11 +29,6 @@ type GetImageLayoutsParams = {
 
 type GetLayoutsParams = GetMainLayoutsParams | GetImageLayoutsParams;
 
-export async function getActiveTab(): Promise<TabsType> {
-  const cookieStore = await cookies();
-  return parseActiveTab(cookieStore.get(ACTIVE_TAB_KEY)?.value);
-}
-
 function layoutsCookieName(params: GetLayoutsParams): string {
   if (params.layoutKey === MAIN_LAYOUTS_KEY) {
     return MAIN_LAYOUTS_KEY;
@@ -44,15 +38,15 @@ function layoutsCookieName(params: GetLayoutsParams): string {
 
 export async function getLayouts(
   params: GetLayoutsParams,
+  cookieStore: ReadonlyRequestCookies,
 ): Promise<ResponsiveLayouts> {
-  const cookieStore = await cookies();
   const layoutsCookie = cookieStore.get(layoutsCookieName(params));
 
   let defaultLayouts: ResponsiveLayouts = {};
   switch (params.layoutKey) {
     case MAIN_LAYOUTS_KEY: {
       const projectKeys = await getProjectSlugs();
-      const activeTab = await getActiveTab();
+      const activeTab = getActiveTab(cookieStore);
       defaultLayouts = generateLayouts(activeTab, projectKeys);
       break;
     }

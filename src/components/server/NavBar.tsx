@@ -4,16 +4,12 @@ import { Suspense, ViewTransition } from "react";
 import { Button } from "@/components/ui/button";
 
 import NavBarCenter from "@/components/NavBarCenter";
-import NavItems, { NavItemsFallback } from "@/components/NavItems";
 import Logo from "@/components/server/Logo";
+import NavItems, { NavItemsFallback } from "@/components/server/NavItems";
 
 import { loadOwnerData } from "@/lib/server/content-load";
-import { getActiveTab } from "@/lib/server/layouts";
-import { getProjectSlugs } from "@/lib/server/projects";
 
-export default function NavBar() {
-  const projectsSlugsPromise = getProjectSlugs();
-  const activeTabPromise = getActiveTab();
+export default async function NavBar() {
   const ownerData = loadOwnerData();
 
   return (
@@ -31,10 +27,7 @@ export default function NavBar() {
           }
         >
           <ViewTransition enter="slide-up" default="none">
-            <NavItems
-              projectsSlugsPromise={projectsSlugsPromise}
-              activeTabPromise={activeTabPromise}
-            />
+            <NavItems />
           </ViewTransition>
         </Suspense>
       </NavBarCenter>

@@ -4,13 +4,13 @@ import { cookies } from "next/headers";
 
 import { setLayouts } from "@/lib/actions/set-layouts";
 import type { ProjectSlugs } from "@/lib/content/display";
-import { tabsTypeSchema } from "@/lib/schemas/active-tab";
 import {
   ACTIVE_TAB_KEY,
   COOKIE_MAX_AGE,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import { generateLayouts, mainGridAllowedLayoutIds } from "@/lib/site/grid";
+import { tabsTypeSchema } from "@/lib/site/tabs";
 
 export async function switchMainGridTab(
   tab: unknown,

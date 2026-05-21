@@ -10,6 +10,7 @@ import { getLayouts } from "@/lib/server/layouts";
 import { getProjectSlugs } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
+import { cookies } from "next/headers";
 
 export function generateMetadata(): Metadata {
   const ownerData = loadOwnerData();
@@ -17,9 +18,15 @@ export function generateMetadata(): Metadata {
   return buildHomeMetadata(ownerData);
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
   const projectsSlugsPromise = getProjectSlugs();
-  const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
+  const layoutsPromise = getLayouts(
+    {
+      layoutKey: MAIN_LAYOUTS_KEY,
+    },
+    cookieStore,
+  );
 
   return (
     <DirectionalTransition>
