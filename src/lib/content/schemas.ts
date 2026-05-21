@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { SKILL_ICON_KEYS } from "@/lib/icons/stack-icons.generated";
+
 const logoSchema = z.object({
-  key: z.string(),
+  key: z.enum(SKILL_ICON_KEYS),
   title: z.string(),
   href: z.url(),
 });

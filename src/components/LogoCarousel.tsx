@@ -2,9 +2,8 @@
 import AutoScroll from "embla-carousel-auto-scroll";
 import { useTheme } from "next-themes";
 import { useId } from "react";
-import StackIcon from "tech-stack-icons";
-
 import { useSkillHover } from "@/components/SkillHoverContext";
+import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
   Carousel,
@@ -69,7 +68,7 @@ export function LogoCarousel({
                 className="inline-flex items-center justify-center"
               >
                 <figure role="img" aria-label={`${logo.title} logo`}>
-                  <StackIcon
+                  <SkillStackIcon
                     name={logo.key}
                     variant={resolvedTheme === "light" ? "light" : "dark"}
                     className="aspect-square size-10 xl:size-16"
