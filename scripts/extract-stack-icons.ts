@@ -1,81 +1,47 @@
 /**
- * Extracts light/dark SVG subsets from tech-stack-icons (MIT) for owner-data skills.
+ * Extracts light/dark SVGs via tech-stack-icons StackIcon (MIT) — same output as runtime.
  * Run: bun run extract:stack-icons
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import StackIcon from "tech-stack-icons";
 
 import { rawOwnerData } from "../src/content/owner-data";
 
-const BUNDLE_PATH = join(
-  process.cwd(),
-  "node_modules/tech-stack-icons/dist/index.js",
-);
 const OUT_PATH = join(process.cwd(), "src/lib/icons/stack-icons.generated.tsx");
 
-const BLOCK_MARKER = ":{svg:{";
+type Variant = "light" | "dark";
 
-function extractQuotedSvg(block: string, variant: "light" | "dark"): string {
-  const marker = `${variant}:'`;
-  const vStart = block.indexOf(marker);
-  if (vStart < 0) {
-    throw new Error(`Missing ${variant} variant in icon block`);
-  }
-
-  let i = vStart + marker.length;
-  let out = "";
-  while (i < block.length) {
-    const c = block[i];
-    if (c === "\\") {
-      out += block[++i];
-      i++;
-      continue;
-    }
-    if (c === "'") break;
-    out += c;
-    i++;
-  }
-
-  if (!out.startsWith("<svg")) {
-    throw new Error(`Invalid ${variant} SVG (expected <svg opener)`);
-  }
-
-  return out;
-}
-
-function extractIconBlock(bundle: string, key: string): string {
-  const start = bundle.indexOf(`${key}${BLOCK_MARKER}`);
-  if (start < 0) {
-    throw new Error(`Icon key not found in tech-stack-icons bundle: "${key}"`);
-  }
-
-  const next = bundle.indexOf(
-    BLOCK_MARKER,
-    start + key.length + BLOCK_MARKER.length,
+function extractRenderedSvg(name: string, variant: Variant): string {
+  const html = renderToStaticMarkup(
+    createElement(StackIcon, { name, variant }),
   );
-  const end = next > start ? next : start + 120_000;
-  return bundle.slice(start, end);
+  const match = html.match(/<svg[\s\S]*<\/svg>/);
+  if (!match) {
+    throw new Error(
+      `StackIcon did not render an <svg> for "${name}" (${variant})`,
+    );
+  }
+  return match[0];
 }
 
 function main() {
-  let bundle: string;
-  try {
-    bundle = readFileSync(BUNDLE_PATH, "utf8");
-  } catch {
-    console.error(
-      `Could not read ${BUNDLE_PATH}. Run "bun install" (tech-stack-icons is a devDependency).`,
-    );
-    process.exit(1);
-  }
-
   const keys = rawOwnerData.skills.map((s) => s.key);
   const icons: Record<string, { light: string; dark: string }> = {};
 
   for (const key of keys) {
-    const block = extractIconBlock(bundle, key);
-    const light = extractQuotedSvg(block, "light");
-    const dark = extractQuotedSvg(block, "dark");
-    icons[key] = { light, dark };
+    try {
+      icons[key] = {
+        light: extractRenderedSvg(key, "light"),
+        dark: extractRenderedSvg(key, "dark"),
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`Failed to extract icon "${key}": ${message}`);
+      process.exit(1);
+    }
   }
 
   const keysLiteral = JSON.stringify(keys);
