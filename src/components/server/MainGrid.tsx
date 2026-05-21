@@ -5,9 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import AvatarMarker, { AvatarMarkerIcon } from "@/components/AvatarMarker";
-import DeferredMapCard from "@/components/DeferredMapCard";
 import GridContainer from "@/components/GridContainer";
-import MapPreviewStatic from "@/components/MapPreviewStatic";
 import AboutMe from "@/components/server/AboutMe";
 import ContributionsCard from "@/components/server/ContributionsCard";
 import ProjectCard from "@/components/server/ProjectCard";
@@ -18,6 +16,7 @@ import type { ProjectSlugs } from "@/lib/content/display";
 import { loadOwnerData } from "@/lib/server/content-load";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
+import Map from "../Map";
 
 export function MainGridFallback() {
   return (
@@ -59,11 +58,11 @@ export default function MainGrid({
         <SkillsCard />
       </Card>
       <Card variant="item" key="maps" className="relative">
-        <DeferredMapCard preview={<MapPreviewStatic />}>
+        <Map>
           <AvatarMarker>
             <AvatarMarkerIcon mapMarkerInfo={ownerData} />
           </AvatarMarker>
-        </DeferredMapCard>
+        </Map>
       </Card>
       <Card variant="item" key="contributions" className="flex flex-col">
         <ContributionsCard />

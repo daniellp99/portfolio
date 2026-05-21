@@ -4,7 +4,6 @@ import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { Activity } from "react";
-import { TileLayer } from "react-leaflet";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -19,6 +18,13 @@ const LeafletMapContainer = dynamic(
     loading() {
       return <Skeleton className="size-full" />;
     },
+  },
+);
+
+const TileLayer = dynamic(
+  async () => (await import("react-leaflet")).TileLayer,
+  {
+    ssr: false,
   },
 );
 
@@ -41,7 +47,6 @@ export default function Map({ children }: { children: React.ReactNode }) {
       className="size-full"
     >
       <ZoomHandler />
-
       <Activity mode={resolvedTheme === "dark" ? "visible" : "hidden"}>
         <TileLayer
           url={"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
