@@ -2,9 +2,8 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 
-import type { MapMarkerInfo, Project } from "@/lib/content/display";
-import { mapOwnerToMapMarkerInfo } from "@/lib/content/map-marker";
-import { readOwnerData } from "@/lib/content/owner";
+import { rawOwnerData } from "@/content/owner-data";
+import type { Project } from "@/lib/content/display";
 import {
   listProjectSlugs,
   readProject,
@@ -14,7 +13,11 @@ import {
   InvalidProjectFrontMatterError,
   type ReadProjectResult,
 } from "@/lib/content/projects-read";
-import type { OwnerData, ProjectDetails } from "@/lib/content/schemas";
+import {
+  ownerDataSchema,
+  type OwnerData,
+  type ProjectDetails,
+} from "@/lib/content/schemas";
 
 export async function loadProjectSlugs(): Promise<string[]> {
   try {
@@ -61,16 +64,7 @@ export async function loadProjectDetails(
   return result.project;
 }
 
-export async function loadOwnerData(): Promise<OwnerData | null> {
-  try {
-    return await readOwnerData();
-  } catch (error) {
-    console.warn("Failed to fetch owner data:", error);
-    return null;
-  }
-}
-
-export async function loadMapMarkerInfo(): Promise<MapMarkerInfo | null> {
-  const ownerData = await loadOwnerData();
-  return mapOwnerToMapMarkerInfo(ownerData);
+export function loadOwnerData(): OwnerData {
+  const ownerData = ownerDataSchema.parse(rawOwnerData);
+  return ownerData;
 }

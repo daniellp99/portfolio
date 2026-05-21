@@ -12,9 +12,6 @@ export const ownerDataSchema = z.object({
   journeyStartAt: z.iso.datetime(),
   githubUser: z.string(),
   aboutMe: z.string(),
-  avatar: z.string(),
-  avatarMarker: z.string(),
-  avatarMarkerHover: z.string(),
   avatarMarkerTooltip: z.string(),
   skills: z.array(logoSchema),
 });

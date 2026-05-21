@@ -35,7 +35,6 @@
         "tailwind-merge": "^3.6.0",
         "tailwindcss-animate": "^1.0.7",
         "tech-stack-icons": "^3.7.1",
-        "yaml": "^2.9.0",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -74,7 +73,6 @@
     "nanoid": "3.3.11",
     "picomatch": "2.3.2",
     "postcss": "^8.5.14",
-    "yaml": "^2.9.0",
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],

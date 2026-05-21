@@ -1,0 +1,36 @@
+import { type OwnerData } from "@/lib/content/schemas";
+
+export const rawOwnerData = {
+  name: "daniellp",
+  email: "daniellp99@gmail.com",
+  journeyStartAt: "2023-07-10T00:00:00Z",
+  githubUser: "daniellp99",
+  aboutMe:
+    "I'm {name}, a full-stack developer from Cuba with {experience} of experience. Outside of coding, I enjoy spending time with family and friends, playing basketball, and exploring how things work.",
+  avatarMarkerTooltip: "Qué bolá, asere",
+  skills: [
+    { key: "react", title: "React", href: "https://react.dev" },
+    { key: "nextjs2", title: "Next.js", href: "https://nextjs.org" },
+    {
+      key: "typescript",
+      title: "TypeScript",
+      href: "https://www.typescriptlang.org",
+    },
+    {
+      key: "tailwindcss",
+      title: "Tailwind CSS",
+      href: "https://tailwindcss.com",
+    },
+    { key: "shadcnui", title: "Shadcn/ui", href: "https://ui.shadcn.com" },
+    { key: "zod", title: "Zod", href: "https://zod.dev" },
+    { key: "git", title: "Git", href: "https://git-scm.com" },
+    { key: "html5", title: "HTML", href: "https://html.spec.whatwg.org/" },
+    { key: "css3", title: "CSS", href: "https://www.w3.org/css/" },
+    { key: "js", title: "JavaScript", href: "https://tc39.es/ecma262/" },
+    { key: "prisma", title: "Prisma ORM", href: "https://www.prisma.io" },
+    { key: "baseui", title: "Base UI", href: "https://base-ui.com" },
+    { key: "docker", title: "Docker", href: "https://www.docker.com" },
+    { key: "cursor", title: "Cursor", href: "https://cursor.com" },
+    { key: "bunjs", title: "Bun", href: "https://bun.sh" },
+  ],
+} as const satisfies OwnerData;
