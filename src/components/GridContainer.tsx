@@ -1,17 +1,20 @@
 "use client";
+import { ReactNode, useState } from "react";
+import { useContainerWidth, type ResponsiveLayouts } from "react-grid-layout";
 
-import dynamic from "next/dynamic";
+import GridResponsive from "@/components/GridResponsive";
+
 import { type SetLayoutsOptions } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
-import { ReactNode } from "react";
-import type { ResponsiveLayouts } from "react-grid-layout";
+import { GRID_SECTION_MAX_WIDTH } from "@/lib/site/grid";
+import { gridSectionInitialWidth } from "@/lib/site/grid/config";
 
-import GridStaticShell from "@/components/GridStaticShell";
-import { useGridContainerWidth } from "@/hooks/use-grid-container-width";
-
-const GridResponsive = dynamic(() => import("@/components/GridResponsive"), {
-  ssr: false,
-});
+function readInitialGridWidth(): number {
+  if (typeof window === "undefined") {
+    return GRID_SECTION_MAX_WIDTH.base;
+  }
+  return gridSectionInitialWidth(window.innerWidth);
+}
 
 export default function GridContainer({
   children,
@@ -30,22 +33,23 @@ export default function GridContainer({
     allowedLayoutIds !== undefined || imageSrcs !== undefined
       ? { allowedLayoutIds, imageSrcs }
       : {};
-  const { width, containerRef, mounted } = useGridContainerWidth();
+  const [initialWidth] = useState(readInitialGridWidth);
+  const { width, containerRef, mounted } = useContainerWidth({
+    measureBeforeMount: true,
+    initialWidth,
+  });
 
   return (
     <div ref={containerRef} className="relative">
-      {!mounted ? (
-        <GridStaticShell layouts={layouts}>{children}</GridStaticShell>
-      ) : (
-        <GridResponsive
-          layouts={layouts}
-          layoutKey={layoutKey}
-          width={width}
-          setLayoutsOptions={setLayoutsOptions}
-        >
-          {children}
-        </GridResponsive>
-      )}
+      <GridResponsive
+        layouts={layouts}
+        layoutKey={layoutKey}
+        width={width}
+        interactive={mounted}
+        setLayoutsOptions={setLayoutsOptions}
+      >
+        {children}
+      </GridResponsive>
     </div>
   );
 }

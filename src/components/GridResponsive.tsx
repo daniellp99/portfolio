@@ -1,12 +1,5 @@
 "use client";
 
-import { setLayouts, type SetLayoutsOptions } from "@/lib/actions/set-layouts";
-import { LayoutKey } from "@/lib/site/constants";
-import {
-  GRID_RESPONSIVE_STATIC_PROPS,
-  mergeCanonicalBreakpoints,
-  syncLayoutsForPersistence,
-} from "@/lib/site/grid";
 import { startTransition, useOptimistic, type ReactNode } from "react";
 import {
   getBreakpointFromWidth,
@@ -15,17 +8,28 @@ import {
   ResponsiveLayouts,
 } from "react-grid-layout";
 
+import { setLayouts, type SetLayoutsOptions } from "@/lib/actions/set-layouts";
+import { LayoutKey } from "@/lib/site/constants";
+import {
+  GRID_RESPONSIVE_STATIC_PROPS,
+  mergeCanonicalBreakpoints,
+  syncLayoutsForPersistence,
+} from "@/lib/site/grid";
+import { cn } from "@/lib/utils";
+
 export default function GridResponsive({
   children,
   layouts,
   layoutKey,
   width,
+  interactive,
   setLayoutsOptions,
 }: {
   children: ReactNode;
   layouts: ResponsiveLayouts;
   layoutKey: LayoutKey;
   width: number;
+  interactive: boolean;
   setLayoutsOptions: SetLayoutsOptions;
 }) {
   const [optimisticLayouts, addOptimisticLayouts] = useOptimistic(
@@ -38,6 +42,8 @@ export default function GridResponsive({
     layout: Layout,
     nextLayouts: ResponsiveLayouts,
   ) => {
+    if (!interactive) return;
+
     const breakpoint = getBreakpointFromWidth(
       GRID_RESPONSIVE_STATIC_PROPS.breakpoints,
       width,
@@ -53,9 +59,13 @@ export default function GridResponsive({
 
   return (
     <Responsive
-      dragConfig={{ cancel: ".cancelDrag" }}
+      dragConfig={{ enabled: interactive, cancel: ".cancelDrag" }}
+      resizeConfig={{ enabled: interactive }}
       width={width}
-      className="layout duration-1000 animate-in fade-in"
+      className={cn(
+        "layout",
+        interactive && "duration-1000 animate-in fade-in",
+      )}
       layouts={optimisticLayouts}
       onLayoutChange={changeLayoutAction}
       {...GRID_RESPONSIVE_STATIC_PROPS}

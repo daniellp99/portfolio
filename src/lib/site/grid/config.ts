@@ -62,6 +62,38 @@ const GRID_RGL_MARGIN = {
   readonly [number, number]
 >;
 
+/**
+ * Main / image grid section caps — keep in sync with
+ * `max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]` on home & project sections.
+ */
+export const GRID_SECTION_MAX_WIDTH = {
+  base: 375,
+  md: 800,
+  xl: 1200,
+} as const;
+
+/** Tailwind `md` / `xl` min-widths for the section caps above. */
+const GRID_SECTION_VIEWPORT = {
+  md: 768,
+  xl: 1280,
+} as const;
+
+/** Section max width for a viewport, before `min()` with the viewport itself. */
+export function gridSectionMaxWidth(viewportWidth: number): number {
+  if (viewportWidth >= GRID_SECTION_VIEWPORT.xl) {
+    return GRID_SECTION_MAX_WIDTH.xl;
+  }
+  if (viewportWidth >= GRID_SECTION_VIEWPORT.md) {
+    return GRID_SECTION_MAX_WIDTH.md;
+  }
+  return GRID_SECTION_MAX_WIDTH.base;
+}
+
+/** Estimated container width for RGL `initialWidth` (matches capped section width). */
+export function gridSectionInitialWidth(viewportWidth: number): number {
+  return Math.min(viewportWidth, gridSectionMaxWidth(viewportWidth));
+}
+
 /** Props shared by `GridContainer` / RGL `Responsive` (single source vs slot math). */
 export const GRID_RESPONSIVE_STATIC_PROPS = {
   breakpoints: GRID_RGL_BREAKPOINTS,
