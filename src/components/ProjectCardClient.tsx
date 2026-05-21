@@ -39,7 +39,8 @@ export default function ProjectCardClient({
         fill
         loading="eager"
         sizes={MAIN_GRID_CARD_IMAGE_SIZES}
-        quality={92}
+        priority={true}
+        fetchPriority="high"
         style={{
           objectFit: "scale-down",
           objectPosition: "top",
