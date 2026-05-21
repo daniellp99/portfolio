@@ -20,7 +20,7 @@ import {
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import { bucketClass, intensityBucket } from "@/lib/contributions/intensity";
 import { WEEKDAY_LABELS } from "@/lib/contributions/weekday-labels";
-import { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
+import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
 import { cn } from "@/lib/utils";
 
 const contributionsPopoverHandle = PopoverBase.createHandle<ReactNode>();

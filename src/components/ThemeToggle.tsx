@@ -22,7 +22,6 @@ export default function ThemeToggle() {
   }, []);
 
   const isDark = resolvedTheme === "dark";
-  const label = isDark ? "Switch to light theme" : "Switch to dark theme";
 
   const knobTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
 
@@ -39,7 +38,7 @@ export default function ThemeToggle() {
         className="cancelDrag mx-auto h-11 w-20 overflow-hidden p-0"
         disabled={!mounted}
         aria-busy={!mounted}
-        aria-label={label}
+        aria-label="Toggle theme"
         onClick={() => {
           setTheme(isDark ? "light" : "dark");
         }}
