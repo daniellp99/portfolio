@@ -1,7 +1,7 @@
 "use client";
 
 import { formatInTimeZone } from "date-fns-tz";
-import { Suspense, ViewTransition } from "react";
+import { Suspense, use, ViewTransition } from "react";
 
 import { ContributionsErrorBoundary } from "@/components/contributions/ContributionsErrorBoundary";
 import { ContributionsErrorFallback } from "@/components/contributions/ContributionsErrorFallback";
@@ -21,8 +21,9 @@ import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import {
   contributionsMonthCacheKey,
-  getContributionsPromise,
+  resolveContributionsMonth,
 } from "@/lib/contributions/fetch-month";
+import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
 import { cn } from "@/lib/utils";
 import { ArrowUpRightIcon } from "lucide-react";
 import { ContributionsCount } from "./contributions/ContributionsCount";
@@ -32,10 +33,12 @@ export default function ContributionsCardClient({
   login,
   years,
   defaultYear,
+  initialContributionsPromise,
 }: {
   login: string;
   years: number[];
   defaultYear: number;
+  initialContributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
   const {
     optimisticMonth,
@@ -48,7 +51,13 @@ export default function ContributionsCardClient({
     calendarEndMonth,
   } = useContributionsCardState({ years, defaultYear });
 
-  const contributionsPromise = getContributionsPromise(year, monthNumber);
+  const initialContributions = use(initialContributionsPromise);
+
+  const contributionsPromise = resolveContributionsMonth(
+    year,
+    monthNumber,
+    initialContributions,
+  );
   const monthStart = getMonthStartInZone(year, monthNumber);
 
   return (

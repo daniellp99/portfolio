@@ -6,6 +6,7 @@ import { startTransition, useOptimistic, useState } from "react";
 
 import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import { evictContributionsMonthCache } from "@/lib/contributions/fetch-month";
+import { getCurrentContributionsMonthInZone } from "@/lib/contributions/initial-month";
 
 export function useContributionsCardState({
   years,
@@ -24,7 +25,7 @@ export function useContributionsCardState({
     new Date(Date.UTC(maxYear, 11, 1)),
     CONTRIBUTIONS_TZ,
   );
-  const initialMonth = startOfMonth(toZonedTime(new Date(), CONTRIBUTIONS_TZ));
+  const initialMonth = getCurrentContributionsMonthInZone();
 
   const [month, setMonth] = useState(initialMonth);
   const [optimisticMonth, setOptimisticMonth] = useOptimistic(month);

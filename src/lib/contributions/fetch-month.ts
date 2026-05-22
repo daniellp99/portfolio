@@ -5,6 +5,8 @@ import {
   type GithubContributionMonthResponse,
 } from "@/lib/schemas/github-contributions";
 
+import { getCanonicalUrl } from "@/lib/site/metadata/urls";
+
 import { CONTRIBUTIONS_TZ } from "./constants";
 
 type FetchErrorResponse = { error?: string; details?: string };
@@ -28,6 +30,14 @@ export function buildContributionsMonthApiUrl(
     tz: timeZone,
   });
   return `/api/github/contributions?${params.toString()}`;
+}
+
+/** Node fetch during SSR requires an absolute URL; the browser accepts relative paths. */
+function toFetchUrl(path: string): string {
+  if (typeof window === "undefined") {
+    return getCanonicalUrl(path);
+  }
+  return path;
 }
 
 export function parseGithubContributionMonthResponse(
@@ -77,7 +87,9 @@ export function getContributionsPromise(
   const existing = contributionPromiseCache.get(key);
   if (existing) return existing;
 
-  const url = buildContributionsMonthApiUrl(year, month, timeZone);
+  const url = toFetchUrl(
+    buildContributionsMonthApiUrl(year, month, timeZone),
+  );
   const promise = fetchImpl(url, { cache: "no-store" }).then(async (res) => {
     const json = (await res.json()) as unknown;
     if (!res.ok) {
@@ -90,4 +102,31 @@ export function getContributionsPromise(
 
   contributionPromiseCache.set(key, promise);
   return promise;
+}
+
+/**
+ * Resolves month data without fetch during SSR when `preloaded` matches the
+ * requested month (passed from the server ContributionsCard).
+ */
+export function resolveContributionsMonth(
+  year: number,
+  month: number,
+  preloaded: GithubContributionMonthResponse | undefined,
+  timeZone: string = CONTRIBUTIONS_TZ,
+): Promise<GithubContributionMonthResponse> {
+  if (
+    preloaded &&
+    preloaded.year === year &&
+    preloaded.month === month
+  ) {
+    const key = contributionsMonthCacheKey(year, month, timeZone);
+    const existing = contributionPromiseCache.get(key);
+    if (existing) return existing;
+
+    const promise = Promise.resolve(preloaded);
+    contributionPromiseCache.set(key, promise);
+    return promise;
+  }
+
+  return getContributionsPromise(year, month, timeZone);
 }

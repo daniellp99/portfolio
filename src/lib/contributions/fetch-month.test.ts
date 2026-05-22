@@ -7,6 +7,7 @@ import {
   contributionsMonthCacheKey,
   getContributionsPromise,
   parseGithubContributionMonthResponse,
+  resolveContributionsMonth,
 } from "./fetch-month";
 
 const validMonthPayload = {
@@ -58,6 +59,19 @@ describe("parseGithubContributionMonthResponse", () => {
       parseGithubContributionMonthResponse({ invalid: true }),
     ).toThrow(/Invalid contributions response/);
   });
+});
+
+describe("resolveContributionsMonth", () => {
+  it("returns preloaded data without fetch when month matches", async () => {
+    const data = await resolveContributionsMonth(2024, 1, {
+      ...validMonthPayload,
+      year: 2024,
+      month: 1,
+    });
+    expect(data.year).toBe(2024);
+    expect(data.month).toBe(1);
+  });
+
 });
 
 describe("getContributionsPromise", () => {
