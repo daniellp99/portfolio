@@ -1,19 +1,57 @@
 "use client";
-import { ReactNode, useState } from "react";
+
+import { type SetLayoutsOptions } from "@/lib/actions/set-layouts";
+import { LayoutKey } from "@/lib/site/constants";
+import { gridSectionInitialWidth } from "@/lib/site/grid";
+import { ReactNode, useSyncExternalStore } from "react";
 import { useContainerWidth, type ResponsiveLayouts } from "react-grid-layout";
 
 import GridResponsive from "@/components/GridResponsive";
 
-import { type SetLayoutsOptions } from "@/lib/actions/set-layouts";
-import { LayoutKey } from "@/lib/site/constants";
-import { GRID_SECTION_MAX_WIDTH } from "@/lib/site/grid";
-import { gridSectionInitialWidth } from "@/lib/site/grid/config";
+function subscribeNoop() {
+  return () => {};
+}
 
-function readInitialGridWidth(): number {
-  if (typeof window === "undefined") {
-    return GRID_SECTION_MAX_WIDTH.base;
-  }
+function readViewportGridWidth(): number | null {
   return gridSectionInitialWidth(window.innerWidth);
+}
+
+/** Defer RGL on the server so hydration matches; client picks width on first paint after hydrate. */
+function readServerGridWidth(): null {
+  return null;
+}
+
+function GridContainerLayout({
+  children,
+  layouts,
+  layoutKey,
+  initialWidth,
+  setLayoutsOptions,
+}: {
+  children: ReactNode;
+  layouts: ResponsiveLayouts;
+  layoutKey: LayoutKey;
+  initialWidth: number;
+  setLayoutsOptions: SetLayoutsOptions;
+}) {
+  const { width, containerRef, mounted } = useContainerWidth({
+    measureBeforeMount: true,
+    initialWidth,
+  });
+
+  return (
+    <div ref={containerRef} className="relative">
+      <GridResponsive
+        layouts={layouts}
+        layoutKey={layoutKey}
+        width={width}
+        interactive={mounted}
+        setLayoutsOptions={setLayoutsOptions}
+      >
+        {children}
+      </GridResponsive>
+    </div>
+  );
 }
 
 export default function GridContainer({
@@ -33,23 +71,24 @@ export default function GridContainer({
     allowedLayoutIds !== undefined || imageSrcs !== undefined
       ? { allowedLayoutIds, imageSrcs }
       : {};
-  const [initialWidth] = useState(readInitialGridWidth);
-  const { width, containerRef, mounted } = useContainerWidth({
-    measureBeforeMount: true,
-    initialWidth,
-  });
+  const initialWidth = useSyncExternalStore(
+    subscribeNoop,
+    readViewportGridWidth,
+    readServerGridWidth,
+  );
+
+  if (initialWidth === null) {
+    return <div className="relative" />;
+  }
 
   return (
-    <div ref={containerRef} className="relative">
-      <GridResponsive
-        layouts={layouts}
-        layoutKey={layoutKey}
-        width={width}
-        interactive={mounted}
-        setLayoutsOptions={setLayoutsOptions}
-      >
-        {children}
-      </GridResponsive>
-    </div>
+    <GridContainerLayout
+      layouts={layouts}
+      layoutKey={layoutKey}
+      initialWidth={initialWidth}
+      setLayoutsOptions={setLayoutsOptions}
+    >
+      {children}
+    </GridContainerLayout>
   );
 }

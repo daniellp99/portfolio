@@ -1,4 +1,7 @@
-export { GRID_RESPONSIVE_STATIC_PROPS, GRID_SECTION_MAX_WIDTH } from "./config";
+export {
+  GRID_RESPONSIVE_STATIC_PROPS,
+  gridSectionInitialWidth,
+} from "./config";
 export {
   compactForCookie,
   cookieValueWithinLimit,
