@@ -7,7 +7,7 @@ import { getProjectSlugs } from "@/lib/server/projects";
 import {
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
-  mainLayoutsKeyForTab,
+  mainLayoutsCookieNamesForTab,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import {
@@ -51,9 +51,10 @@ export async function getLayouts(
       const projectKeys = await getProjectSlugs();
       const activeTab = getActiveTab(cookieStore);
       defaultLayouts = generateLayouts(activeTab, projectKeys);
-      layoutsCookie =
-        cookieStore.get(mainLayoutsKeyForTab(activeTab)) ??
-        (activeTab === "All" ? cookieStore.get(MAIN_LAYOUTS_KEY) : undefined);
+      for (const cookieName of mainLayoutsCookieNamesForTab(activeTab)) {
+        layoutsCookie = cookieStore.get(cookieName);
+        if (layoutsCookie) break;
+      }
       break;
     }
     case IMAGE_LAYOUTS_KEY:

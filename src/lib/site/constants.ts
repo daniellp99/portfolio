@@ -56,6 +56,13 @@ export function mainLayoutsKeyForTab(tab: string): MainLayoutsCookieKey {
   return `${MAIN_LAYOUTS_PREFIX}${safe}` as MainLayoutsCookieKey;
 }
 
+export function mainLayoutsCookieNamesForTab(
+  tab: string,
+): readonly MainLayoutsCookieKey[] {
+  const tabKey = mainLayoutsKeyForTab(tab);
+  return tab === "All" ? [tabKey, MAIN_LAYOUTS_KEY] : [tabKey];
+}
+
 export type LayoutKey = MainLayoutsCookieKey | ImageLayoutsCookieKey;
 
 export const CONTRIBUTIONS_TZ = "UTC" as const;
