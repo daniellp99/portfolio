@@ -1,13 +1,13 @@
 "use client";
 
-import { getMonth, getYear } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { useOptimistic, useTransition } from "react";
+import { TZDate } from "react-day-picker";
 
 import { Calendar } from "@/components/ui/calendar";
 
 import { changeContributionsMonth } from "@/lib/actions/change-contributions-month";
-import { normalizeContributionsMonth } from "@/lib/contributions/contributions-month";
+import { contributionsYearMonthFromDateInZone } from "@/lib/contributions/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 export function ContributionsCalendar({
@@ -26,9 +26,14 @@ export function ContributionsCalendar({
   );
 
   function setMonthFrom(next: Date) {
-    const normalized = normalizeContributionsMonth(next);
-    const nextYear = getYear(normalized);
-    const nextMonth = getMonth(normalized) + 1;
+    const { year: nextYear, month: nextMonth } =
+      contributionsYearMonthFromDateInZone(next, CONTRIBUTIONS_TZ);
+    const normalized = new TZDate(
+      nextYear,
+      nextMonth - 1,
+      1,
+      CONTRIBUTIONS_TZ,
+    );
 
     startTransition(async () => {
       setOptimisticMonth(normalized);
@@ -46,6 +51,7 @@ export function ContributionsCalendar({
       }}
       mode="single"
       month={optimisticMonth}
+      timeZone={CONTRIBUTIONS_TZ}
       onMonthChange={setMonthFrom}
       onNextClick={setMonthFrom}
       onPrevClick={setMonthFrom}

@@ -1,25 +1,20 @@
 "use client";
 
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { use, useOptimistic, useTransition } from "react";
+import { useOptimistic, useTransition } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { switchMainGridTab } from "@/lib/actions/switch-main-grid-tab";
-import type { ProjectSlugs } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
 import { tabs, type TabsType } from "@/lib/site/tabs";
 import { cn } from "@/lib/utils";
 
 export default function NavItemsClient({
-  projectsSlugsPromise,
   initialActiveTab,
 }: {
-  projectsSlugsPromise: Promise<ProjectSlugs>;
   initialActiveTab: TabsType;
 }) {
-  const projectsSlugs = use(projectsSlugsPromise);
-
   const [pending, startTransition] = useTransition();
   const [activeTab, setOptimisticTab] = useOptimistic(
     initialActiveTab,
@@ -37,7 +32,7 @@ export default function NavItemsClient({
         const tab = value as TabsType;
         startTransition(async () => {
           setOptimisticTab(tab);
-          await switchMainGridTab(tab, projectsSlugs);
+          await switchMainGridTab(tab);
         });
       }}
       className="flex flex-col items-center"

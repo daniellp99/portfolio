@@ -1,5 +1,5 @@
 import { formatISO, getMonth, getYear, startOfMonth } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
 import {
@@ -60,6 +60,16 @@ export function contributionsYearMonthFromDate(date: Date): {
   month: number;
 } {
   return { year: getYear(date), month: getMonth(date) + 1 };
+}
+
+export function contributionsYearMonthFromDateInZone(
+  date: Date,
+  timeZone: string = CONTRIBUTIONS_TZ,
+): ContributionsYearMonth {
+  return {
+    year: Number(formatInTimeZone(date, timeZone, "yyyy")),
+    month: Number(formatInTimeZone(date, timeZone, "M")),
+  };
 }
 
 export function normalizeContributionsMonth(

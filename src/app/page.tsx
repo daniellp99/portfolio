@@ -10,6 +10,7 @@ import { getLayouts } from "@/lib/server/layouts";
 import { getProjectSlugs } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
+import { getActiveTab } from "@/lib/site/tabs";
 import { cookies } from "next/headers";
 
 export function generateMetadata(): Metadata {
@@ -20,6 +21,7 @@ export function generateMetadata(): Metadata {
 
 export default async function HomePage() {
   const cookieStore = await cookies();
+  const activeTab = getActiveTab(cookieStore);
   const projectsSlugsPromise = getProjectSlugs();
   const layoutsPromise = getLayouts(
     {
@@ -43,6 +45,7 @@ export default async function HomePage() {
             <MainGrid
               projectsSlugsPromise={projectsSlugsPromise}
               layoutsPromise={layoutsPromise}
+              activeTab={activeTab}
             />
           </ViewTransition>
         </Suspense>

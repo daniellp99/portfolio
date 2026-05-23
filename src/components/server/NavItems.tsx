@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 
-import { getProjectSlugs } from "@/lib/server/projects";
 import { getActiveTab } from "@/lib/site/tabs";
 
 import NavItemsClient from "../NavItems";
@@ -13,11 +12,5 @@ export function NavItemsFallback() {
 export default async function NavItems() {
   const cookieStore = await cookies();
   const initialActiveTab = getActiveTab(cookieStore);
-  const projectsSlugsPromise = getProjectSlugs();
-  return (
-    <NavItemsClient
-      projectsSlugsPromise={projectsSlugsPromise}
-      initialActiveTab={initialActiveTab}
-    />
-  );
+  return <NavItemsClient initialActiveTab={initialActiveTab} />;
 }

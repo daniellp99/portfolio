@@ -38,17 +38,18 @@ export default function GridResponsive({
       mergeCanonicalBreakpoints(state, newLayouts),
   );
 
-  const changeLayoutAction = (
-    layout: Layout,
-    nextLayouts: ResponsiveLayouts,
-  ) => {
+  const persistUserLayout = (layout: Layout) => {
     if (!interactive) return;
 
     const breakpoint = getBreakpointFromWidth(
       GRID_RESPONSIVE_STATIC_PROPS.breakpoints,
       width,
     );
-    const synced = syncLayoutsForPersistence(layout, breakpoint, nextLayouts);
+    const synced = syncLayoutsForPersistence(
+      layout,
+      breakpoint,
+      optimisticLayouts,
+    );
     startTransition(() => {
       addOptimisticLayouts(synced);
       startTransition(async () => {
@@ -67,7 +68,8 @@ export default function GridResponsive({
         interactive && "duration-1000 animate-in fade-in",
       )}
       layouts={optimisticLayouts}
-      onLayoutChange={changeLayoutAction}
+      onDragStop={persistUserLayout}
+      onResizeStop={persistUserLayout}
       {...GRID_RESPONSIVE_STATIC_PROPS}
     >
       {children}

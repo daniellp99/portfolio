@@ -2,26 +2,12 @@
 
 import { cookies } from "next/headers";
 
-import { setLayouts } from "@/lib/actions/set-layouts";
-import type { ProjectSlugs } from "@/lib/content/display";
-import {
-  ACTIVE_TAB_KEY,
-  COOKIE_MAX_AGE,
-  MAIN_LAYOUTS_KEY,
-} from "@/lib/site/constants";
-import { generateLayouts, mainGridAllowedLayoutIds } from "@/lib/site/grid";
+import { ACTIVE_TAB_KEY, COOKIE_MAX_AGE } from "@/lib/site/constants";
 import { tabsTypeSchema } from "@/lib/site/tabs";
 
-export async function switchMainGridTab(
-  tab: unknown,
-  projectSlugs: ProjectSlugs,
-): Promise<void> {
+export async function switchMainGridTab(tab: unknown): Promise<void> {
   const parsed = tabsTypeSchema.safeParse(tab);
   if (!parsed.success) return;
-
-  const layouts = generateLayouts(parsed.data, projectSlugs);
-  const allowedLayoutIds = mainGridAllowedLayoutIds(projectSlugs);
-  await setLayouts(layouts, MAIN_LAYOUTS_KEY, { allowedLayoutIds });
 
   const expires = new Date();
   expires.setTime(expires.getTime() + COOKIE_MAX_AGE * 1000);

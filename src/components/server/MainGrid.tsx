@@ -14,8 +14,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 import type { ProjectSlugs } from "@/lib/content/display";
 import { loadOwnerData } from "@/lib/server/content-load";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { mainLayoutsKeyForTab } from "@/lib/site/constants";
 import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
+import type { TabsType } from "@/lib/site/tabs";
 import Map from "../Map";
 
 export function MainGridFallback() {
@@ -33,9 +34,11 @@ export function MainGridFallback() {
 export default function MainGrid({
   projectsSlugsPromise,
   layoutsPromise,
+  activeTab,
 }: {
   projectsSlugsPromise: Promise<ProjectSlugs>;
   layoutsPromise: Promise<ResponsiveLayouts>;
+  activeTab: TabsType;
 }) {
   const projectsSlugs = use(projectsSlugsPromise);
   const layouts = use(layoutsPromise);
@@ -45,7 +48,7 @@ export default function MainGrid({
   return (
     <GridContainer
       layouts={layouts}
-      layoutKey={MAIN_LAYOUTS_KEY}
+      layoutKey={mainLayoutsKeyForTab(activeTab)}
       allowedLayoutIds={allowedLayoutIds}
     >
       <Card variant="item" key="me">

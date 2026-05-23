@@ -11,7 +11,11 @@ export const ACTIVE_TAB_KEY = "portfolio-active-tab" as const;
 export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
 export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 
+const MAIN_LAYOUTS_PREFIX = "portfolio-main-layouts__" as const;
 const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;
+type MainLayoutsCookieKey =
+  | typeof MAIN_LAYOUTS_KEY
+  | `${typeof MAIN_LAYOUTS_PREFIX}${string}`;
 type ImageLayoutsCookieKey = `${typeof IMAGE_LAYOUTS_PREFIX}${string}`;
 
 function imageLayoutDimensionHash(
@@ -47,7 +51,12 @@ export function imageLayoutsKeyForSlug(
   return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}` as ImageLayoutsCookieKey;
 }
 
-export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;
+export function mainLayoutsKeyForTab(tab: string): MainLayoutsCookieKey {
+  const safe = tab.replace(/[^a-zA-Z0-9_-]/g, "_");
+  return `${MAIN_LAYOUTS_PREFIX}${safe}` as MainLayoutsCookieKey;
+}
+
+export type LayoutKey = MainLayoutsCookieKey | ImageLayoutsCookieKey;
 
 export const CONTRIBUTIONS_TZ = "UTC" as const;
 

@@ -7,6 +7,7 @@ import { getProjectSlugs } from "@/lib/server/projects";
 import {
   IMAGE_LAYOUTS_KEY,
   imageLayoutsKeyForSlug,
+  mainLayoutsKeyForTab,
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import {
@@ -40,18 +41,24 @@ export async function getLayouts(
   params: GetLayoutsParams,
   cookieStore: ReadonlyRequestCookies,
 ): Promise<ResponsiveLayouts> {
-  const layoutsCookie = cookieStore.get(layoutsCookieName(params));
-
   let defaultLayouts: ResponsiveLayouts = {};
+  let layoutsCookie:
+    | ReturnType<ReadonlyRequestCookies["get"]>
+    | null
+    | undefined;
   switch (params.layoutKey) {
     case MAIN_LAYOUTS_KEY: {
       const projectKeys = await getProjectSlugs();
       const activeTab = getActiveTab(cookieStore);
       defaultLayouts = generateLayouts(activeTab, projectKeys);
+      layoutsCookie =
+        cookieStore.get(mainLayoutsKeyForTab(activeTab)) ??
+        (activeTab === "All" ? cookieStore.get(MAIN_LAYOUTS_KEY) : undefined);
       break;
     }
     case IMAGE_LAYOUTS_KEY:
       defaultLayouts = generateImageLayouts(params.images);
+      layoutsCookie = cookieStore.get(layoutsCookieName(params));
       break;
   }
 
