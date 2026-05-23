@@ -11,7 +11,14 @@ Short glossary for architecture and import rules in this repo.
 
 - **`@/lib/server/*`** is for Next-facing loaders, cache tags, and server-only helpers. Client modules must not pull runtime code from there.
 - **ESLint:** `boundary/no-server-value-imports-in-use-client` (see `eslint-plugins/client-server-boundary.mjs`) reports value imports from `@/lib/server/*` in files that start with the `"use client"` directive. `import type` from those paths is still allowed.
-- **Server actions** that must be invoked from the client (e.g. persisting layout cookies) live under `src/lib/actions/` so they are not treated as `@/lib/server` imports.
+- **Server actions** that must be invoked from the client (e.g. persisting layout cookies, changing the contributions calendar month) live under `src/lib/actions/` so they are not treated as `@/lib/server` imports.
+
+## GitHub contributions month
+
+- **Selected month** is stored in the `portfolio-contributions-month` cookie (`MM-YYYY`, e.g. `02-2026`). `getContributionsYearMonthFromCookies` in `ContributionsCard` reads it; when missing or invalid, the zoned current month is used (same pattern as `getActiveTab` for the main grid tab).
+- **Month bounds** come from `buildContributionsMonthSnapshot` / `parseContributionsMonthSnapshot` (journey start through current year). `ContributionsCalendar` receives `initialMonth` and calendar start/end from the server; it uses `useOptimistic` for the caption month only.
+- **Data loading** uses `getGithubContributionsForMonth` (`'use cache'`, `cacheLife('weeks')` for past months, `cacheLife('hours')` for the current month, per-month `cacheTag`). The server card starts the fetch as a `Promise` without awaiting; after a month change, the cookie refresh re-renders the card and starts a new promise for the new year/month. `ContributionsHeatmap` and `ContributionsCount` resolve it with `use()` inside Suspense.
+- **Month navigation** uses `changeContributionsMonth` (`void`, cookie write only) from `ContributionsCalendar` inside `startTransition`, mirroring `switchMainGridTab`. `updateTag` runs only when navigating **to** the current month. Retries re-invoke the same action with the current year/month. While a transition is pending, the calendar sets `data-pending` on a `peer/contributions` element (footer before content in DOM order); the heatmap `ViewTransition` uses `peer-has-data-[pending=true]/contributions` (and `peer/retry` for error retries) instead of showing Suspense fallbacks—React keeps prior content visible during non-urgent updates. There is no client Route Handler or client-side fetch cache for contributions.
 
 ## Content readers vs app entry
 

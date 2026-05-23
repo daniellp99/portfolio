@@ -10,7 +10,7 @@ import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 
 import type { GithubContributionCalendar } from "@/lib/schemas/github-contributions";
 
-import { CONTRIBUTIONS_TZ } from "./constants";
+import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 /** month is 1–12 */
 export function monthGridCellCount(

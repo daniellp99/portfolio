@@ -4,7 +4,11 @@ import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
 import { flattenError } from "zod";
 
-import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
+import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
+import {
+  contributionsMonthCacheTag,
+  isCurrentContributionsMonth,
+} from "@/lib/contributions/contributions-month";
 import { toIsoDateRangeForMonth } from "@/lib/contributions/month-range";
 import {
   githubContributionGraphqlResponseSchema,
@@ -88,8 +92,12 @@ export const getGithubContributionsForMonth = cache(
     timeZone: string = CONTRIBUTIONS_TZ,
   ): Promise<GithubContributionMonthResponse> => {
     "use cache";
-    cacheLife("hours");
-    cacheTag(`github_contrib_${login}_${year}_${month}_${timeZone}`);
+    cacheTag(contributionsMonthCacheTag(login, year, month, timeZone));
+    if (isCurrentContributionsMonth(year, month, timeZone)) {
+      cacheLife("hours");
+    } else {
+      cacheLife("weeks");
+    }
 
     const { from, to } = toIsoDateRangeForMonth(year, month, timeZone);
 

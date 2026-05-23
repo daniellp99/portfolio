@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { CONTRIBUTIONS_TZ } from "./constants";
+import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 import { toIsoDateRangeForMonth } from "./month-range";
 
 describe("toIsoDateRangeForMonth", () => {

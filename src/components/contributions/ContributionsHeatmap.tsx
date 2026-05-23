@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
 import { usePrefersFinePointer } from "@/hooks/use-prefers-fine-pointer";
 import {
   contributionCountsByIsoDate,
@@ -17,10 +18,13 @@ import {
   getMonthHeatmapGridDates,
   getMonthStartInZone,
 } from "@/lib/contributions/calendar-projection";
-import { CONTRIBUTIONS_TZ } from "@/lib/contributions/constants";
 import { bucketClass, intensityBucket } from "@/lib/contributions/intensity";
 import { WEEKDAY_LABELS } from "@/lib/contributions/weekday-labels";
 import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
+import {
+  CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS,
+  CONTRIBUTIONS_TZ,
+} from "@/lib/site/constants";
 import { cn } from "@/lib/utils";
 
 const contributionsPopoverHandle = PopoverBase.createHandle<ReactNode>();
@@ -40,7 +44,12 @@ export function ContributionsHeatmap({
   const max = Math.max(...Array.from(byDate.values()), 0);
 
   return (
-    <ol className="grid grid-cols-7 place-items-stretch gap-1 pt-2 md:pt-4 xl:gap-2">
+    <ol
+      className={cn(
+        "grid grid-cols-7 place-items-stretch gap-1 pt-2 md:pt-4 xl:gap-2",
+        CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS,
+      )}
+    >
       {WEEKDAY_LABELS.map(({ short, initial }) => (
         <span
           key={short}

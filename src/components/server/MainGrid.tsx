@@ -1,4 +1,4 @@
-import { use } from "react";
+import { Suspense, use } from "react";
 import type { ResponsiveLayouts } from "react-grid-layout";
 
 import { Card } from "@/components/ui/card";
@@ -65,7 +65,9 @@ export default function MainGrid({
         </Map>
       </Card>
       <Card variant="item" key="contributions" className="flex flex-col">
-        <ContributionsCard />
+        <Suspense fallback={<Skeleton className="size-full" />}>
+          <ContributionsCard />
+        </Suspense>
       </Card>
       {projectsSlugs.map((projectSlug) => (
         <Card variant="item" key={projectSlug}>

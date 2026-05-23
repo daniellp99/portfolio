@@ -3,6 +3,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { monthGridCellCount } from "@/lib/contributions/calendar-projection";
 import { WEEKDAY_LABELS } from "@/lib/contributions/weekday-labels";
+import { CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS } from "@/lib/site/constants";
+import { cn } from "@/lib/utils";
 
 export function ContributionsHeatmapFallback({
   year,
@@ -13,7 +15,12 @@ export function ContributionsHeatmapFallback({
 }) {
   const cellCount = monthGridCellCount(year, month);
   return (
-    <div className="grid grid-cols-7 place-items-stretch gap-0.5 pt-2 md:pt-4 xl:gap-2">
+    <div
+      className={cn(
+        "grid grid-cols-7 place-items-stretch gap-0.5 pt-2 md:pt-4 xl:gap-2",
+        CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS,
+      )}
+    >
       {WEEKDAY_LABELS.map(({ short, initial }) => (
         <span
           key={short}
