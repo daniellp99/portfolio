@@ -15,7 +15,7 @@ function subscribeNoop() {
   return () => {};
 }
 
-function readViewportGridWidth(): number | null {
+function readViewportGridWidth(): number {
   return gridSectionInitialWidth(window.innerWidth);
 }
 
