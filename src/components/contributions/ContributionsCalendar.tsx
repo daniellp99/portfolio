@@ -6,7 +6,6 @@ import { useOptimistic, useTransition } from "react";
 import { Calendar } from "@/components/ui/calendar";
 
 import { changeContributionsMonth } from "@/lib/actions/change-contributions-month";
-import { normalizeContributionsMonth } from "@/lib/contributions/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 export function ContributionsCalendar({
@@ -25,13 +24,9 @@ export function ContributionsCalendar({
   );
 
   function setMonthFrom(next: Date) {
-    const normalized = normalizeContributionsMonth(next);
-    const nextYear = Number(
-      formatInTimeZone(normalized, CONTRIBUTIONS_TZ, "y"),
-    );
-    const nextMonth = Number(
-      formatInTimeZone(normalized, CONTRIBUTIONS_TZ, "M"),
-    );
+    const nextYear = Number(formatInTimeZone(next, CONTRIBUTIONS_TZ, "y"));
+    const nextMonth = Number(formatInTimeZone(next, CONTRIBUTIONS_TZ, "M"));
+    const normalized = new Date(Date.UTC(nextYear, nextMonth - 1, 1));
 
     startTransition(async () => {
       setOptimisticMonth(normalized);
