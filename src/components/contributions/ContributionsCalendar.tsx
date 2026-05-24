@@ -1,6 +1,5 @@
 "use client";
 
-import { getMonth, getYear } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { useOptimistic, useTransition } from "react";
 
@@ -27,8 +26,12 @@ export function ContributionsCalendar({
 
   function setMonthFrom(next: Date) {
     const normalized = normalizeContributionsMonth(next);
-    const nextYear = getYear(normalized);
-    const nextMonth = getMonth(normalized) + 1;
+    const nextYear = Number(
+      formatInTimeZone(normalized, CONTRIBUTIONS_TZ, "y"),
+    );
+    const nextMonth = Number(
+      formatInTimeZone(normalized, CONTRIBUTIONS_TZ, "M"),
+    );
 
     startTransition(async () => {
       setOptimisticMonth(normalized);
@@ -51,6 +54,7 @@ export function ContributionsCalendar({
       onPrevClick={setMonthFrom}
       startMonth={calendarStartMonth}
       endMonth={calendarEndMonth}
+      timeZone={CONTRIBUTIONS_TZ}
       classNames={{
         table: "hidden",
         weekdays: "hidden",

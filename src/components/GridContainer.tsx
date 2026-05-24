@@ -2,7 +2,10 @@
 
 import { type SetLayoutsOptions } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
-import { gridSectionInitialWidth } from "@/lib/site/grid";
+import {
+  GRID_SECTION_MAX_WIDTH,
+  gridSectionInitialWidth,
+} from "@/lib/site/grid";
 import { ReactNode, useSyncExternalStore } from "react";
 import { useContainerWidth, type ResponsiveLayouts } from "react-grid-layout";
 
@@ -16,9 +19,9 @@ function readViewportGridWidth(): number | null {
   return gridSectionInitialWidth(window.innerWidth);
 }
 
-/** Defer RGL on the server so hydration matches; client picks width on first paint after hydrate. */
-function readServerGridWidth(): null {
-  return null;
+/** Use a deterministic SSR width so grid content is present before hydration. */
+function readServerGridWidth(): number {
+  return GRID_SECTION_MAX_WIDTH.base;
 }
 
 function GridContainerLayout({
@@ -76,10 +79,6 @@ export default function GridContainer({
     readViewportGridWidth,
     readServerGridWidth,
   );
-
-  if (initialWidth === null) {
-    return <div className="relative" />;
-  }
 
   return (
     <GridContainerLayout

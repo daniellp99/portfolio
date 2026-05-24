@@ -1,4 +1,5 @@
 export {
+  GRID_SECTION_MAX_WIDTH,
   GRID_RESPONSIVE_STATIC_PROPS,
   gridSectionInitialWidth,
 } from "./config";
