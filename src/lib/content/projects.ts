@@ -25,11 +25,24 @@ type ReadProjectSourceResult =
   | { status: "missing" }
   | { status: "invalid"; slug: string; cause: unknown; kind: "matter" | "zod" };
 
+function projectFilePathForSlug(
+  slug: string,
+  paths: ContentPaths,
+): string | null {
+  if (!slug || slug.includes("/") || slug.includes("\\")) {
+    return null;
+  }
+
+  return path.join(paths.projectsDir, `${slug}.mdx`);
+}
+
 async function readProjectSource(
   slug: string,
   paths: ContentPaths,
 ): Promise<ReadProjectSourceResult> {
-  const filePath = path.join(paths.projectsDir, `${slug}.mdx`);
+  const filePath = projectFilePathForSlug(slug, paths);
+  if (!filePath) return { status: "missing" };
+
   let raw: string;
   try {
     raw = await fs.readFile(filePath, "utf8");
