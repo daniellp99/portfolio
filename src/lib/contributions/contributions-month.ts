@@ -7,13 +7,12 @@ import {
   type ContributionsYearMonth,
 } from "@/lib/schemas/contributions-month";
 
-import { getMonthStartInZone } from "./calendar-projection";
 import {
   CONTRIBUTIONS_MONTH_COOKIE_KEY,
   CONTRIBUTIONS_TZ,
 } from "@/lib/site/constants";
+import { getMonthStartInZone } from "./calendar-projection";
 
-export { contributionsMonthCookieSchema } from "@/lib/schemas/contributions-month";
 export type { ContributionsYearMonth } from "@/lib/schemas/contributions-month";
 
 export function formatContributionsMonthCookie({
@@ -48,7 +47,7 @@ export type ContributionsMonthSnapshot = {
   defaultYear: number;
 };
 
-export function getCurrentContributionsMonthInZone(
+function getCurrentContributionsMonthInZone(
   now: Date = new Date(),
   timeZone: string = CONTRIBUTIONS_TZ,
 ): Date {
