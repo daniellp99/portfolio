@@ -4,6 +4,7 @@ import {
   getCanonicalUrl,
   getOwnerAvatarPath,
 } from "@/lib/site/metadata";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export default function HomeJsonLd() {
   const ownerData = loadOwnerData();
@@ -41,7 +42,7 @@ export default function HomeJsonLd() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }
