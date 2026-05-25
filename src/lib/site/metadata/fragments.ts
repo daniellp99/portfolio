@@ -6,6 +6,7 @@ export function openGraphWebsiteFragment(input: {
   siteName: string;
   title: string;
   description: string;
+  imageUrl?: string;
 }): NonNullable<Metadata["openGraph"]> {
   return {
     type: "website",
@@ -14,6 +15,7 @@ export function openGraphWebsiteFragment(input: {
     siteName: input.siteName,
     title: input.title,
     description: input.description,
+    ...(input.imageUrl ? { images: [{ url: input.imageUrl }] } : {}),
   };
 }
 
@@ -38,11 +40,13 @@ export function twitterSummaryLargeImage(input: {
   title: string;
   description: string;
   creator?: string;
+  imageUrl?: string;
 }): NonNullable<Metadata["twitter"]> {
   return {
     card: "summary_large_image",
     title: input.title,
     description: input.description,
+    ...(input.imageUrl ? { images: [input.imageUrl] } : {}),
     ...(input.creator ? { creator: input.creator } : {}),
   };
 }

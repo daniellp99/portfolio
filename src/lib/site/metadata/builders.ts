@@ -10,7 +10,7 @@ import {
 } from "./fragments";
 import { OWNER_AVATAR_PATH } from "@/content/owner-assets";
 
-import { getCanonicalUrl, getMetadataBase } from "./urls";
+import { getCanonicalUrl, getHomeOgImageUrl, getMetadataBase } from "./urls";
 
 type OwnerForMetadata = {
   name?: string | null;
@@ -39,6 +39,7 @@ export async function buildRootLayoutMetadata(
   const description = await resolveOwnerDescription(owner);
   const avatarPath = OWNER_AVATAR_PATH;
   const homeUrl = getCanonicalUrl("");
+  const homeOgImageUrl = getHomeOgImageUrl(owner?.journeyStartAt);
 
   return {
     metadataBase: getMetadataBase(),
@@ -77,10 +78,12 @@ export async function buildRootLayoutMetadata(
       siteName: brand,
       title: brand,
       description,
+      imageUrl: homeOgImageUrl,
     }),
     twitter: twitterSummaryLargeImage({
       title: brand,
       description,
+      imageUrl: homeOgImageUrl,
     }),
     robots: {
       index: true,
@@ -105,6 +108,7 @@ export async function buildHomeMetadata(
   const brand = brandTitle(ownerName);
   const description = await resolveOwnerDescription(owner);
   const homeUrl = getCanonicalUrl("");
+  const homeOgImageUrl = getHomeOgImageUrl(owner?.journeyStartAt);
 
   return {
     description,
@@ -116,10 +120,12 @@ export async function buildHomeMetadata(
       siteName: brand,
       title: brand,
       description,
+      imageUrl: homeOgImageUrl,
     }),
     twitter: twitterSummaryLargeImage({
       title: brand,
       description,
+      imageUrl: homeOgImageUrl,
     }),
   };
 }

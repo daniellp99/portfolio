@@ -38,6 +38,14 @@ export function getCanonicalUrl(path: string = ""): string {
   return `${baseUrl}${cleanPath}`;
 }
 
+/** Busts social preview image caches when owner profile content changes. */
+export function getHomeOgImageUrl(journeyStartAt?: string | null): string {
+  const version = journeyStartAt?.slice(0, 10) ?? "default";
+  return getAbsoluteImageUrl(
+    `/opengraph-image?v=${encodeURIComponent(version)}`,
+  );
+}
+
 /**
  * Get metadataBase URL object for Next.js metadata
  * Always returns a URL object - uses NEXT_PUBLIC_SITE_URL, VERCEL_URL,

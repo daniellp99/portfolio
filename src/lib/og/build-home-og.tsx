@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- next/og ImageResponse uses Satori, not next/image */
 import { ImageResponse } from "next/og";
 
-import { renderAboutMeCached } from "@/lib/content/render-about-me";
+import { renderAboutMe } from "@/lib/content/render-about-me";
 import { brandTitle } from "@/lib/site/metadata/brand";
 
 import { loadOwnerData } from "@/lib/server/content-load";
@@ -14,11 +14,14 @@ export async function buildHomeOgImageResponse() {
   const brand = brandTitle(ownerData.name);
   const subtitle = ownerData.aboutMe
     ? truncateForOg(
-        await renderAboutMeCached({
-          aboutMe: ownerData.aboutMe,
-          name: ownerData.name,
-          journeyStartAt: ownerData.journeyStartAt,
-        }),
+        renderAboutMe(
+          {
+            aboutMe: ownerData.aboutMe,
+            name: ownerData.name,
+            journeyStartAt: ownerData.journeyStartAt,
+          },
+          new Date(),
+        ),
         220,
       )
     : "Full-stack web development";
