@@ -13,14 +13,22 @@ const nextConfig = {
   cacheComponents: true,
   experimental: {
     viewTransition: true,
+    optimizePackageImports: [
+      "motion",
+      "lucide-react",
+      "date-fns",
+      "react-grid-layout",
+      "react-leaflet",
+      "leaflet",
+    ],
   },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75, 85, 90, 92],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 192, 256, 384],
+    imageSizes: [16, 32, 48, 64, 96, 128, 144, 192, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
-    // Map marker avatars in `owner-data.yaml` may be `/public` paths (no entry needed)
+    // Map marker avatars are static imports under `/public` (no entry needed)
     // or absolute URLs — allow common avatar/CDN hosts.
     remotePatterns: [
       {
@@ -46,6 +54,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "c.basemaps.cartocdn.com",
         pathname: "/**",
       },
     ],

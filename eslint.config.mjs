@@ -1,6 +1,8 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 
+import clientServerBoundary from "./eslint-plugins/client-server-boundary.mjs";
+
 const eslintConfig = [
   {
     ignores: [
@@ -13,6 +15,96 @@ const eslintConfig = [
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: [
+      "**/*.test.ts",
+      "src/components/**",
+      "src/lib/server/content-load.ts",
+      "src/lib/content/owner.ts",
+      "src/lib/content/projects.ts",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/lib/content/owner",
+              message:
+                "Import owner content only through @/lib/server/content-load (or tests).",
+            },
+            {
+              name: "@/lib/content/projects",
+              message:
+                "Import project content only through @/lib/server/content-load (or tests).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/**/*.{ts,tsx}"],
+    ignores: ["src/components/server/**", "**/*.test.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/lib/content/owner",
+              message:
+                "Import owner content only through @/lib/server/content-load (or tests).",
+            },
+            {
+              name: "@/lib/content/projects",
+              message:
+                "Import project content only through @/lib/server/content-load (or tests).",
+            },
+          ],
+          patterns: [
+            {
+              group: ["@/lib/server/*"],
+              message:
+                "Import @/lib/server/* only from src/components/server/ (RSC data loaders).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/components/server/**/*.{ts,tsx}"],
+    ignores: ["**/*.test.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/lib/content/owner",
+              message:
+                "Import owner content only through @/lib/server/content-load (or tests).",
+            },
+            {
+              name: "@/lib/content/projects",
+              message:
+                "Import project content only through @/lib/server/content-load (or tests).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["**/*.test.ts"],
+    plugins: { boundary: clientServerBoundary },
+    rules: {
+      "boundary/no-server-value-imports-in-use-client": "error",
+    },
+  },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {

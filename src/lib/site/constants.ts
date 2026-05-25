@@ -1,8 +1,14 @@
 import { LatLngExpression } from "leaflet";
 
 export const DEFAULT_CENTER = [20.89689, -76.26652] satisfies LatLngExpression;
+export const DEFAULT_ZOOM = 4.49;
+
+export const COOKIE_MAX_AGE = 31536000;
+export const COOKIE_VALUE_MAX_LENGTH = 4096;
+
+export const ACTIVE_TAB_KEY = "portfolio-active-tab" as const;
+
 export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
-/** Discriminator for getLayouts image branch; cookie key is per-slug via imageLayoutsKeyForSlug */
 export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 
 const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;
@@ -19,7 +25,6 @@ function imageLayoutDimensionHash(
   return (h >>> 0).toString(36);
 }
 
-/** Cookie-safe per-project key for image grid layouts (dims invalidate stale cookies). */
 export function imageLayoutsKeyForSlug(
   slug: string | undefined | null,
   images?: readonly { src: string; width: number; height: number }[],
@@ -43,5 +48,12 @@ export function imageLayoutsKeyForSlug(
 }
 
 export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;
-export const COOKIE_MAX_AGE = 31536000; // 1 year in seconds
-export const DEFAULT_ZOOM = 4.49;
+
+export const CONTRIBUTIONS_TZ = "UTC" as const;
+
+export const CONTRIBUTIONS_MONTH_COOKIE_KEY =
+  "portfolio-contributions-month" as const;
+
+/** Heatmap lives inside `group/card`; calendar/retry set `data-pending` on descendants (not heatmap siblings). */
+export const CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS =
+  "motion-reduce:animate-none group-has-data-[pending=true]/card:animate-pulse peer-has-data-[pending=true]/retry:animate-pulse" as const;

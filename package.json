@@ -9,7 +9,11 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "knip": "knip"
+    "knip": "knip",
+    "test": "bun test --conditions react-server",
+    "measure:project-listing": "bun run scripts/measure-project-listing.ts",
+    "extract:stack-icons": "bun run scripts/extract-stack-icons.ts",
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
@@ -28,40 +32,39 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^0.562.0",
     "motion": "^12.38.0",
-    "next": "16.2.4",
+    "next": "16.2.6",
     "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.4.6",
-    "react": "19.2.5",
+    "react": "19.2.6",
     "react-day-picker": "^9.14.0",
-    "react-dom": "19.2.5",
+    "react-dom": "19.2.6",
     "react-grid-layout": "^2.2.3",
     "react-leaflet": "^5.0.0",
     "server-only": "^0.0.1",
     "sharp": "^0.33.5",
     "sugar-high": "^0.9.5",
-    "tailwind-merge": "^3.5.0",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "tech-stack-icons": "^3.7.1",
-    "yaml": "^2.8.3",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.4",
+    "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/leaflet": "^1.9.21",
-    "@types/mdx": "^2.0.13",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.8.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "babel-plugin-react-compiler": "^1.0.0",
+    "bun-types": "1.3.12",
     "eslint": "^9.39.4",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "16.2.6",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "knip": "^6.7.0",
-    "postcss": "^8.5.12",
+    "knip": "^6.14.0",
+    "postcss": "^8.5.14",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "tailwindcss": "^4.2.4",
+    "tailwindcss": "^4.3.0",
+    "tech-stack-icons": "^3.7.1",
     "typescript": "^6.0.3"
   },
   "overrides": {
@@ -75,8 +78,7 @@
     "minimatch": "3.1.5",
     "nanoid": "3.3.11",
     "picomatch": "2.3.2",
-    "postcss": "$postcss",
-    "yaml": "$yaml"
+    "postcss": "$postcss"
   },
   "trustedDependencies": [
     "@vercel/speed-insights"

@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+import { SKILL_ICON_KEYS } from "@/lib/icons/stack-icons.generated";
+
 const logoSchema = z.object({
-  key: z.string(),
+  key: z.enum(SKILL_ICON_KEYS),
   title: z.string(),
   href: z.url(),
 });
@@ -12,9 +14,6 @@ export const ownerDataSchema = z.object({
   journeyStartAt: z.iso.datetime(),
   githubUser: z.string(),
   aboutMe: z.string(),
-  avatar: z.string(),
-  avatarMarker: z.string(),
-  avatarMarkerHover: z.string(),
   avatarMarkerTooltip: z.string(),
   skills: z.array(logoSchema),
 });
@@ -45,4 +44,3 @@ export type ProjectDetails = z.infer<typeof projectFrontMatterSchema> & {
   content: string;
 };
 export type OwnerData = z.infer<typeof ownerDataSchema>;
-export type Logo = z.infer<typeof logoSchema>;

@@ -14,6 +14,16 @@ const LayoutSchema = z.object({
   isResizable: z.boolean().optional(),
 });
 
-const LayoutsSchema = z.record(z.string(), z.array(LayoutSchema));
+const LogicalLayoutsSchema = z
+  .object({
+    lg: z.array(LayoutSchema).optional(),
+    sm: z.array(LayoutSchema).optional(),
+    xs: z.array(LayoutSchema).optional(),
+  })
+  .strict();
 
-export const jsonToLayouts = jsonCodec(LayoutsSchema);
+export const jsonToLogicalLayouts = jsonCodec(LogicalLayoutsSchema);
+
+export type DecodedLayoutsItem = z.infer<typeof LayoutSchema>;
+export type DecodedLayouts = Record<string, DecodedLayoutsItem[]>;
+export type LogicalLayouts = z.infer<typeof LogicalLayoutsSchema>;

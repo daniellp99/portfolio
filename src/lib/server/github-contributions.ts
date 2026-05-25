@@ -4,21 +4,18 @@ import { cacheLife, cacheTag } from "next/cache";
 import { cache } from "react";
 import { flattenError } from "zod";
 
+import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
+import {
+  contributionsMonthCacheTag,
+  isCurrentContributionsMonth,
+} from "@/lib/contributions/contributions-month";
+import { toIsoDateRangeForMonth } from "@/lib/contributions/month-range";
 import {
   githubContributionGraphqlResponseSchema,
   githubContributionMonthResponseSchema,
   type GithubContributionCalendar,
   type GithubContributionMonthResponse,
 } from "@/lib/schemas/github-contributions";
-
-function toIsoDateRangeForMonth(year: number, month: number) {
-  const monthIndex = month - 1;
-  const from = new Date(Date.UTC(year, monthIndex, 1, 0, 0, 0)).toISOString();
-  const to = new Date(
-    Date.UTC(year, monthIndex + 1, 0, 23, 59, 59),
-  ).toISOString();
-  return { from, to };
-}
 
 async function githubGraphql<T>(
   query: string,
@@ -92,12 +89,17 @@ export const getGithubContributionsForMonth = cache(
     login: string,
     year: number,
     month: number,
+    timeZone: string = CONTRIBUTIONS_TZ,
   ): Promise<GithubContributionMonthResponse> => {
     "use cache";
-    cacheLife("hours");
-    cacheTag(`github_contrib_${login}_${year}_${month}`);
+    cacheTag(contributionsMonthCacheTag(login, year, month, timeZone));
+    if (isCurrentContributionsMonth(year, month, timeZone)) {
+      cacheLife("hours");
+    } else {
+      cacheLife("weeks");
+    }
 
-    const { from, to } = toIsoDateRangeForMonth(year, month);
+    const { from, to } = toIsoDateRangeForMonth(year, month, timeZone);
 
     const data = await githubGraphql<{
       user: null | {

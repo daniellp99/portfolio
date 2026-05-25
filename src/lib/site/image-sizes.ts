@@ -1,9 +1,11 @@
 /**
  * `sizes` for next/image fill on **single-column** main-grid project tiles
- * (2 cols &lt;768px, 4 cols ≥768px, max ~1200px container).
+ * (2 cols &lt;768px, 4 cols ≥768px; containers max 375 / 800 / 1200px).
+ *
+ * Slot width ≈ column − 36px (`border-2` + `px-4` on the cover image).
  */
 export const MAIN_GRID_CARD_IMAGE_SIZES =
-  "(max-width: 767px) calc(50vw - 20px), (max-width: 1199px) calc(25vw - 16px), 286px";
+  "(max-width: 767px) 128px, (max-width: 1199px) 144px, 244px";
 
 /**
  * `sizes` for project detail {@link ImageGrid}: MDX `width` is RGL column span,
@@ -23,7 +25,7 @@ export function imageGridCardSizes(columnSpan: number): string {
           : "calc(100vw - 40px)";
   const xlFixed =
     span === 1
-      ? "286px"
+      ? "244px"
       : span === 2
         ? "588px"
         : span === 3

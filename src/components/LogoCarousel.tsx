@@ -2,8 +2,8 @@
 import AutoScroll from "embla-carousel-auto-scroll";
 import { useTheme } from "next-themes";
 import { useId } from "react";
-import StackIcon from "tech-stack-icons";
-
+import { useSkillHover } from "@/components/SkillHoverContext";
+import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
   Carousel,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
-import { Logo } from "@/lib/content/schemas";
+import type { Logo } from "@/lib/content/display";
 
 export function LogoCarousel({
   logos,
@@ -23,6 +23,7 @@ export function LogoCarousel({
 }) {
   const id = useId();
   const { resolvedTheme } = useTheme();
+  const { setHoveredTitle } = useSkillHover();
 
   if (logos.length === 0) return null;
 
@@ -56,14 +57,18 @@ export function LogoCarousel({
               target="_blank"
               rel="noreferrer noopener"
               aria-label={logo.title}
-              className="block p-2 transition-transform duration-200 hover:scale-110"
+              className="block p-2 transition-transform duration-200 hover:scale-110 active:scale-110"
+              onPointerEnter={() => setHoveredTitle(logo.title)}
+              onPointerLeave={() => setHoveredTitle(null)}
+              onFocus={() => setHoveredTitle(logo.title)}
+              onBlur={() => setHoveredTitle(null)}
             >
               <CardGrayscale
                 duration={0.2}
                 className="inline-flex items-center justify-center"
               >
                 <figure role="img" aria-label={`${logo.title} logo`}>
-                  <StackIcon
+                  <SkillStackIcon
                     name={logo.key}
                     variant={resolvedTheme === "light" ? "light" : "dark"}
                     className="aspect-square size-10 xl:size-16"

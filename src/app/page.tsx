@@ -1,49 +1,32 @@
 import { Metadata } from "next";
-import { Suspense } from "react";
-import { ViewTransition } from "react";
+import { Suspense, ViewTransition } from "react";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
-import HomeJsonLd from "@/components/HomeJsonLd";
-import MainGrid, { MainGridFallback } from "@/components/MainGrid";
+import HomeJsonLd from "@/components/server/HomeJsonLd";
+import MainGrid, { MainGridFallback } from "@/components/server/MainGrid";
 
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getLayouts } from "@/lib/server/layouts";
-import { getMapMarkerInfo, getOwnerData } from "@/lib/server/owner";
-import { getProjects } from "@/lib/server/projects";
+import { getProjectSlugs } from "@/lib/server/projects";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { getCanonicalUrl } from "@/lib/site/metadata";
+import { buildHomeMetadata } from "@/lib/site/metadata";
+import { cookies } from "next/headers";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerData();
-  const ownerName = ownerData?.name || "";
-  const title = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
-  const description = ownerData?.aboutMe || "";
-  const homeUrl = getCanonicalUrl("");
+export function generateMetadata(): Metadata {
+  const ownerData = loadOwnerData();
 
-  return {
-    description,
-    alternates: {
-      canonical: homeUrl,
-    },
-    openGraph: {
-      type: "website",
-      locale: "en_US",
-      url: homeUrl,
-      siteName: `${ownerName}'s Portfolio`,
-      title,
-      description,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
+  return buildHomeMetadata(ownerData);
 }
 
-export default function HomePage() {
-  const projectsPromise = getProjects();
-  const layoutsPromise = getLayouts({ layoutKey: MAIN_LAYOUTS_KEY });
-  const mapMarkerInfoPromise = getMapMarkerInfo();
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const projectsSlugsPromise = getProjectSlugs();
+  const layoutsPromise = getLayouts(
+    {
+      layoutKey: MAIN_LAYOUTS_KEY,
+    },
+    cookieStore,
+  );
 
   return (
     <DirectionalTransition>
@@ -58,9 +41,8 @@ export default function HomePage() {
         >
           <ViewTransition enter="slide-up" default="none">
             <MainGrid
-              projectsPromise={projectsPromise}
+              projectsSlugsPromise={projectsSlugsPromise}
               layoutsPromise={layoutsPromise}
-              mapMarkerInfoPromise={mapMarkerInfoPromise}
             />
           </ViewTransition>
         </Suspense>

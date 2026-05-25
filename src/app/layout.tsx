@@ -4,94 +4,30 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
 
-import "@/../node_modules/react-grid-layout/css/styles.css";
-import NavBar from "@/components/NavBar";
-import { ThemeProvider } from "@/components/Providers";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { getOwnerData } from "@/lib/server/owner";
-import {
-  getCanonicalUrl,
-  getMetadataBase,
-  getOwnerAvatarPath,
-} from "@/lib/site/metadata";
+
+import { ThemeProvider } from "@/components/Providers";
+import NavBar from "@/components/server/NavBar";
+
+import { loadOwnerData } from "@/lib/server/content-load";
+import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = await getOwnerData();
+export function generateMetadata(): Metadata {
+  const ownerData = loadOwnerData();
 
-  const ownerName = ownerData?.name || "";
-  const brandTitle = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
-  const description = ownerData?.aboutMe || "";
-
-  const avatarPath = getOwnerAvatarPath(ownerData?.avatar);
-
-  const homeUrl = getCanonicalUrl("");
-
-  return {
-    metadataBase: getMetadataBase(),
-    title: {
-      default: brandTitle,
-      template: `%s | ${brandTitle}`,
-    },
-    description,
-    icons: {
-      icon: avatarPath,
-      apple: avatarPath,
-    },
-    keywords: [
-      "web developer",
-      "full-stack developer",
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Tailwind CSS",
-      "Shadcn UI",
-      "AuthJS",
-      "Drizzle ORM",
-      "portfolio",
-      ownerName,
-      "Cuba",
-    ],
-    authors: [{ name: ownerName }],
-    creator: ownerName,
-    applicationName: brandTitle,
-    category: "Portfolio",
-    alternates: {
-      canonical: homeUrl,
-    },
-    openGraph: {
-      type: "website",
-      locale: "en_US",
-      siteName: brandTitle,
-      title: brandTitle,
-      description,
-      url: homeUrl,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: brandTitle,
-      description,
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-video-preview": -1,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-      },
-    },
-  };
+  return buildRootLayoutMetadata(ownerData);
 }
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
@@ -101,6 +37,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://c.basemaps.cartocdn.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
         <a
           href="#main"
@@ -109,14 +52,12 @@ export default function RootLayout({
           Skip to content
         </a>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            <ScrollArea className="h-screen">
-              <main id="main" className="w-full">
-                <NavBar />
-                {children}
-              </main>
-            </ScrollArea>
-          </TooltipProvider>
+          <ScrollArea className="h-screen">
+            <main id="main" className="w-full">
+              <NavBar />
+              {children}
+            </main>
+          </ScrollArea>
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />

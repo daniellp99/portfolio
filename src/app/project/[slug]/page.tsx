@@ -4,59 +4,27 @@ import { Suspense, ViewTransition } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
-import ImageGrid from "@/components/ImageGrid";
 import { CustomMDX } from "@/components/MdxRemote";
-import ProjectJsonLd from "@/components/ProjectJsonLd";
+import ImageGrid from "@/components/server/ImageGrid";
+import ProjectJsonLd from "@/components/server/ProjectJsonLd";
 
-import { getOwnerData } from "@/lib/server/owner";
+import { loadOwnerData } from "@/lib/server/content-load";
 import { getProjectDetails, getProjectSlugs } from "@/lib/server/projects";
-import { getCanonicalUrl } from "@/lib/site/metadata";
+import { buildProjectPageMetadata } from "@/lib/site/metadata";
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const params = await props.params;
   const project = await getProjectDetails(params.slug);
-  const ownerData = await getOwnerData();
+  const ownerData = loadOwnerData();
 
-  const title = project.name;
-  const description = project.description;
-  const ownerName = ownerData?.name || "";
-
-  const projectUrl = getCanonicalUrl(`/project/${params.slug}`);
-
-  return {
-    title,
-    description,
-    keywords: [
-      project.name,
-      "web development",
-      "project",
-      "portfolio",
-      "React",
-      "Next.js",
-    ],
-    authors: [{ name: ownerName }],
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      locale: "en_US",
-      url: projectUrl,
-      siteName: `${ownerName}'s Portfolio`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      ...(ownerData?.githubUser && {
-        creator: `@${ownerData.githubUser}`,
-      }),
-    },
-    alternates: {
-      canonical: projectUrl,
-    },
-  };
+  return buildProjectPageMetadata({
+    slug: params.slug,
+    projectName: project.name,
+    projectDescription: project.description,
+    owner: ownerData,
+  });
 }
 
 export async function generateStaticParams() {

@@ -1,19 +1,16 @@
 /* eslint-disable @next/next/no-img-element -- next/og ImageResponse uses Satori, not next/image */
 import { ImageResponse } from "next/og";
 
-import { getOwnerData } from "@/lib/server/owner";
 import { getProjectDetails } from "@/lib/server/projects";
 
+import { loadOwnerData } from "@/lib/server/content-load";
 import { ogImageSize, ogPalette, truncateForOg } from "./image-config";
 import { loadImageForOg } from "./load-image-for-og";
 
 export async function buildProjectOgImageResponse(slug: string) {
-  const [project, ownerData] = await Promise.all([
-    getProjectDetails(slug),
-    getOwnerData(),
-  ]);
-
-  const ownerName = ownerData?.name || "";
+  const project = await getProjectDetails(slug);
+  const ownerData = loadOwnerData();
+  const ownerName = ownerData.name;
   const siteLabel = ownerName ? `${ownerName}'s Portfolio` : "Portfolio";
 
   const coverPath = project.coverImage.startsWith("/")
