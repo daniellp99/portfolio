@@ -1,4 +1,4 @@
-import { renderAboutMe } from "@/lib/content/render-about-me";
+import { renderAboutMeCached } from "@/lib/content/render-about-me";
 import { loadOwnerData } from "@/lib/server/content-load";
 import {
   getAbsoluteImageUrl,
@@ -7,17 +7,17 @@ import {
 } from "@/lib/site/metadata";
 import { serializeJsonLd } from "@/lib/json-ld";
 
-export default function HomeJsonLd() {
+export default async function HomeJsonLd() {
   const ownerData = loadOwnerData();
   const ownerName = ownerData.name;
   const homeUrl = getCanonicalUrl("");
   const brandName = `${ownerName}'s Portfolio`;
   const description =
-    renderAboutMe({
+    (await renderAboutMeCached({
       aboutMe: ownerData.aboutMe,
       name: ownerData.name,
       journeyStartAt: ownerData.journeyStartAt,
-    }) || brandName;
+    })) || brandName;
   const profileImage = getAbsoluteImageUrl(getOwnerAvatarPath());
 
   const personId = `${homeUrl}#person`;

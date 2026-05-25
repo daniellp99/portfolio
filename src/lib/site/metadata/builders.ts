@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { renderAboutMe } from "@/lib/content/render-about-me";
+import { renderAboutMeCached } from "@/lib/content/render-about-me";
 
 import { brandTitle } from "./brand";
 import {
@@ -19,24 +19,24 @@ type OwnerForMetadata = {
   githubUser?: string | null;
 };
 
-function resolveOwnerDescription(
+async function resolveOwnerDescription(
   owner: OwnerForMetadata | null | undefined,
-): string {
+): Promise<string> {
   if (!owner?.aboutMe) return "";
 
-  return renderAboutMe({
+  return renderAboutMeCached({
     aboutMe: owner.aboutMe,
     name: owner.name ?? "",
     journeyStartAt: owner.journeyStartAt ?? "",
   });
 }
 
-export function buildRootLayoutMetadata(
+export async function buildRootLayoutMetadata(
   owner: OwnerForMetadata | null | undefined,
-): Metadata {
+): Promise<Metadata> {
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
-  const description = resolveOwnerDescription(owner);
+  const description = await resolveOwnerDescription(owner);
   const avatarPath = OWNER_AVATAR_PATH;
   const homeUrl = getCanonicalUrl("");
 
@@ -96,12 +96,14 @@ export function buildRootLayoutMetadata(
   };
 }
 
-export function buildHomeMetadata(
+export async function buildHomeMetadata(
   owner: OwnerForMetadata | null | undefined,
-): Pick<Metadata, "description" | "alternates" | "openGraph" | "twitter"> {
+): Promise<
+  Pick<Metadata, "description" | "alternates" | "openGraph" | "twitter">
+> {
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
-  const description = resolveOwnerDescription(owner);
+  const description = await resolveOwnerDescription(owner);
   const homeUrl = getCanonicalUrl("");
 
   return {

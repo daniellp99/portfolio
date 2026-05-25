@@ -12,7 +12,7 @@ import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
 import { cookies } from "next/headers";
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
   const ownerData = loadOwnerData();
 
   return buildHomeMetadata(ownerData);

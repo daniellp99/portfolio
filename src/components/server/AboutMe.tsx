@@ -1,11 +1,15 @@
 import { CardHeader } from "@/components/ui/card";
 
-import { renderAboutMe } from "@/lib/content/render-about-me";
+import { renderAboutMeCached } from "@/lib/content/render-about-me";
 import { loadOwnerData } from "@/lib/server/content-load";
 
-export default function AboutMe() {
+export default async function AboutMe() {
   const { aboutMe, name, journeyStartAt } = loadOwnerData();
-  const renderedAboutMe = renderAboutMe({ aboutMe, name, journeyStartAt });
+  const renderedAboutMe = await renderAboutMeCached({
+    aboutMe,
+    name,
+    journeyStartAt,
+  });
 
   const nameParts = renderedAboutMe.split(name);
   const beforeName = nameParts[0] ?? renderedAboutMe;

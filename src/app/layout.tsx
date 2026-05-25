@@ -14,7 +14,7 @@ import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
-export function generateMetadata(): Metadata {
+export async function generateMetadata(): Promise<Metadata> {
   const ownerData = loadOwnerData();
 
   return buildRootLayoutMetadata(ownerData);
