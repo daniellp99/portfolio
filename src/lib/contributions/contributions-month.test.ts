@@ -12,6 +12,7 @@ import {
   contributionsMonthCacheKey,
   contributionsMonthCacheTag,
   contributionsYearMonthFromDate,
+  contributionsYearMonthFromDateInZone,
   formatContributionsMonthCookie,
   getContributionsYearMonthFromCookies,
   isCurrentContributionsMonth,
@@ -79,6 +80,19 @@ describe("normalizeContributionsMonth", () => {
       new Date("2024-03-15T18:00:00Z"),
     );
     expect(contributionsYearMonthFromDate(normalized)).toEqual({
+      year: 2024,
+      month: 3,
+    });
+  });
+});
+
+describe("contributionsYearMonthFromDateInZone", () => {
+  it("extracts the calendar month in the requested timezone", () => {
+    const tokyoMarchStart = new Date("2024-02-29T15:00:00.000Z");
+
+    expect(
+      contributionsYearMonthFromDateInZone(tokyoMarchStart, "Asia/Tokyo"),
+    ).toEqual({
       year: 2024,
       month: 3,
     });
