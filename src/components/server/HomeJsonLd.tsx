@@ -1,3 +1,4 @@
+import { renderAboutMe } from "@/lib/content/render-about-me";
 import { loadOwnerData } from "@/lib/server/content-load";
 import {
   getAbsoluteImageUrl,
@@ -11,6 +12,12 @@ export default function HomeJsonLd() {
   const ownerName = ownerData.name;
   const homeUrl = getCanonicalUrl("");
   const brandName = `${ownerName}'s Portfolio`;
+  const description =
+    renderAboutMe({
+      aboutMe: ownerData.aboutMe,
+      name: ownerData.name,
+      journeyStartAt: ownerData.journeyStartAt,
+    }) || brandName;
   const profileImage = getAbsoluteImageUrl(getOwnerAvatarPath());
 
   const personId = `${homeUrl}#person`;
@@ -23,7 +30,7 @@ export default function HomeJsonLd() {
         "@type": "Person",
         "@id": personId,
         name: ownerName,
-        description: ownerData.aboutMe || brandName,
+        description,
         url: homeUrl,
         image: profileImage,
         sameAs: [`https://github.com/${ownerData.githubUser}`],
@@ -33,7 +40,7 @@ export default function HomeJsonLd() {
         "@id": websiteId,
         url: homeUrl,
         name: brandName,
-        description: ownerData.aboutMe || brandName,
+        description,
         publisher: { "@id": personId },
       },
     ],

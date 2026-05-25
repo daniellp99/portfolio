@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element -- next/og ImageResponse uses Satori, not next/image */
 import { ImageResponse } from "next/og";
 
+import { renderAboutMe } from "@/lib/content/render-about-me";
 import { brandTitle } from "@/lib/site/metadata/brand";
 
 import { loadOwnerData } from "@/lib/server/content-load";
@@ -12,7 +13,14 @@ export async function buildHomeOgImageResponse() {
   const ownerName = ownerData.name;
   const brand = brandTitle(ownerData.name);
   const subtitle = ownerData.aboutMe
-    ? truncateForOg(ownerData.aboutMe, 220)
+    ? truncateForOg(
+        renderAboutMe({
+          aboutMe: ownerData.aboutMe,
+          name: ownerData.name,
+          journeyStartAt: ownerData.journeyStartAt,
+        }),
+        220,
+      )
     : "Full-stack web development";
 
   const avatarSrc = await loadImageForOg("/Avatar-lg.webp", {

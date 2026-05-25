@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { renderAboutMe } from "@/lib/content/render-about-me";
+
 import { brandTitle } from "./brand";
 import {
   openGraphArticleFragment,
@@ -13,15 +15,28 @@ import { getCanonicalUrl, getMetadataBase } from "./urls";
 type OwnerForMetadata = {
   name?: string | null;
   aboutMe?: string | null;
+  journeyStartAt?: string | null;
   githubUser?: string | null;
 };
+
+function resolveOwnerDescription(
+  owner: OwnerForMetadata | null | undefined,
+): string {
+  if (!owner?.aboutMe) return "";
+
+  return renderAboutMe({
+    aboutMe: owner.aboutMe,
+    name: owner.name ?? "",
+    journeyStartAt: owner.journeyStartAt ?? "",
+  });
+}
 
 export function buildRootLayoutMetadata(
   owner: OwnerForMetadata | null | undefined,
 ): Metadata {
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
-  const description = owner?.aboutMe || "";
+  const description = resolveOwnerDescription(owner);
   const avatarPath = OWNER_AVATAR_PATH;
   const homeUrl = getCanonicalUrl("");
 
@@ -86,7 +101,7 @@ export function buildHomeMetadata(
 ): Pick<Metadata, "description" | "alternates" | "openGraph" | "twitter"> {
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
-  const description = owner?.aboutMe || "";
+  const description = resolveOwnerDescription(owner);
   const homeUrl = getCanonicalUrl("");
 
   return {
