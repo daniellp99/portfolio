@@ -60,7 +60,11 @@ export default function MainGrid({
       <Card variant="item" key="maps" className="relative">
         <Map>
           <AvatarMarker>
-            <AvatarMarkerIcon mapMarkerInfo={ownerData} />
+            <AvatarMarkerIcon
+              mapMarkerInfo={{
+                avatarMarkerTooltip: ownerData.avatarMarkerTooltip,
+              }}
+            />
           </AvatarMarker>
         </Map>
       </Card>
