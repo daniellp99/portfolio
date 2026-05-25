@@ -210,7 +210,7 @@ function layoutForVariant(
     );
   }
 
-  return out as Layout;
+  return out;
 }
 
 function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
@@ -245,7 +245,7 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
     };
   }
 
-  return out as Layout;
+  return out;
 }
 
 export function generateLayouts(tab: TabsType, projectKeys: string[]) {

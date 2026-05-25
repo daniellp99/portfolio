@@ -5,7 +5,7 @@ import { CANONICAL_LAYOUT_BREAKPOINT_KEYS } from "./config";
 import { cloneLayout } from "./layout-copy";
 
 function cloneBreakpointLayout(layout: Layout): Layout {
-  return cloneLayout(layout) as Layout;
+  return cloneLayout(layout);
 }
 
 /** Drop breakpoint keys not in the canonical RGL set. */

@@ -122,7 +122,7 @@ function encodeLogicalBreakpoint(
 function remapLayoutIndexIds(
   layout: Layout,
   imageSrcs: readonly string[],
-): LayoutItem[] {
+): Layout {
   const len = layout.length;
   const out: LayoutItem[] = new Array(len);
   let w = 0;
@@ -141,7 +141,7 @@ function remapLayoutIndexIds(
 function expandAliasBreakpoint(
   layout: Layout,
   imageSrcs: readonly string[] | undefined,
-): [LayoutItem[], LayoutItem[]] {
+): [Layout, Layout] {
   if (imageSrcs === undefined) {
     return cloneLayoutAliasPair(layout);
   }
@@ -168,19 +168,19 @@ function expandAliasBreakpoint(
 function expandSingleBreakpoint(
   layout: Layout,
   imageSrcs: readonly string[] | undefined,
-): LayoutItem[] {
+): Layout {
   return imageSrcs === undefined
-    ? (layout as LayoutItem[])
+    ? layout
     : remapLayoutIndexIds(layout, imageSrcs);
 }
 
 function assignAliasPair(
   out: ResponsiveLayouts,
-  pair: [LayoutItem[], LayoutItem[]],
+  pair: [Layout, Layout],
   keys: readonly ["lg", "md"] | readonly ["xs", "xxs"],
 ): void {
-  out[keys[0]] = pair[0] as Layout;
-  out[keys[1]] = pair[1] as Layout;
+  out[keys[0]] = pair[0];
+  out[keys[1]] = pair[1];
 }
 
 function expandLogicalToResponsive(
@@ -209,7 +209,7 @@ function expandLogicalToResponsive(
       continue;
     }
 
-    out.sm = expandSingleBreakpoint(layout, imageSrcs) as Layout;
+    out.sm = expandSingleBreakpoint(layout, imageSrcs);
   }
 
   return out;
@@ -252,13 +252,13 @@ export function syncLayoutsForPersistence(
     if (value !== undefined) merged[key] = value;
   }
 
-  merged[currentBreakpoint] = canonical as Layout;
+  merged[currentBreakpoint] = canonical;
   if (currentBreakpoint === "lg" || currentBreakpoint === "md") {
-    merged.lg = canonical as Layout;
-    merged.md = canonical as Layout;
+    merged.lg = canonical;
+    merged.md = canonical;
   } else if (currentBreakpoint === "xs" || currentBreakpoint === "xxs") {
-    merged.xs = canonical as Layout;
-    merged.xxs = canonical as Layout;
+    merged.xs = canonical;
+    merged.xxs = canonical;
   }
 
   return merged;

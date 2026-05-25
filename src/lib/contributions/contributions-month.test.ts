@@ -170,16 +170,19 @@ describe("getContributionsYearMonthFromCookies", () => {
     const cookieStore = {
       get: (key: string) =>
         key === CONTRIBUTIONS_MONTH_COOKIE_KEY
-          ? { value: "03-2024" }
+          ? { name: CONTRIBUTIONS_MONTH_COOKIE_KEY, value: "03-2024" }
           : undefined,
-    } as ReadonlyRequestCookies;
+    } satisfies Pick<ReadonlyRequestCookies, "get">;
     expect(
       getContributionsYearMonthFromCookies(cookieStore, CONTRIBUTIONS_TZ, now),
     ).toEqual({ month: 3, year: 2024 });
   });
 
   it("defaults to zoned current month when cookie is missing", () => {
-    const cookieStore = { get: () => undefined } as ReadonlyRequestCookies;
+    const cookieStore = { get: () => undefined } satisfies Pick<
+      ReadonlyRequestCookies,
+      "get"
+    >;
     expect(
       getContributionsYearMonthFromCookies(cookieStore, CONTRIBUTIONS_TZ, now),
     ).toEqual({ month: 5, year: 2025 });
@@ -189,9 +192,9 @@ describe("getContributionsYearMonthFromCookies", () => {
     const cookieStore = {
       get: (key: string) =>
         key === CONTRIBUTIONS_MONTH_COOKIE_KEY
-          ? { value: "not-a-month" }
+          ? { name: CONTRIBUTIONS_MONTH_COOKIE_KEY, value: "not-a-month" }
           : undefined,
-    } as ReadonlyRequestCookies;
+    } satisfies Pick<ReadonlyRequestCookies, "get">;
     expect(
       getContributionsYearMonthFromCookies(cookieStore, CONTRIBUTIONS_TZ, now),
     ).toEqual({ month: 5, year: 2025 });

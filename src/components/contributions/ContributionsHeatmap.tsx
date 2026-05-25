@@ -100,14 +100,14 @@ export function ContributionsHeatmap({
       })}
 
       <Popover handle={contributionsPopoverHandle}>
-        {({ payload: Payload }) => (
+        {({ payload }) => (
           <PopoverContent
             variant="tooltip"
             side="top"
             align="center"
             sideOffset={4}
           >
-            {Payload as ReactNode}
+            {payload}
           </PopoverContent>
         )}
       </Popover>

@@ -37,7 +37,9 @@ const popoverContentVariants = cva(
   },
 );
 
-function Popover({ ...props }: PopoverPrimitive.Root.Props) {
+function Popover<Payload = unknown>(
+  props: PopoverPrimitive.Root.Props<Payload>,
+) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 

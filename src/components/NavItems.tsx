@@ -8,7 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { switchMainGridTab } from "@/lib/actions/switch-main-grid-tab";
 import type { ProjectSlugs } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
-import { tabs, type TabsType } from "@/lib/site/tabs";
+import { tabs, tabsTypeSchema, type TabsType } from "@/lib/site/tabs";
 import { cn } from "@/lib/utils";
 
 export default function NavItemsClient({
@@ -34,7 +34,9 @@ export default function NavItemsClient({
       data-pending={pending}
       value={activeTab}
       onValueChange={(value) => {
-        const tab = value as TabsType;
+        const parsed = tabsTypeSchema.safeParse(value);
+        if (!parsed.success) return;
+        const tab = parsed.data;
         startTransition(async () => {
           setOptimisticTab(tab);
           await switchMainGridTab(tab, projectsSlugs);

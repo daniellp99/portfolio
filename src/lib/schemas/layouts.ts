@@ -25,5 +25,5 @@ const LogicalLayoutsSchema = z
 export const jsonToLogicalLayouts = jsonCodec(LogicalLayoutsSchema);
 
 export type DecodedLayoutsItem = z.infer<typeof LayoutSchema>;
-export type DecodedLayouts = Record<string, DecodedLayoutsItem[]>;
+export type DecodedLayouts = Record<string, readonly DecodedLayoutsItem[]>;
 export type LogicalLayouts = z.infer<typeof LogicalLayoutsSchema>;

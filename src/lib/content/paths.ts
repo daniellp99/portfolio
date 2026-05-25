@@ -9,7 +9,7 @@ export function isENOENT(error: unknown): boolean {
     typeof error === "object" &&
     error !== null &&
     "code" in error &&
-    (error as NodeJS.ErrnoException).code === "ENOENT"
+    error.code === "ENOENT"
   );
 }
 

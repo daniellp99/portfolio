@@ -13,11 +13,9 @@ const DEFAULT_ACTIVE_TAB = TABS.ALL satisfies TabsType;
 
 export type TabsType = (typeof TABS)[keyof typeof TABS];
 
-export const tabs: TabsType[] = Object.values(TABS).map(
-  (tab) => tab as TabsType,
-);
+export const tabs: TabsType[] = [TABS.ALL, TABS.ABOUT, TABS.PROJECTS];
 
-export const tabsTypeSchema = z.enum([TABS.ALL, TABS.ABOUT, TABS.PROJECTS]);
+export const tabsTypeSchema = z.enum(tabs);
 
 export function getActiveTab(cookieStore: ReadonlyRequestCookies): TabsType {
   const result = tabsTypeSchema.safeParse(

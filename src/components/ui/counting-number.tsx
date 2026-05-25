@@ -31,14 +31,11 @@ function CountingNumber({
   initiallyStable = false,
   ...props
 }: CountingNumberProps) {
-  const { ref: localRef, isInView } = useIsInView(
-    ref as React.Ref<HTMLElement>,
-    {
-      inView,
-      inViewOnce,
-      inViewMargin,
-    },
-  );
+  const { ref: localRef, isInView } = useIsInView(ref, {
+    inView,
+    inViewOnce,
+    inViewMargin,
+  });
 
   const numberStr = number.toString();
   const decimals =

@@ -16,7 +16,7 @@ export function cloneLayoutItem(item: LayoutItem): LayoutItem {
   return out;
 }
 
-export function cloneLayout(layout: Layout): LayoutItem[] {
+export function cloneLayout(layout: Layout): Layout {
   const len = layout.length;
   const out: LayoutItem[] = new Array(len);
   for (let i = 0; i < len; i++) {
@@ -26,9 +26,7 @@ export function cloneLayout(layout: Layout): LayoutItem[] {
 }
 
 /** Independent lg/md or xs/xxs copies in one pass over items. */
-export function cloneLayoutAliasPair(
-  layout: Layout,
-): [LayoutItem[], LayoutItem[]] {
+export function cloneLayoutAliasPair(layout: Layout): [Layout, Layout] {
   const len = layout.length;
   const a: LayoutItem[] = new Array(len);
   const b: LayoutItem[] = new Array(len);

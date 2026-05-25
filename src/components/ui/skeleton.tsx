@@ -1,5 +1,10 @@
 import { cn } from "@/lib/utils";
 
+type SkeletonStyle = React.CSSProperties & {
+  "--loader-skeleton-duration"?: string;
+  "--loader-skeleton-gradient"?: string;
+};
+
 function Skeleton({
   className,
   highlightColor,
@@ -10,6 +15,13 @@ function Skeleton({
   highlightColor?: string;
   duration?: number;
 }) {
+  const skeletonStyle: SkeletonStyle = {
+    ...style,
+    "--loader-skeleton-duration": `${duration}s`,
+    "--loader-skeleton-gradient": `linear-gradient(90deg, transparent, ${
+      highlightColor ?? "rgba(255, 255, 255, 0.3)"
+    }, transparent)`,
+  };
   return (
     <div
       data-slot="skeleton"
@@ -20,15 +32,7 @@ function Skeleton({
         "motion-safe:before:animate-skeleton-shimmer motion-reduce:before:animate-none",
         className,
       )}
-      style={
-        {
-          ...style,
-          "--loader-skeleton-duration": `${duration}s`,
-          "--loader-skeleton-gradient": `linear-gradient(90deg, transparent, ${
-            highlightColor ?? "rgba(255, 255, 255, 0.3)"
-          }, transparent)`,
-        } as React.CSSProperties
-      }
+      style={skeletonStyle}
       {...props}
     />
   );

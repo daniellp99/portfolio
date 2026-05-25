@@ -44,7 +44,7 @@ export function imageLayoutsKeyForSlug(
     images?.length && images.length > 0
       ? `_${imageLayoutDimensionHash(images)}`
       : "";
-  return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}` as ImageLayoutsCookieKey;
+  return `${IMAGE_LAYOUTS_PREFIX}${safe}${dim}`;
 }
 
 export type LayoutKey = typeof MAIN_LAYOUTS_KEY | ImageLayoutsCookieKey;

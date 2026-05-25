@@ -23,7 +23,7 @@ export function formatContributionsMonthCookie({
 }
 
 export function getContributionsYearMonthFromCookies(
-  cookieStore: ReadonlyRequestCookies,
+  cookieStore: Pick<ReadonlyRequestCookies, "get">,
   timeZone: string = CONTRIBUTIONS_TZ,
   now: Date = new Date(),
 ): ContributionsYearMonth {
