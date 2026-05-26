@@ -1,5 +1,3 @@
-"use client";
-
 import { bucketClass } from "@/lib/contributions/intensity";
 import { cn } from "@/lib/utils";
 

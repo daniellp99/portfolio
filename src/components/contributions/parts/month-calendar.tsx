@@ -10,7 +10,7 @@ import { changeContributionsMonth } from "@/lib/actions/change-contributions-mon
 import { contributionsYearMonthFromDateInZone } from "@/lib/contributions/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
-export function ContributionsCalendar({
+export function ContributionsMonthCalendar({
   initialMonth,
   calendarStartMonth,
   calendarEndMonth,
