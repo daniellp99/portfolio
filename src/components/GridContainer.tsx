@@ -7,6 +7,7 @@ import { ReactNode, useSyncExternalStore } from "react";
 import { useContainerWidth, type ResponsiveLayouts } from "react-grid-layout";
 
 import GridResponsive from "@/components/GridResponsive";
+import GridStaticShell from "@/components/GridStaticShell";
 
 function subscribeNoop() {
   return () => {};
@@ -78,7 +79,7 @@ export default function GridContainer({
   );
 
   if (initialWidth === null) {
-    return <div className="relative" />;
+    return <GridStaticShell layouts={layouts}>{children}</GridStaticShell>;
   }
 
   return (
