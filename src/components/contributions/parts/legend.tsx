@@ -11,9 +11,9 @@ export function ContributionsLegend({ className }: { className?: string }) {
       aria-hidden="true"
     >
       <span className="text-xs text-muted-foreground">Less</span>
-      <div className="flex items-center gap-1">
+      <ol className="flex items-center gap-1">
         {Array.from({ length: 5 }).map((_, idx) => (
-          <span
+          <li
             key={idx}
             className={cn(
               "size-4 rounded ring-1 ring-foreground/10",
@@ -21,7 +21,7 @@ export function ContributionsLegend({ className }: { className?: string }) {
             )}
           />
         ))}
-      </div>
+      </ol>
       <span className="text-xs text-muted-foreground">More</span>
     </div>
   );
