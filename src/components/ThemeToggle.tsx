@@ -4,6 +4,8 @@ import { motion, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+import posthog from "posthog-js";
+
 import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
 import { Button } from "@/components/ui/button";
 import { UI_SPRING } from "@/lib/motion";
@@ -40,7 +42,9 @@ export default function ThemeToggle() {
         aria-busy={!mounted}
         aria-label="Toggle theme"
         onClick={() => {
-          setTheme(isDark ? "light" : "dark");
+          const newTheme = isDark ? "light" : "dark";
+          setTheme(newTheme);
+          posthog.capture("theme_toggled", { theme: newTheme });
         }}
       >
         <motion.div

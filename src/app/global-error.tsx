@@ -5,6 +5,8 @@ import { GeistSans } from "geist/font/sans";
 import { CircleAlertIcon, RefreshCwIcon } from "lucide-react";
 import { useEffect } from "react";
 
+import posthog from "posthog-js";
+
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -44,6 +46,10 @@ export default function GlobalError({
 
   useEffect(() => {
     console.error(error);
+    posthog.capture("global_error_encountered", {
+      error_message: error.message,
+      error_digest: error.digest,
+    });
   }, [error]);
 
   return (

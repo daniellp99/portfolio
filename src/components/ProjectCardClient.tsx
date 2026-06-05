@@ -4,6 +4,7 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { use, useState, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,12 @@ export default function ProjectCardClient({
             <Link
               href={`/project/${project.slug}`}
               transitionTypes={["nav-forward"]}
+              onClick={() =>
+                posthog.capture("project_card_clicked", {
+                  project_slug: project.slug,
+                  project_name: project.name,
+                })
+              }
             />
           }
           nativeButton={false}

@@ -9,6 +9,8 @@ import {
   type SubmitEvent,
 } from "react";
 
+import posthog from "posthog-js";
+
 import { Button } from "@/components/ui/button";
 
 import { changeContributionsMonthFormAction } from "@/lib/actions/change-contributions-month-form";
@@ -55,6 +57,12 @@ export function ContributionsMonthCalendar({
       journeyStartAt,
     );
     if (!next) return;
+
+    posthog.capture("contributions_month_changed", {
+      year: next.year,
+      month: next.month,
+      direction: intent,
+    });
 
     startTransition(() => {
       setOptimisticState(next);

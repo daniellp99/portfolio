@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
 import { CustomMDX } from "@/components/MdxRemote";
+import PostHogProjectView from "@/components/PostHogProjectView";
 import ImageGrid from "@/components/server/ImageGrid";
 import ProjectJsonLd from "@/components/server/ProjectJsonLd";
 
@@ -41,6 +42,7 @@ export default async function ProjectPage(props: {
 
   return (
     <DirectionalTransition>
+      <PostHogProjectView slug={slug} projectName={project.name} />
       <ProjectJsonLd slug={slug} />
       <div className="flex flex-col place-items-center gap-10">
         <article className="container mx-auto flex size-full flex-col gap-4 sm:flex-row">
