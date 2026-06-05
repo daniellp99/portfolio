@@ -1,6 +1,6 @@
-import { LatLngExpression } from "leaflet";
+export type MapCenter = [number, number];
 
-export const DEFAULT_CENTER = [20.89689, -76.26652] satisfies LatLngExpression;
+export const DEFAULT_CENTER: MapCenter = [20.89689, -76.26652];
 export const DEFAULT_ZOOM = 4.49;
 
 export const COOKIE_MAX_AGE = 31536000;

@@ -1,13 +1,10 @@
 "use client";
+
 import "leaflet/dist/leaflet.css";
-import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { Activity } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-
-import ZoomHandler from "@/components/ZoomHandler";
 
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
@@ -21,15 +18,7 @@ const LeafletMapContainer = dynamic(
   },
 );
 
-const TileLayer = dynamic(
-  async () => (await import("react-leaflet")).TileLayer,
-  {
-    ssr: false,
-  },
-);
-
-export default function Map({ children }: { children: React.ReactNode }) {
-  const { resolvedTheme } = useTheme();
+export default function MapRoot({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
@@ -44,19 +33,8 @@ export default function Map({ children }: { children: React.ReactNode }) {
       center={DEFAULT_CENTER}
       zoom={DEFAULT_ZOOM}
       maxZoom={16}
-      className="size-full"
+      className="isolate grid size-full [grid-template-areas:'map']"
     >
-      <ZoomHandler />
-      <Activity mode={resolvedTheme === "dark" ? "visible" : "hidden"}>
-        <TileLayer
-          url={"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}
-        />
-      </Activity>
-      <Activity mode={resolvedTheme === "dark" ? "hidden" : "visible"}>
-        <TileLayer
-          url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
-        />
-      </Activity>
       {children}
     </LeafletMapContainer>
   );

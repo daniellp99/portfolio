@@ -13,5 +13,3 @@ export type Project = {
 export type ProjectSlugs = string[];
 
 export type Images = ProjectDetails["images"];
-
-export type MapMarkerInfo = Pick<OwnerData, "avatarMarkerTooltip">;
