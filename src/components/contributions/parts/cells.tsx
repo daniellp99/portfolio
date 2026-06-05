@@ -18,26 +18,30 @@ export function ContributionsCells({
   const { year, month, retryNonce } = useContributionsBoundary();
 
   return (
-    <ErrorBoundary
-      resetKeys={[year, month, retryNonce]}
-      fallbackRender={({ error, resetErrorBoundary }) => (
-        <ContributionsErrorCells
-          error={error instanceof Error ? error : new Error(String(error))}
-          resetErrorBoundary={resetErrorBoundary}
-        />
-      )}
-    >
-      <Suspense
-        fallback={
-          <ViewTransition exit="slide-down">
-            <ContributionsLoadingCells year={year} month={month} />
-          </ViewTransition>
-        }
+    <section className="grid place-items-stretch [grid-template-areas:'cells']">
+      <ErrorBoundary
+        resetKeys={[year, month, retryNonce]}
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <ContributionsErrorCells
+            error={error instanceof Error ? error : new Error(String(error))}
+            resetErrorBoundary={resetErrorBoundary}
+          />
+        )}
       >
-        <ViewTransition enter="slide-up" default="none">
-          <ContributionsDataCells contributionsPromise={contributionsPromise} />
-        </ViewTransition>
-      </Suspense>
-    </ErrorBoundary>
+        <Suspense
+          fallback={
+            <ViewTransition exit="slide-down">
+              <ContributionsLoadingCells year={year} month={month} />
+            </ViewTransition>
+          }
+        >
+          <ViewTransition enter="slide-up" default="none">
+            <ContributionsDataCells
+              contributionsPromise={contributionsPromise}
+            />
+          </ViewTransition>
+        </Suspense>
+      </ErrorBoundary>
+    </section>
   );
 }

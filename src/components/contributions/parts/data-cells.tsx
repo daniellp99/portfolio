@@ -47,7 +47,7 @@ export function ContributionsDataCells({
   return (
     <ol
       className={cn(
-        "grid grid-cols-7 place-items-stretch gap-1 xl:gap-2",
+        "grid grid-cols-7 place-items-stretch gap-1 [grid-area:cells] xl:gap-2",
         className,
       )}
     >
