@@ -10,14 +10,12 @@ import {
 } from "@/components/ui/card";
 import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import {
-  buildContributionsMonthSnapshot,
+  buildContributionsMonthFormState,
   contributionsMonthCacheKey,
   getContributionsYearMonthFromCookies,
-  parseContributionsMonthSnapshot,
 } from "@/lib/contributions/contributions-month";
 import { loadOwnerData } from "@/lib/server/content-load";
 import { getGithubContributionsForMonth } from "@/lib/server/github-contributions";
-import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 export default async function ContributionsCard() {
   const cookieStore = await cookies();
@@ -39,14 +37,11 @@ export default async function ContributionsCard() {
     );
   }
 
-  const snapshot = buildContributionsMonthSnapshot(
+  const monthFormInitialState = buildContributionsMonthFormState(
     ownerData.journeyStartAt,
-    undefined,
-    CONTRIBUTIONS_TZ,
-    { year, month },
+    year,
+    month,
   );
-  const { initialMonth, calendarStartMonth, calendarEndMonth } =
-    parseContributionsMonthSnapshot(snapshot);
   const monthStart = getMonthStartInZone(year, month);
 
   return (
@@ -59,9 +54,9 @@ export default async function ContributionsCard() {
       <CardFooter className="peer/contribution-calendar order-3 items-end justify-between px-2 pb-2">
         <Contributions.OpenProfileLink login={login} />
         <Contributions.MonthCalendar
-          initialMonth={initialMonth}
-          calendarStartMonth={calendarStartMonth}
-          calendarEndMonth={calendarEndMonth}
+          key={contributionsMonthCacheKey(year, month)}
+          initialState={monthFormInitialState}
+          journeyStartAt={ownerData.journeyStartAt}
         />
       </CardFooter>
       <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">

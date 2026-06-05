@@ -8,7 +8,7 @@ import MainGrid, { MainGridFallback } from "@/components/server/MainGrid";
 import { loadOwnerData } from "@/lib/server/content-load";
 import { getLayouts } from "@/lib/server/layouts";
 import { getProjectSlugs } from "@/lib/server/projects";
-import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+import { MAIN_GRID_TABPANEL_ID, MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 import { buildHomeMetadata } from "@/lib/site/metadata";
 import { cookies } from "next/headers";
 
@@ -31,7 +31,12 @@ export default async function HomePage() {
   return (
     <DirectionalTransition>
       <HomeJsonLd />
-      <section className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
+      <section
+        id={MAIN_GRID_TABPANEL_ID}
+        role="tabpanel"
+        aria-label="Portfolio grid"
+        className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]"
+      >
         <Suspense
           fallback={
             <ViewTransition exit="slide-down">

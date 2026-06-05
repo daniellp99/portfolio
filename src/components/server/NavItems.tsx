@@ -1,10 +1,9 @@
 import { cookies } from "next/headers";
 
-import { getProjectSlugs } from "@/lib/server/projects";
+import NavItemsClient from "@/components/NavItems";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { MainGridTabFormState } from "@/lib/actions/switch-main-grid-tab-form";
 import { getActiveTab } from "@/lib/site/tabs";
-
-import NavItemsClient from "../NavItems";
-import { Skeleton } from "../ui/skeleton";
 
 export function NavItemsFallback() {
   return <Skeleton className="h-12 w-68.25 rounded-full" />;
@@ -12,12 +11,9 @@ export function NavItemsFallback() {
 
 export default async function NavItems() {
   const cookieStore = await cookies();
-  const initialActiveTab = getActiveTab(cookieStore);
-  const projectsSlugsPromise = getProjectSlugs();
-  return (
-    <NavItemsClient
-      projectsSlugsPromise={projectsSlugsPromise}
-      initialActiveTab={initialActiveTab}
-    />
-  );
+  const initialState: MainGridTabFormState = {
+    activeTab: getActiveTab(cookieStore),
+  };
+
+  return <NavItemsClient initialState={initialState} />;
 }

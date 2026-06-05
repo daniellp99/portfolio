@@ -8,7 +8,9 @@ import {
   CONTRIBUTIONS_TZ,
 } from "@/lib/site/constants";
 import {
+  buildContributionsMonthFormState,
   buildContributionsMonthSnapshot,
+  stepContributionsMonthFormState,
   contributionsMonthCacheKey,
   contributionsMonthCacheTag,
   contributionsYearMonthFromDate,
@@ -198,5 +200,74 @@ describe("getContributionsYearMonthFromCookies", () => {
     expect(
       getContributionsYearMonthFromCookies(cookieStore, CONTRIBUTIONS_TZ, now),
     ).toEqual({ month: 5, year: 2025 });
+  });
+});
+
+describe("buildContributionsMonthFormState", () => {
+  const journeyStartAt = "2023-07-10T00:00:00Z";
+  const now = new Date("2025-05-15T12:00:00Z");
+
+  it("formats caption and enables prev/next within calendar bounds", () => {
+    const state = buildContributionsMonthFormState(
+      journeyStartAt,
+      2024,
+      3,
+      CONTRIBUTIONS_TZ,
+      now,
+    );
+    expect(state).toEqual({
+      year: 2024,
+      month: 3,
+      caption: "Mar 2024",
+      canGoPrev: true,
+      canGoNext: true,
+    });
+  });
+
+  it("disables prev at calendar start month", () => {
+    const state = buildContributionsMonthFormState(
+      journeyStartAt,
+      2023,
+      1,
+      CONTRIBUTIONS_TZ,
+      now,
+    );
+    expect(state.canGoPrev).toBe(false);
+    expect(state.canGoNext).toBe(true);
+  });
+
+  it("disables next at calendar end month", () => {
+    const state = buildContributionsMonthFormState(
+      journeyStartAt,
+      2025,
+      12,
+      CONTRIBUTIONS_TZ,
+      now,
+    );
+    expect(state.canGoPrev).toBe(true);
+    expect(state.canGoNext).toBe(false);
+  });
+
+  it("steps month forward for optimistic updates", () => {
+    const state = buildContributionsMonthFormState(
+      journeyStartAt,
+      2024,
+      3,
+      CONTRIBUTIONS_TZ,
+      now,
+    );
+    const next = stepContributionsMonthFormState(
+      state,
+      "next",
+      journeyStartAt,
+      now,
+    );
+    expect(next).toEqual({
+      year: 2024,
+      month: 4,
+      caption: "Apr 2024",
+      canGoPrev: true,
+      canGoNext: true,
+    });
   });
 });

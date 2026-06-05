@@ -1,4 +1,12 @@
-import { formatISO, getMonth, getYear, startOfMonth } from "date-fns";
+import {
+  addMonths,
+  formatISO,
+  getMonth,
+  getYear,
+  isAfter,
+  isBefore,
+  startOfMonth,
+} from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
@@ -163,4 +171,68 @@ export function contributionsMonthCacheKey(
   timeZone: string = CONTRIBUTIONS_TZ,
 ): string {
   return `${year}-${month}-${timeZone}`;
+}
+
+export type ContributionsMonthFormState = {
+  year: number;
+  month: number;
+  caption: string;
+  canGoPrev: boolean;
+  canGoNext: boolean;
+};
+
+export function stepContributionsMonthFormState(
+  prevState: ContributionsMonthFormState,
+  intent: "prev" | "next",
+  journeyStartAtIso: string,
+  now: Date = new Date(),
+): ContributionsMonthFormState | null {
+  if (intent === "prev" && !prevState.canGoPrev) return null;
+  if (intent === "next" && !prevState.canGoNext) return null;
+
+  const delta = intent === "prev" ? -1 : 1;
+  const current = getMonthStartInZone(
+    prevState.year,
+    prevState.month,
+    CONTRIBUTIONS_TZ,
+  );
+  const next = addMonths(current, delta);
+  const { year: nextYear, month: nextMonth } =
+    contributionsYearMonthFromDateInZone(next, CONTRIBUTIONS_TZ);
+
+  return buildContributionsMonthFormState(
+    journeyStartAtIso,
+    nextYear,
+    nextMonth,
+    CONTRIBUTIONS_TZ,
+    now,
+  );
+}
+
+export function buildContributionsMonthFormState(
+  journeyStartAtIso: string,
+  year: number,
+  month: number,
+  timeZone: string = CONTRIBUTIONS_TZ,
+  now: Date = new Date(),
+): ContributionsMonthFormState {
+  const snapshot = buildContributionsMonthSnapshot(
+    journeyStartAtIso,
+    now,
+    timeZone,
+    { year, month },
+  );
+  const { calendarStartMonth, calendarEndMonth } =
+    parseContributionsMonthSnapshot(snapshot);
+  const current = getMonthStartInZone(year, month, timeZone);
+  const start = startOfMonth(calendarStartMonth);
+  const end = startOfMonth(calendarEndMonth);
+
+  return {
+    year,
+    month,
+    caption: formatInTimeZone(current, timeZone, "MMM yyyy"),
+    canGoPrev: isAfter(current, start),
+    canGoNext: isBefore(current, end),
+  };
 }

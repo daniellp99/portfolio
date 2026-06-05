@@ -9,6 +9,7 @@ export const COOKIE_VALUE_MAX_LENGTH = 4096;
 export const ACTIVE_TAB_KEY = "portfolio-active-tab" as const;
 
 export const MAIN_LAYOUTS_KEY = "portfolio-main-layouts" as const;
+export const MAIN_GRID_TABPANEL_ID = "main-grid" as const;
 export const IMAGE_LAYOUTS_KEY = "portfolio-image-layouts" as const;
 
 const IMAGE_LAYOUTS_PREFIX = "portfolio-image-layouts__" as const;

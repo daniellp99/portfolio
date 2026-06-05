@@ -1,65 +1,127 @@
 "use client";
 
 import { formatInTimeZone } from "date-fns-tz";
-import { useOptimistic, useTransition } from "react";
-import { TZDate } from "react-day-picker";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  startTransition,
+  useActionState,
+  useOptimistic,
+  type SubmitEvent,
+} from "react";
 
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 
-import { changeContributionsMonth } from "@/lib/actions/change-contributions-month";
-import { contributionsYearMonthFromDateInZone } from "@/lib/contributions/contributions-month";
+import { changeContributionsMonthFormAction } from "@/lib/actions/change-contributions-month-form";
+import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
+import {
+  stepContributionsMonthFormState,
+  type ContributionsMonthFormState,
+} from "@/lib/contributions/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
+function formDataFromSubmit(event: SubmitEvent<HTMLFormElement>): FormData {
+  const submitter = event.nativeEvent.submitter;
+  return new FormData(
+    event.currentTarget,
+    submitter instanceof HTMLButtonElement ? submitter : undefined,
+  );
+}
+
 export function ContributionsMonthCalendar({
-  initialMonth,
-  calendarStartMonth,
-  calendarEndMonth,
+  initialState,
+  journeyStartAt,
 }: {
-  initialMonth: Date;
-  calendarStartMonth: Date;
-  calendarEndMonth: Date;
+  initialState: ContributionsMonthFormState;
+  journeyStartAt: string;
 }) {
-  const [isPending, startTransition] = useTransition();
-  const [optimisticMonth, setOptimisticMonth] = useOptimistic(
-    initialMonth,
-    (_current, next: Date) => next,
+  const [state, formAction, isPending] = useActionState(
+    changeContributionsMonthFormAction,
+    initialState,
+  );
+  const [optimisticState, setOptimisticState] = useOptimistic(
+    state,
+    (_current, next: ContributionsMonthFormState) => next,
   );
 
-  function setMonthFrom(next: Date) {
-    const { year: nextYear, month: nextMonth } =
-      contributionsYearMonthFromDateInZone(next, CONTRIBUTIONS_TZ);
-    const normalized = new TZDate(nextYear, nextMonth - 1, 1, CONTRIBUTIONS_TZ);
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = formDataFromSubmit(event);
+    const intent = formData.get("intent");
+    if (intent !== "prev" && intent !== "next") return;
 
-    startTransition(async () => {
-      setOptimisticMonth(normalized);
-      await changeContributionsMonth({ year: nextYear, month: nextMonth });
+    const next = stepContributionsMonthFormState(
+      optimisticState,
+      intent,
+      journeyStartAt,
+    );
+    if (!next) return;
+
+    startTransition(() => {
+      setOptimisticState(next);
+      formAction(formData);
     });
   }
 
+  const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
+
+  const monthStart = getMonthStartInZone(year, month, CONTRIBUTIONS_TZ);
+  const monthShort = formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM");
+  const yearLabel = formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "yyyy");
+  const monthIso = `${year}-${String(month).padStart(2, "0")}`;
+
   return (
-    <Calendar
+    <form
+      action={formAction}
+      onSubmit={handleSubmit}
+      aria-label="Change contributions month"
+      aria-busy={isPending || undefined}
       data-pending={isPending || undefined}
-      captionLayout="label"
-      formatters={{
-        formatCaption: (date) =>
-          formatInTimeZone(date, CONTRIBUTIONS_TZ, "MMM yyyy"),
-      }}
-      mode="single"
-      month={optimisticMonth}
-      timeZone={CONTRIBUTIONS_TZ}
-      onMonthChange={setMonthFrom}
-      onNextClick={setMonthFrom}
-      onPrevClick={setMonthFrom}
-      startMonth={calendarStartMonth}
-      endMonth={calendarEndMonth}
-      classNames={{
-        table: "hidden",
-        weekdays: "hidden",
-        week: "hidden",
-        month: "gap-0",
-        caption_label: "text-center leading-4",
-      }}
-      className="cancelDrag rounded-sm bg-input p-1"
-    />
+      className="cancelDrag group/calendar flex h-10 items-center rounded-full bg-input px-1"
+    >
+      <Button
+        type="submit"
+        name="intent"
+        value="prev"
+        variant="ghost"
+        size="icon"
+        disabled={!canGoPrev}
+        aria-label="Go to the previous month"
+        className="size-8.5"
+      >
+        <ChevronLeftIcon className="size-5" aria-hidden="true" />
+      </Button>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        <span className="sr-only">{caption}</span>
+        <time
+          dateTime={monthIso}
+          aria-hidden="true"
+          className="hidden text-sm leading-4 font-medium whitespace-nowrap select-none xl:inline"
+        >
+          {caption}
+        </time>
+        <time
+          dateTime={monthIso}
+          aria-hidden="true"
+          className="flex flex-col items-center justify-center leading-none select-none xl:hidden"
+        >
+          <span className="text-sm font-medium">{monthShort}</span>
+          <span className="text-[10px] font-medium tabular-nums">
+            {yearLabel}
+          </span>
+        </time>
+      </div>
+      <Button
+        type="submit"
+        name="intent"
+        value="next"
+        variant="ghost"
+        size="icon"
+        disabled={!canGoNext}
+        aria-label="Go to the next month"
+        className="size-8.5"
+      >
+        <ChevronRightIcon className="size-5" aria-hidden="true" />
+      </Button>
+    </form>
   );
 }
