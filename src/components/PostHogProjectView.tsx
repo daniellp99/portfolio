@@ -1,7 +1,8 @@
 "use client";
 
-import posthog from "posthog-js";
 import { useEffect } from "react";
+
+import { capture } from "@/lib/analytics";
 
 export default function PostHogProjectView({
   slug,
@@ -11,7 +12,7 @@ export default function PostHogProjectView({
   projectName: string;
 }) {
   useEffect(() => {
-    posthog.capture("project_viewed", {
+    capture("project_viewed", {
       project_slug: slug,
       project_name: projectName,
     });

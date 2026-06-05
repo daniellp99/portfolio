@@ -1,6 +1,5 @@
 "use client";
 
-import posthog from "posthog-js";
 import { startTransition, useOptimistic, type ReactNode } from "react";
 import {
   getBreakpointFromWidth,
@@ -9,6 +8,7 @@ import {
   ResponsiveLayouts,
 } from "react-grid-layout";
 
+import { capture } from "@/lib/analytics";
 import { setLayouts, type SetLayoutsOptions } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
 import {
@@ -42,7 +42,7 @@ export default function GridResponsive({
   const persistUserLayout = (layout: Layout) => {
     if (!interactive) return;
 
-    posthog.capture("grid_layout_changed");
+    capture("grid_layout_changed");
 
     const breakpoint = getBreakpointFromWidth(
       GRID_RESPONSIVE_STATIC_PROPS.breakpoints,

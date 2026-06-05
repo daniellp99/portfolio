@@ -9,9 +9,8 @@ import {
   type SubmitEvent,
 } from "react";
 
-import posthog from "posthog-js";
-
 import { Button } from "@/components/ui/button";
+import { capture } from "@/lib/analytics";
 
 import { changeContributionsMonthFormAction } from "@/lib/actions/change-contributions-month-form";
 import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
@@ -58,7 +57,7 @@ export function ContributionsMonthCalendar({
     );
     if (!next) return;
 
-    posthog.capture("contributions_month_changed", {
+    capture("contributions_month_changed", {
       year: next.year,
       month: next.month,
       direction: intent,

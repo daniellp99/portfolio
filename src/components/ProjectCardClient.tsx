@@ -4,12 +4,12 @@ import { ArrowUpRightIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import posthog from "posthog-js";
 import { use, useState, ViewTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
+import { capture } from "@/lib/analytics";
 import type { Project } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
@@ -57,7 +57,7 @@ export default function ProjectCardClient({
               href={`/project/${project.slug}`}
               transitionTypes={["nav-forward"]}
               onClick={() =>
-                posthog.capture("project_card_clicked", {
+                capture("project_card_clicked", {
                   project_slug: project.slug,
                   project_name: project.name,
                 })

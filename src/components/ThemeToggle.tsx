@@ -4,10 +4,9 @@ import { motion, useReducedMotion } from "motion/react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import posthog from "posthog-js";
-
 import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
 import { Button } from "@/components/ui/button";
+import { capture } from "@/lib/analytics";
 import { UI_SPRING } from "@/lib/motion";
 
 const KNOB_X = 18;
@@ -44,7 +43,7 @@ export default function ThemeToggle() {
         onClick={() => {
           const newTheme = isDark ? "light" : "dark";
           setTheme(newTheme);
-          posthog.capture("theme_toggled", { theme: newTheme });
+          capture("theme_toggled", { theme: newTheme });
         }}
       >
         <motion.div

@@ -1,9 +1,8 @@
 "use client";
 
 import { ArrowUpRightIcon } from "lucide-react";
-import posthog from "posthog-js";
-
 import { buttonVariants } from "@/components/ui/button";
+import { capture } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 export function ContributionsOpenProfileLink({
@@ -22,7 +21,7 @@ export function ContributionsOpenProfileLink({
       )}
       href={`https://github.com/${login}`}
       onClick={() =>
-        posthog.capture("github_profile_link_clicked", { github_login: login })
+        capture("github_profile_link_clicked", { github_login: login })
       }
     >
       <ArrowUpRightIcon data-icon="inline-start" className="size-5" />

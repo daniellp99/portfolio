@@ -2,9 +2,8 @@
 
 import { XIcon } from "lucide-react";
 import Link from "next/link";
-import posthog from "posthog-js";
-
 import { Button } from "@/components/ui/button";
+import { capture } from "@/lib/analytics";
 
 export default function GoBackButton() {
   return (
@@ -18,7 +17,7 @@ export default function GoBackButton() {
         <Link
           href="/"
           transitionTypes={["nav-back"]}
-          onClick={() => posthog.capture("back_to_home_clicked")}
+          onClick={() => capture("back_to_home_clicked")}
         />
       }
       nativeButton={false}

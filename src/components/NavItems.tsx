@@ -1,7 +1,6 @@
 "use client";
 
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import posthog from "posthog-js";
 import {
   startTransition,
   useActionState,
@@ -12,6 +11,7 @@ import {
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+import { capture } from "@/lib/analytics";
 import {
   switchMainGridTabFormAction,
   type MainGridTabFormState,
@@ -68,7 +68,7 @@ export default function NavItemsClient({
     formData.set("tab", tab);
     const next: MainGridTabFormState = { activeTab: tab };
 
-    posthog.capture("grid_tab_switched", { tab });
+    capture("grid_tab_switched", { tab });
 
     startTransition(() => {
       setOptimisticState(next);
