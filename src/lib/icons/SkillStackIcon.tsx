@@ -10,7 +10,7 @@ export type SkillStackIconProps = {
   className?: string;
 };
 
-export function stackIconSrc(
+function stackIconSrc(
   name: SkillIconKey,
   variant: SkillStackIconVariant,
 ): string {
