@@ -1,20 +1,24 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import { ThemeToggleIcon } from "@/components/ThemeToggleIcon";
-import { Button } from "@/components/ui/button";
-import { capture } from "@/lib/analytics";
-import { UI_SPRING } from "@/lib/motion";
+import { PillTabs } from "@/components/ui/pill-tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const KNOB_X = 18;
+import { capture } from "@/lib/analytics";
+
+const THEME_OPTIONS = ["light", "system", "dark"] as const;
+type ThemeOption = (typeof THEME_OPTIONS)[number];
+
+function isThemeOption(value: string): value is ThemeOption {
+  return (THEME_OPTIONS as readonly string[]).includes(value);
+}
 
 export default function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const reduceMotion = useReducedMotion() ?? false;
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -22,40 +26,44 @@ export default function ThemeToggle() {
     });
   }, []);
 
-  const isDark = resolvedTheme === "dark";
-
-  const knobTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
+  if (!mounted) {
+    return (
+      <div className="flex size-full items-center justify-center">
+        <Skeleton className="cancelDrag mx-auto h-9 w-full max-w-28 rounded-full" />
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-      className="flex size-full items-center justify-items-center"
-      initial={false}
-      animate={{ opacity: mounted ? 1 : 0 }}
-      transition={{ duration: reduceMotion ? 0 : 0.15 }}
-    >
-      <Button
-        variant="themeToggle"
-        size="icon-lg"
-        className="cancelDrag mx-auto h-11 w-20 overflow-hidden p-0"
-        disabled={!mounted}
-        aria-busy={!mounted}
-        aria-label="Toggle theme"
-        onClick={() => {
-          const newTheme = isDark ? "light" : "dark";
-          setTheme(newTheme);
-          capture("theme_toggled", { theme: newTheme });
+    <div className="flex size-full items-center justify-center">
+      <PillTabs.Root
+        layoutGroupId="theme-switch"
+        value={theme ?? "system"}
+        onValueChange={(value) => {
+          if (!isThemeOption(value)) {
+            return;
+          }
+          setTheme(value);
+          capture("theme_selected", { theme: value });
         }}
+        className="cancelDrag mx-auto w-full max-w-28"
       >
-        <motion.div
-          className="size-9 rounded-full bg-foreground p-1 text-background"
-          initial={false}
-          animate={{ x: mounted ? (isDark ? KNOB_X : -KNOB_X) : -KNOB_X }}
-          whileTap={mounted && !reduceMotion ? { scale: 0.97 } : undefined}
-          transition={knobTransition}
+        <PillTabs.List
+          size="compact"
+          aria-label="Color theme"
+          className="w-full"
         >
-          <ThemeToggleIcon isDark={mounted && isDark} />
-        </motion.div>
-      </Button>
-    </motion.div>
+          <PillTabs.Item value="light" aria-label="Light theme">
+            <SunIcon aria-hidden />
+          </PillTabs.Item>
+          <PillTabs.Item value="system" aria-label="System theme">
+            <MonitorIcon aria-hidden />
+          </PillTabs.Item>
+          <PillTabs.Item value="dark" aria-label="Dark theme">
+            <MoonIcon aria-hidden />
+          </PillTabs.Item>
+        </PillTabs.List>
+      </PillTabs.Root>
+    </div>
   );
 }

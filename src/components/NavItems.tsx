@@ -1,6 +1,5 @@
 "use client";
 
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import {
   startTransition,
   useActionState,
@@ -9,17 +8,15 @@ import {
   type SubmitEvent,
 } from "react";
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PillTabs } from "@/components/ui/pill-tabs";
 
-import { capture } from "@/lib/analytics";
 import {
   switchMainGridTabFormAction,
   type MainGridTabFormState,
 } from "@/lib/actions/switch-main-grid-tab-form";
-import { UI_SPRING } from "@/lib/motion";
+import { capture } from "@/lib/analytics";
 import { MAIN_GRID_TABPANEL_ID } from "@/lib/site/constants";
 import { tabs, tabsTypeSchema, type TabsType } from "@/lib/site/tabs";
-import { cn } from "@/lib/utils";
 
 function mainGridTabId(tabId: TabsType) {
   return `main-grid-tab-${tabId}`;
@@ -56,8 +53,6 @@ export default function NavItemsClient({
     (_current, next: MainGridTabFormState) => next,
   );
   const skipSubmitForTab = useRef<TabsType | null>(null);
-  const reduceMotion = useReducedMotion() ?? false;
-  const indicatorTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
 
   function commitTab(tab: TabsType) {
     if (tab === optimisticState.activeTab) {
@@ -91,7 +86,7 @@ export default function NavItemsClient({
     commitTab(tab);
   }
 
-  function handleValueChange(value: TabsType) {
+  function handleValueChange(value: string) {
     const parsed = tabsTypeSchema.safeParse(value);
     if (!parsed.success || parsed.data === optimisticState.activeTab) {
       return;
@@ -109,51 +104,36 @@ export default function NavItemsClient({
       aria-busy={isPending || undefined}
       data-pending={isPending || undefined}
     >
-      <Tabs
+      <PillTabs.Root
+        layoutGroupId="nav-tabs"
         value={optimisticState.activeTab}
         onValueChange={handleValueChange}
-        className="flex flex-col items-center"
       >
-        <TabsList
+        <PillTabs.List
+          size="default"
           aria-label="Main grid views"
           activateOnFocus
-          className="h-11 w-fit gap-1 rounded-full bg-card px-px py-0 text-secondary-foreground ring-2 ring-border"
         >
-          <LayoutGroup id="nav-tabs">
-            {tabs.map((tabId) => (
-              <TabsTrigger
-                key={tabId}
-                id={mainGridTabId(tabId)}
-                value={tabId}
-                aria-controls={MAIN_GRID_TABPANEL_ID}
-                render={
-                  <button
-                    type="submit"
-                    name="tab"
-                    value={tabId}
-                    aria-labelledby={mainGridTabLabelId(tabId)}
-                  />
-                }
-                className={cn(
-                  "relative z-0 rounded-full px-4 text-xl data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
-                )}
-              >
-                {optimisticState.activeTab === tabId ? (
-                  <motion.span
-                    layoutId="nav-tab-indicator"
-                    className="pointer-events-none absolute inset-0 z-0 rounded-full bg-foreground"
-                    transition={indicatorTransition}
-                    aria-hidden="true"
-                  />
-                ) : null}
-                <span id={mainGridTabLabelId(tabId)} className="relative z-10">
-                  {tabId}
-                </span>
-              </TabsTrigger>
-            ))}
-          </LayoutGroup>
-        </TabsList>
-      </Tabs>
+          {tabs.map((tabId) => (
+            <PillTabs.Item
+              key={tabId}
+              id={mainGridTabId(tabId)}
+              value={tabId}
+              aria-controls={MAIN_GRID_TABPANEL_ID}
+              render={
+                <button
+                  type="submit"
+                  name="tab"
+                  value={tabId}
+                  aria-labelledby={mainGridTabLabelId(tabId)}
+                />
+              }
+            >
+              <span id={mainGridTabLabelId(tabId)}>{tabId}</span>
+            </PillTabs.Item>
+          ))}
+        </PillTabs.List>
+      </PillTabs.Root>
     </form>
   );
 }
