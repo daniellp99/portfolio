@@ -3,7 +3,8 @@ import type { Layout } from "react-grid-layout";
 import type { Images } from "@/lib/content/display";
 import { TabsType } from "@/lib/site/tabs";
 import type { LogicalLayoutBreakpoint } from "./config";
-import { SCALE_Y } from "./config";
+import { GRID_RESPONSIVE_STATIC_PROPS, SCALE_Y } from "./config";
+import { applyResizePolicyToLayoutItem } from "./resize-policy";
 import { withRglBreakpointAliases } from "./layout-copy";
 
 type Variant = "default" | "about" | "projects";
@@ -12,7 +13,6 @@ type Slot = { x: number; y: number; w: number; h: number };
 type BaseItemId = "me" | "toggle-theme" | "skills" | "maps" | "contributions";
 type BaseSlotUnits = { x: number; y: number; w: number; h: number };
 
-const IS_RESIZABLE = false;
 const TAB_TO_VARIANT = {
   All: "default",
   About: "about",
@@ -166,15 +166,20 @@ function layoutItemFromSlot(
   id: string,
   slot: Slot,
   size: LogicalLayoutBreakpoint,
+  mode: "main" | "image",
 ): LayoutItem {
-  return {
-    i: id,
-    x: slot.x,
-    y: scale(size, slot.y),
-    w: slot.w,
-    h: scale(size, slot.h),
-    isResizable: IS_RESIZABLE,
-  };
+  const cols = GRID_RESPONSIVE_STATIC_PROPS.cols[size];
+  return applyResizePolicyToLayoutItem(
+    {
+      i: id,
+      x: slot.x,
+      y: scale(size, slot.y),
+      w: slot.w,
+      h: scale(size, slot.h),
+    },
+    mode,
+    cols,
+  );
 }
 
 function logicalLayoutsFromSizes(
@@ -199,7 +204,7 @@ function layoutForVariant(
 
   for (let i = 0; i < BASE_ITEM_ORDER.length; i++) {
     const id = BASE_ITEM_ORDER[i]!;
-    out[i] = layoutItemFromSlot(id, baseSlots[id], size);
+    out[i] = layoutItemFromSlot(id, baseSlots[id], size, "main");
   }
 
   for (let index = 0; index < projectCount; index++) {
@@ -207,6 +212,7 @@ function layoutForVariant(
       projectKeys[index]!,
       projectSlots[index]!,
       size,
+      "main",
     );
   }
 
@@ -235,14 +241,18 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
     }
 
     totalWSoFar += image.width;
-    out[i] = {
-      i: image.src,
-      x,
-      y: scale(size, y),
-      w: image.width,
-      h: scale(size, image.height),
-      isResizable: IS_RESIZABLE,
-    };
+    const cols = GRID_RESPONSIVE_STATIC_PROPS.cols[size];
+    out[i] = applyResizePolicyToLayoutItem(
+      {
+        i: image.src,
+        x,
+        y: scale(size, y),
+        w: image.width,
+        h: scale(size, image.height),
+      },
+      "image",
+      cols,
+    );
   }
 
   return out;

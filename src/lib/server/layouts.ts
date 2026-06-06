@@ -10,6 +10,7 @@ import {
   MAIN_LAYOUTS_KEY,
 } from "@/lib/site/constants";
 import {
+  applyResizePolicyToLayouts,
   expandFromCookie,
   generateImageLayouts,
   generateLayouts,
@@ -62,9 +63,12 @@ export async function getLayouts(
         : {};
     const expanded = expandFromCookie(layoutsCookie.value, expandOptions);
     if (expanded !== null) {
-      return normalizeLayoutsFromCookie(expanded, defaultLayouts, true);
+      return applyResizePolicyToLayouts(
+        normalizeLayoutsFromCookie(expanded, defaultLayouts, true),
+        params.layoutKey,
+      );
     }
   }
 
-  return defaultLayouts;
+  return applyResizePolicyToLayouts(defaultLayouts, params.layoutKey);
 }

@@ -13,6 +13,9 @@ export function cloneLayoutItem(item: LayoutItem): LayoutItem {
   if (item.minH !== undefined) out.minH = item.minH;
   if (item.maxH !== undefined) out.maxH = item.maxH;
   if (item.isResizable !== undefined) out.isResizable = item.isResizable;
+  if (item.resizeHandles !== undefined) {
+    out.resizeHandles = [...item.resizeHandles];
+  }
   return out;
 }
 

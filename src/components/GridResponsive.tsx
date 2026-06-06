@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useOptimistic, type ReactNode } from "react";
+import { startTransition, useMemo, useOptimistic, type ReactNode } from "react";
 import {
   getBreakpointFromWidth,
   Layout,
@@ -12,6 +12,8 @@ import { capture } from "@/lib/analytics";
 import { setLayouts, type SetLayoutsOptions } from "@/lib/actions/set-layouts";
 import { LayoutKey } from "@/lib/site/constants";
 import {
+  applyResizePolicyToLayout,
+  applyResizePolicyToLayouts,
   GRID_RESPONSIVE_STATIC_PROPS,
   mergeCanonicalBreakpoints,
   syncLayoutsForPersistence,
@@ -39,6 +41,11 @@ export default function GridResponsive({
       mergeCanonicalBreakpoints(state, newLayouts),
   );
 
+  const policyLayouts = useMemo(
+    () => applyResizePolicyToLayouts(optimisticLayouts, layoutKey),
+    [optimisticLayouts, layoutKey],
+  );
+
   const persistUserLayout = (layout: Layout) => {
     if (!interactive) return;
 
@@ -48,8 +55,13 @@ export default function GridResponsive({
       GRID_RESPONSIVE_STATIC_PROPS.breakpoints,
       width,
     );
+    const cols =
+      GRID_RESPONSIVE_STATIC_PROPS.cols[
+        breakpoint as keyof typeof GRID_RESPONSIVE_STATIC_PROPS.cols
+      ];
+    const policyLayout = applyResizePolicyToLayout(layout, layoutKey, cols);
     const synced = syncLayoutsForPersistence(
-      layout,
+      policyLayout,
       breakpoint,
       optimisticLayouts,
     );
@@ -70,7 +82,7 @@ export default function GridResponsive({
         "layout",
         interactive && "duration-1000 animate-in fade-in",
       )}
-      layouts={optimisticLayouts}
+      layouts={policyLayouts}
       onDragStop={persistUserLayout}
       onResizeStop={persistUserLayout}
       {...GRID_RESPONSIVE_STATIC_PROPS}

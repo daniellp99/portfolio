@@ -16,3 +16,7 @@ export {
   type LayoutPersistenceOptions,
 } from "./layout-persistence";
 export { normalizeLayoutsFromCookie } from "./normalize";
+export {
+  applyResizePolicyToLayout,
+  applyResizePolicyToLayouts,
+} from "./resize-policy";

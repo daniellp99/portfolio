@@ -1,6 +1,8 @@
 import { describe, expect, it } from "bun:test";
 import type { ResponsiveLayouts } from "react-grid-layout";
 
+import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
+
 import { generateImageLayouts } from "./defaults";
 import {
   collapseAliasBreakpointsToLogical,
@@ -9,6 +11,7 @@ import {
   expandFromCookie,
   syncLayoutsForPersistence,
 } from "./cookie-layouts";
+import { applyResizePolicyToLayouts } from "./resize-policy";
 
 const sampleItem = {
   i: "me",
@@ -153,6 +156,30 @@ describe("compactForCookie / expandFromCookie", () => {
     const key = "portfolio-image-layouts__sample_hash";
     expect(cookieValueWithinLimit(key, encoded)).toBe(true);
     expect(key.length + encoded.length).toBeLessThanOrEqual(4096);
+  });
+
+  it("encodes geometry only after resize policy is applied", () => {
+    const layouts = applyResizePolicyToLayouts(
+      {
+        lg: [
+          { i: "maps", x: 2, y: 0, w: 2, h: 2 },
+          { i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 },
+        ],
+      },
+      MAIN_LAYOUTS_KEY,
+    );
+    const encoded = compactForCookie(layouts);
+    const parsed = JSON.parse(encoded) as Record<
+      string,
+      Record<string, unknown>[]
+    >;
+    expect(encoded).not.toContain("isResizable");
+    expect(encoded).not.toContain("minW");
+    expect(encoded).not.toContain("minH");
+    expect(encoded).not.toContain("resizeHandles");
+    for (const item of parsed.lg ?? []) {
+      expect(Object.keys(item).sort()).toEqual(["h", "i", "w", "x", "y"]);
+    }
   });
 });
 

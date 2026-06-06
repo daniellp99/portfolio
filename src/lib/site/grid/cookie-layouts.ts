@@ -101,19 +101,13 @@ function encodeLogicalBreakpoint(
       id = indexId;
     }
 
-    const compact: DecodedLayoutsItem = {
+    out[w++] = {
       i: id,
       x: roundCoord(item.x),
       y: roundCoord(item.y),
       w: roundCoord(item.w),
       h: roundCoord(item.h),
     };
-    if (item.minW !== undefined) compact.minW = roundCoord(item.minW);
-    if (item.maxW !== undefined) compact.maxW = roundCoord(item.maxW);
-    if (item.minH !== undefined) compact.minH = roundCoord(item.minH);
-    if (item.maxH !== undefined) compact.maxH = roundCoord(item.maxH);
-    if (item.isResizable === true) compact.isResizable = true;
-    out[w++] = compact;
   }
   out.length = w;
   return out;
