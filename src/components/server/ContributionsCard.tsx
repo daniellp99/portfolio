@@ -51,35 +51,34 @@ export default async function ContributionsCard() {
           <Contributions.Title />
         </CardTitle>
       </CardHeader>
-      <CardFooter className="peer/contribution-calendar order-3 items-end justify-between px-2 pb-2">
-        <Contributions.OpenProfileLink login={login} />
-        <Contributions.MonthCalendar
-          key={contributionsMonthCacheKey(year, month)}
-          initialState={monthFormInitialState}
-          journeyStartAt={ownerData.journeyStartAt}
-        />
-      </CardFooter>
-      <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">
-        <Contributions.Boundary year={year} month={month}>
+      <Contributions.Boundary year={year} month={month}>
+        <CardFooter className="peer/contribution-calendar order-3 items-end justify-between px-2 pb-2">
+          <Contributions.OpenProfileLink login={login} />
+          <Contributions.MonthCalendar
+            key={contributionsMonthCacheKey(year, month)}
+            initialState={monthFormInitialState}
+            journeyStartAt={ownerData.journeyStartAt}
+          />
+        </CardFooter>
+        <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">
           <CardDescription className="text-center text-xs">
             <Contributions.Description monthStart={monthStart}>
               <Contributions.Count
-                key={contributionsMonthCacheKey(year, month)}
+                cacheKey={contributionsMonthCacheKey(year, month)}
                 contributionsPromise={contributionsPromise}
               />
             </Contributions.Description>
           </CardDescription>
           <Contributions.Grid>
             <Contributions.WeeksHeader />
-            <Contributions.Cells>
-              <Contributions.DataCellsServer
-                contributionsPromise={contributionsPromise}
-              />
-            </Contributions.Cells>
+            <Contributions.Cells
+              cacheKey={contributionsMonthCacheKey(year, month)}
+              contributionsPromise={contributionsPromise}
+            />
           </Contributions.Grid>
           <Contributions.Legend />
-        </Contributions.Boundary>
-      </CardContent>
+        </CardContent>
+      </Contributions.Boundary>
     </>
   );
 }

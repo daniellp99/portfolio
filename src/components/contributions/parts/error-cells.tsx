@@ -7,6 +7,7 @@ import { ViewTransition } from "react";
 
 import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { ContributionsCell } from "@/components/contributions/parts/cell";
+import { ContributionsCellTransition } from "@/components/contributions/parts/cell-transition";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -16,13 +17,18 @@ import {
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 export function ContributionsErrorCells({
+  year: yearProp,
+  month: monthProp,
   error,
-  resetErrorBoundary,
 }: {
+  year: number;
+  month: number;
   error: Error;
-  resetErrorBoundary: () => void;
 }) {
-  const { year, month, retry } = useContributionsBoundary();
+  const { retry, retryPending } = useContributionsBoundary();
+  const year = yearProp;
+  const month = monthProp;
+  const monthKey = `${year}-${month}`;
 
   const isProd = process.env.NODE_ENV === "production";
   const monthStart = getMonthStartInZone(year, month);
@@ -30,19 +36,21 @@ export function ContributionsErrorCells({
 
   return (
     <>
-      <ol
-        aria-hidden="true"
-        inert
-        className="grid grid-cols-7 place-items-stretch gap-1 [grid-area:cells] xl:gap-2"
-      >
-        {dates.map((d) => {
-          const iso = formatInTimeZone(d, CONTRIBUTIONS_TZ, "yyyy-MM-dd");
-          const isOutside = getMonth(d) !== getMonth(monthStart);
-          return (
-            <ContributionsCell key={iso} state="error" outside={isOutside} />
-          );
-        })}
-      </ol>
+      <ContributionsCellTransition monthKey={monthKey}>
+        <ol
+          aria-hidden="true"
+          inert
+          className="grid grid-cols-7 place-items-stretch gap-1 [grid-area:cells] xl:gap-2"
+        >
+          {dates.map((d) => {
+            const iso = formatInTimeZone(d, CONTRIBUTIONS_TZ, "yyyy-MM-dd");
+            const isOutside = getMonth(d) !== getMonth(monthStart);
+            return (
+              <ContributionsCell key={iso} state="error" outside={isOutside} />
+            );
+          })}
+        </ol>
+      </ContributionsCellTransition>
 
       <ViewTransition
         name="contributions-error-alert"
@@ -66,13 +74,11 @@ export function ContributionsErrorCells({
           </p>
           <Button
             size="sm"
-            onClick={() => {
-              resetErrorBoundary();
-              retry();
-            }}
+            disabled={retryPending}
+            onClick={() => retry()}
             className="h-6 px-2 text-[11px] sm:h-7 sm:text-xs xl:h-8 xl:text-sm"
           >
-            Retry
+            {retryPending ? "Retrying…" : "Retry"}
           </Button>
           {!isProd && (
             <details className="hidden max-w-full text-[10px] text-muted-foreground xl:block xl:text-xs">

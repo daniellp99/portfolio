@@ -29,19 +29,24 @@ function CountValue({
 }
 
 export function ContributionsCount({
+  cacheKey,
   contributionsPromise,
 }: {
+  cacheKey: string;
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
-  const { year, month, retryNonce } = useContributionsBoundary();
+  const { attempt } = useContributionsBoundary();
 
   return (
     <ErrorBoundary
-      resetKeys={[year, month, retryNonce]}
+      resetKeys={[cacheKey, attempt, contributionsPromise]}
       fallbackRender={() => <span>0</span>}
     >
       <Suspense fallback={<span>0</span>}>
-        <CountValue contributionsPromise={contributionsPromise} />
+        <CountValue
+          key={cacheKey}
+          contributionsPromise={contributionsPromise}
+        />
       </Suspense>
     </ErrorBoundary>
   );

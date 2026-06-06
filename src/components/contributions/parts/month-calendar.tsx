@@ -10,6 +10,7 @@ import {
   type SubmitEvent,
 } from "react";
 
+import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { Button } from "@/components/ui/button";
 import { capture } from "@/lib/analytics";
 
@@ -44,6 +45,7 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
+  const { setOptimisticMonth } = useContributionsBoundary();
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -66,6 +68,7 @@ export function ContributionsMonthCalendar({
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
+      setOptimisticMonth(next.year, next.month);
       setOptimisticState(next);
       formAction(formData);
     });

@@ -3,7 +3,9 @@
 import {
   createContext,
   use,
+  useEffect,
   useMemo,
+  useRef,
   useState,
   useTransition,
   type ReactNode,
@@ -14,9 +16,10 @@ import { changeContributionsMonth } from "@/lib/actions/change-contributions-mon
 type ContributionsBoundaryValue = {
   year: number;
   month: number;
-  retryNonce: number;
+  attempt: number;
   retryPending: boolean;
   retry: () => void;
+  setOptimisticMonth: (year: number, month: number) => void;
 };
 
 const ContributionsBoundaryContext =
@@ -42,22 +45,41 @@ export function ContributionsBoundary({
   children: ReactNode;
 }) {
   const [retryPending, startTransition] = useTransition();
-  const [retryNonce, setRetryNonce] = useState(0);
+  const [attempt, setAttempt] = useState(0);
+  const [displayMonth, setDisplayMonth] = useState({ year, month });
+  const serverMonthRef = useRef({ year, month });
+
+  useEffect(() => {
+    const prev = serverMonthRef.current;
+    if (prev.year === year && prev.month === month) return;
+
+    serverMonthRef.current = { year, month };
+    setDisplayMonth({ year, month });
+    setAttempt(0);
+  }, [year, month]);
 
   const value = useMemo<ContributionsBoundaryValue>(
     () => ({
-      year,
-      month,
-      retryNonce,
+      year: displayMonth.year,
+      month: displayMonth.month,
+      attempt,
       retryPending,
+      setOptimisticMonth: (nextYear, nextMonth) => {
+        setDisplayMonth({ year: nextYear, month: nextMonth });
+      },
       retry: () => {
-        startTransition(async () => {
-          await changeContributionsMonth({ year, month });
-          setRetryNonce((n) => n + 1);
+        const { year: retryYear, month: retryMonth } = displayMonth;
+        startTransition(() => {
+          void changeContributionsMonth({
+            year: retryYear,
+            month: retryMonth,
+          }).then(() => {
+            setAttempt((current) => current + 1);
+          });
         });
       },
     }),
-    [year, month, retryNonce, retryPending],
+    [attempt, displayMonth, retryPending],
   );
 
   return (
@@ -67,7 +89,7 @@ export function ContributionsBoundary({
         data-pending={retryPending || undefined}
         aria-hidden
       />
-      {children}
+      <div className="contents">{children}</div>
     </ContributionsBoundaryContext>
   );
 }

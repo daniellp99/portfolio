@@ -1,3 +1,5 @@
+"use client";
+
 import { use } from "react";
 
 import { ContributionsDataCells } from "@/components/contributions/parts/data-cells";
@@ -5,7 +7,7 @@ import { ContributionsDataCells } from "@/components/contributions/parts/data-ce
 import { buildContributionHeatmapCells } from "@/lib/contributions/calendar-projection";
 import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
 
-export function ContributionsDataCellsServer({
+export function ContributionsDataCellsAsync({
   contributionsPromise,
 }: {
   contributionsPromise: Promise<GithubContributionMonthResponse>;

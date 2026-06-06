@@ -1,29 +1,39 @@
 "use client";
 
-import { Suspense, ViewTransition, type ReactNode } from "react";
+import { Suspense, ViewTransition } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { ContributionsCellTransition } from "@/components/contributions/parts/cell-transition";
+import { ContributionsDataCellsAsync } from "@/components/contributions/parts/data-cells-async";
 import { ContributionsErrorCells } from "@/components/contributions/parts/error-cells";
 import { ContributionsLoadingCells } from "@/components/contributions/parts/loading-cells";
 
-export function ContributionsCells({ children }: { children: ReactNode }) {
-  const { year, month, retryNonce } = useContributionsBoundary();
+import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
+
+export function ContributionsCells({
+  cacheKey,
+  contributionsPromise,
+}: {
+  cacheKey: string;
+  contributionsPromise: Promise<GithubContributionMonthResponse>;
+}) {
+  const { year, month, attempt } = useContributionsBoundary();
   const monthKey = `${year}-${month}`;
 
   return (
-    <ContributionsCellTransition monthKey={monthKey}>
-      <section className="grid place-items-stretch [grid-template-areas:'cells']">
-        <ErrorBoundary
-          resetKeys={[year, month, retryNonce]}
-          fallbackRender={({ error, resetErrorBoundary }) => (
-            <ContributionsErrorCells
-              error={error instanceof Error ? error : new Error(String(error))}
-              resetErrorBoundary={resetErrorBoundary}
-            />
-          )}
-        >
+    <section className="grid place-items-stretch [grid-template-areas:'cells']">
+      <ErrorBoundary
+        resetKeys={[cacheKey, attempt, contributionsPromise]}
+        fallbackRender={({ error }) => (
+          <ContributionsErrorCells
+            year={year}
+            month={month}
+            error={error instanceof Error ? error : new Error(String(error))}
+          />
+        )}
+      >
+        <ContributionsCellTransition monthKey={monthKey}>
           <Suspense
             fallback={
               <ViewTransition exit="slide-down" default="none">
@@ -32,11 +42,14 @@ export function ContributionsCells({ children }: { children: ReactNode }) {
             }
           >
             <ViewTransition enter="slide-up" default="none">
-              {children}
+              <ContributionsDataCellsAsync
+                key={cacheKey}
+                contributionsPromise={contributionsPromise}
+              />
             </ViewTransition>
           </Suspense>
-        </ErrorBoundary>
-      </section>
-    </ContributionsCellTransition>
+        </ContributionsCellTransition>
+      </ErrorBoundary>
+    </section>
   );
 }
