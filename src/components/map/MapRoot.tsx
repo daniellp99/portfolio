@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+import MapResizeSync from "@/components/map/MapResizeSync";
+
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
 const LeafletMapContainer = dynamic(
@@ -35,6 +37,7 @@ export default function MapRoot({ children }: { children: React.ReactNode }) {
       maxZoom={16}
       className="isolate grid size-full [grid-template-areas:'map']"
     >
+      <MapResizeSync />
       {children}
     </LeafletMapContainer>
   );
