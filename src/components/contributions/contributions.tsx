@@ -1,6 +1,7 @@
 import { ContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { ContributionsCell } from "@/components/contributions/parts/cell";
 import { ContributionsCells } from "@/components/contributions/parts/cells";
+import { ContributionsDataCellsServer } from "@/components/contributions/parts/contributions-data-cells-server";
 import { ContributionsCount } from "@/components/contributions/parts/count";
 import { ContributionsDescription } from "@/components/contributions/parts/description";
 import { ContributionsGrid } from "@/components/contributions/parts/grid";
@@ -19,6 +20,7 @@ export const Contributions = {
   Grid: ContributionsGrid,
   Cell: ContributionsCell,
   Cells: ContributionsCells,
+  DataCellsServer: ContributionsDataCellsServer,
   Legend: ContributionsLegend,
   MonthCalendar: ContributionsMonthCalendar,
   OpenProfileLink: ContributionsOpenProfileLink,

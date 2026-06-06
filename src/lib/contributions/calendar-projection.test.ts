@@ -1,6 +1,7 @@
 import { describe, expect, it } from "bun:test";
 
 import {
+  buildContributionHeatmapCells,
   contributionCountsByIsoDate,
   formatContributionDayTooltip,
   getMonthHeatmapGridDates,
@@ -52,5 +53,38 @@ describe("formatContributionDayTooltip", () => {
     const s = formatContributionDayTooltip("2024-06-15", 3);
     expect(s).toContain("3 contributions");
     expect(s).toContain("Jun");
+  });
+});
+
+describe("buildContributionHeatmapCells", () => {
+  it("projects a month grid with inside/outside buckets and labels", () => {
+    const cells = buildContributionHeatmapCells({
+      year: 2024,
+      month: 2,
+      restrictedContributionsCount: 0,
+      calendar: {
+        totalContributions: 5,
+        weeks: [
+          {
+            contributionDays: [
+              { date: "2024-02-01", contributionCount: 2 },
+              { date: "2024-02-15", contributionCount: 3 },
+            ],
+          },
+        ],
+      },
+    });
+
+    expect(cells).toHaveLength(35);
+    expect(cells.some((c) => c.outside)).toBe(true);
+
+    const feb1 = cells.find((c) => c.iso === "2024-02-01");
+    expect(feb1?.outside).toBe(false);
+    expect(feb1?.bucket).toBeGreaterThan(0);
+    expect(feb1?.label).toContain("2 contributions");
+
+    const outside = cells.find((c) => c.iso === "2024-01-28");
+    expect(outside?.outside).toBe(true);
+    expect(outside?.bucket).toBe(0);
   });
 });

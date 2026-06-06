@@ -2,15 +2,27 @@ import {
   eachDayOfInterval,
   endOfMonth,
   endOfWeek,
+  getMonth,
   parseISO,
   startOfMonth,
   startOfWeek,
 } from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 
-import type { GithubContributionCalendar } from "@/lib/schemas/github-contributions";
+import type {
+  GithubContributionCalendar,
+  GithubContributionMonthResponse,
+} from "@/lib/schemas/github-contributions";
 
+import { intensityBucket } from "@/lib/contributions/intensity";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
+
+export type ContributionHeatmapCell = {
+  iso: string;
+  outside: boolean;
+  bucket: 0 | 1 | 2 | 3 | 4;
+  label: string;
+};
 
 /** month is 1–12 */
 export function monthGridCellCount(
@@ -73,4 +85,27 @@ export function formatContributionDayTooltip(
   const day = parseISO(isoDate);
   const formatted = formatInTimeZone(day, timeZone, "MMM d, yyyy");
   return `${count} contribution${count === 1 ? "" : "s"} on ${formatted}`;
+}
+
+export function buildContributionHeatmapCells(
+  data: GithubContributionMonthResponse,
+  timeZone: string = CONTRIBUTIONS_TZ,
+): ContributionHeatmapCell[] {
+  const { year, month, calendar } = data;
+  const byDate = contributionCountsByIsoDate(calendar);
+  const monthStart = getMonthStartInZone(year, month, timeZone);
+  const dates = getMonthHeatmapGridDates(year, month, timeZone);
+  const max = Math.max(...Array.from(byDate.values()), 0);
+
+  return dates.map((d) => {
+    const iso = formatInTimeZone(d, timeZone, "yyyy-MM-dd");
+    const outside = getMonth(d) !== getMonth(monthStart);
+    const count = byDate.get(iso) ?? 0;
+    const bucket = (
+      outside ? 0 : intensityBucket(count, max)
+    ) as ContributionHeatmapCell["bucket"];
+    const label = formatContributionDayTooltip(iso, count, timeZone);
+
+    return { iso, outside, bucket, label };
+  });
 }

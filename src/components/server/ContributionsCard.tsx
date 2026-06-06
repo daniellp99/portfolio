@@ -71,7 +71,11 @@ export default async function ContributionsCard() {
           </CardDescription>
           <Contributions.Grid>
             <Contributions.WeeksHeader />
-            <Contributions.Cells contributionsPromise={contributionsPromise} />
+            <Contributions.Cells>
+              <Contributions.DataCellsServer
+                contributionsPromise={contributionsPromise}
+              />
+            </Contributions.Cells>
           </Contributions.Grid>
           <Contributions.Legend />
         </Contributions.Boundary>

@@ -5,13 +5,13 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { LogoCarousel } from "@/components/LogoCarousel";
 import {
   SkillHoverProvider,
-  useSkillHover,
+  useSkillHoverTitle,
 } from "@/components/SkillHoverContext";
 
 import type { Logo } from "@/lib/content/display";
 
 function SkillsHoverLabel() {
-  const { hoveredTitle } = useSkillHover();
+  const hoveredTitle = useSkillHoverTitle();
   const reduceMotion = useReducedMotion() ?? false;
 
   const transition = reduceMotion

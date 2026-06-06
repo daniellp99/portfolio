@@ -1,21 +1,14 @@
 "use client";
 
-import { Suspense, ViewTransition } from "react";
+import { Suspense, ViewTransition, type ReactNode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { ContributionsCellTransition } from "@/components/contributions/parts/cell-transition";
-import { ContributionsDataCells } from "@/components/contributions/parts/data-cells";
 import { ContributionsErrorCells } from "@/components/contributions/parts/error-cells";
 import { ContributionsLoadingCells } from "@/components/contributions/parts/loading-cells";
 
-import type { GithubContributionMonthResponse } from "@/lib/schemas/github-contributions";
-
-export function ContributionsCells({
-  contributionsPromise,
-}: {
-  contributionsPromise: Promise<GithubContributionMonthResponse>;
-}) {
+export function ContributionsCells({ children }: { children: ReactNode }) {
   const { year, month, retryNonce } = useContributionsBoundary();
   const monthKey = `${year}-${month}`;
 
@@ -39,9 +32,7 @@ export function ContributionsCells({
             }
           >
             <ViewTransition enter="slide-up" default="none">
-              <ContributionsDataCells
-                contributionsPromise={contributionsPromise}
-              />
+              {children}
             </ViewTransition>
           </Suspense>
         </ErrorBoundary>

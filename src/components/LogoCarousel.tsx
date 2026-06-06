@@ -2,7 +2,7 @@
 import AutoScroll from "embla-carousel-auto-scroll";
 import { useTheme } from "next-themes";
 import { useId } from "react";
-import { useSkillHover } from "@/components/SkillHoverContext";
+import { useSkillHoverSetter } from "@/components/SkillHoverContext";
 import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
@@ -23,7 +23,7 @@ export function LogoCarousel({
 }) {
   const id = useId();
   const { resolvedTheme } = useTheme();
-  const { setHoveredTitle } = useSkillHover();
+  const setHoveredTitle = useSkillHoverSetter();
 
   if (logos.length === 0) return null;
 
