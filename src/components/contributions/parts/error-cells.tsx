@@ -3,6 +3,7 @@
 import { getMonth } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { AlertTriangleIcon } from "lucide-react";
+import { ViewTransition } from "react";
 
 import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
 import { ContributionsCell } from "@/components/contributions/parts/cell";
@@ -43,42 +44,48 @@ export function ContributionsErrorCells({
         })}
       </ol>
 
-      <div
-        role="alert"
-        aria-live="polite"
-        className="grid h-fit place-items-center gap-1 place-self-center rounded p-1 [grid-area:cells]"
+      <ViewTransition
+        name="contributions-error-alert"
+        share="contributions-error-fixed"
+        default="none"
       >
-        <AlertTriangleIcon
-          aria-hidden="true"
-          className="size-4 text-destructive sm:size-5 xl:size-6"
-        />
-        <p className="text-[11px] leading-tight font-medium sm:text-xs xl:text-sm">
-          Couldn’t load data
-        </p>
-        <p className="hidden text-[10px] text-muted-foreground md:block xl:text-xs">
-          Please try again in a moment.
-        </p>
-        <Button
-          size="sm"
-          onClick={() => {
-            resetErrorBoundary();
-            retry();
-          }}
-          className="h-6 px-2 text-[11px] sm:h-7 sm:text-xs xl:h-8 xl:text-sm"
+        <div
+          role="alert"
+          aria-live="polite"
+          className="grid h-fit place-items-center gap-1 place-self-center rounded p-1 [grid-area:cells]"
         >
-          Retry
-        </Button>
-        {!isProd && (
-          <details className="hidden max-w-full text-[10px] text-muted-foreground xl:block xl:text-xs">
-            <summary className="cursor-pointer select-none">
-              Technical details
-            </summary>
-            <div className="mt-1 max-h-16 overflow-auto text-left wrap-break-word whitespace-pre-wrap xl:max-h-24">
-              {error.message}
-            </div>
-          </details>
-        )}
-      </div>
+          <AlertTriangleIcon
+            aria-hidden="true"
+            className="size-4 text-destructive sm:size-5 xl:size-6"
+          />
+          <p className="text-[11px] leading-tight font-medium sm:text-xs xl:text-sm">
+            Couldn’t load data
+          </p>
+          <p className="hidden text-[10px] text-muted-foreground md:block xl:text-xs">
+            Please try again in a moment.
+          </p>
+          <Button
+            size="sm"
+            onClick={() => {
+              resetErrorBoundary();
+              retry();
+            }}
+            className="h-6 px-2 text-[11px] sm:h-7 sm:text-xs xl:h-8 xl:text-sm"
+          >
+            Retry
+          </Button>
+          {!isProd && (
+            <details className="hidden max-w-full text-[10px] text-muted-foreground xl:block xl:text-xs">
+              <summary className="cursor-pointer select-none">
+                Technical details
+              </summary>
+              <div className="mt-1 max-h-16 overflow-auto text-left wrap-break-word whitespace-pre-wrap xl:max-h-24">
+                {error.message}
+              </div>
+            </details>
+          )}
+        </div>
+      </ViewTransition>
     </>
   );
 }

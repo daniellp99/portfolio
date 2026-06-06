@@ -3,6 +3,7 @@
 import { formatInTimeZone } from "date-fns-tz";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import {
+  addTransitionType,
   startTransition,
   useActionState,
   useOptimistic,
@@ -64,6 +65,7 @@ export function ContributionsMonthCalendar({
     });
 
     startTransition(() => {
+      addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
       setOptimisticState(next);
       formAction(formData);
     });

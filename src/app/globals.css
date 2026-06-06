@@ -445,6 +445,10 @@ pre code {
     var(--duration-enter) ease-out var(--duration-exit) both fade,
     var(--duration-move) ease-in-out both slide;
 }
+::view-transition-group(.nav-forward) {
+  animation-duration: var(--duration-move);
+  animation-timing-function: ease-in-out;
+}
 
 ::view-transition-old(.nav-back) {
   --slide-offset: 60px;
@@ -457,6 +461,10 @@ pre code {
   animation:
     var(--duration-enter) ease-out var(--duration-exit) both fade,
     var(--duration-move) ease-in-out both slide;
+}
+::view-transition-group(.nav-back) {
+  animation-duration: var(--duration-move);
+  animation-timing-function: ease-in-out;
 }
 
 ::view-transition-group(.morph) {
@@ -488,6 +496,25 @@ pre code {
 ::view-transition-group(persistent-nav) {
   animation: none;
   z-index: 100;
+}
+
+::view-transition-group(contributions-error-alert) {
+  animation: none;
+  z-index: 1;
+}
+
+::view-transition-group(.contributions-error-fixed) {
+  animation: none;
+}
+
+::view-transition-old(.contributions-error-fixed) {
+  display: none;
+}
+
+::view-transition-new(.contributions-error-fixed) {
+  animation: none;
+  object-fit: none;
+  object-position: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
