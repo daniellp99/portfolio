@@ -18,7 +18,6 @@ type CarouselProps = {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
-  setApi?: (api: CarouselApi) => void;
   "aria-label"?: string;
   "aria-labelledby"?: string;
 };
@@ -47,7 +46,6 @@ function useCarousel() {
 function Carousel({
   orientation = "horizontal",
   opts,
-  setApi,
   plugins,
   className,
   children,
@@ -89,11 +87,6 @@ function Carousel({
     },
     [scrollPrev, scrollNext],
   );
-
-  React.useEffect(() => {
-    if (!api || !setApi) return;
-    setApi(api);
-  }, [api, setApi]);
 
   React.useEffect(() => {
     if (!api) return;

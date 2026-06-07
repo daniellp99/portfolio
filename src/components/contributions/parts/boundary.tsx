@@ -3,9 +3,7 @@
 import {
   createContext,
   use,
-  useEffect,
   useMemo,
-  useRef,
   useState,
   useTransition,
   type ReactNode,
@@ -45,41 +43,43 @@ export function ContributionsBoundary({
   children: ReactNode;
 }) {
   const [retryPending, startTransition] = useTransition();
+  const [prevServerMonth, setPrevServerMonth] = useState({ year, month });
   const [attempt, setAttempt] = useState(0);
-  const [displayMonth, setDisplayMonth] = useState({ year, month });
-  const serverMonthRef = useRef({ year, month });
+  const [optimisticMonth, setOptimisticMonth] = useState<{
+    year: number;
+    month: number;
+  } | null>(null);
 
-  useEffect(() => {
-    const prev = serverMonthRef.current;
-    if (prev.year === year && prev.month === month) return;
-
-    serverMonthRef.current = { year, month };
-    setDisplayMonth({ year, month });
+  if (prevServerMonth.year !== year || prevServerMonth.month !== month) {
+    setPrevServerMonth({ year, month });
     setAttempt(0);
-  }, [year, month]);
+    setOptimisticMonth(null);
+  }
+
+  const displayYear = optimisticMonth?.year ?? year;
+  const displayMonth = optimisticMonth?.month ?? month;
 
   const value = useMemo<ContributionsBoundaryValue>(
     () => ({
-      year: displayMonth.year,
-      month: displayMonth.month,
+      year: displayYear,
+      month: displayMonth,
       attempt,
       retryPending,
       setOptimisticMonth: (nextYear, nextMonth) => {
-        setDisplayMonth({ year: nextYear, month: nextMonth });
+        setOptimisticMonth({ year: nextYear, month: nextMonth });
       },
       retry: () => {
-        const { year: retryYear, month: retryMonth } = displayMonth;
         startTransition(() => {
           void changeContributionsMonth({
-            year: retryYear,
-            month: retryMonth,
+            year: displayYear,
+            month: displayMonth,
           }).then(() => {
             setAttempt((current) => current + 1);
           });
         });
       },
     }),
-    [attempt, displayMonth, retryPending],
+    [attempt, displayMonth, displayYear, retryPending],
   );
 
   return (

@@ -1,5 +1,6 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
+import reactYouMightNotNeedAnEffect from "eslint-plugin-react-you-might-not-need-an-effect";
 
 import clientServerBoundary from "./eslint-plugins/client-server-boundary.mjs";
 
@@ -15,6 +16,7 @@ const eslintConfig = [
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
+  reactYouMightNotNeedAnEffect.configs.strict,
   {
     files: ["src/**/*.{ts,tsx}"],
     ignores: [
