@@ -6,7 +6,9 @@ import {
   addTransitionType,
   startTransition,
   useActionState,
+  useEffect,
   useOptimistic,
+  useRef,
   type SubmitEvent,
 } from "react";
 
@@ -45,7 +47,15 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
-  const { setOptimisticMonth } = useContributionsBoundary();
+  const { clearOptimisticMonth, setOptimisticMonth } =
+    useContributionsBoundary();
+  const hasSubmittedNavigation = useRef(false);
+
+  useEffect(() => {
+    if (isPending || !hasSubmittedNavigation.current) return;
+    hasSubmittedNavigation.current = false;
+    clearOptimisticMonth();
+  }, [clearOptimisticMonth, isPending]);
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,6 +78,7 @@ export function ContributionsMonthCalendar({
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
+      hasSubmittedNavigation.current = true;
       setOptimisticMonth(next.year, next.month);
       setOptimisticState(next);
       formAction(formData);

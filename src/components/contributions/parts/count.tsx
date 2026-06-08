@@ -24,7 +24,11 @@ export function ContributionsCount({
   cacheKey: string;
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
-  const { attempt } = useContributionsBoundary();
+  const { attempt, isNavigating } = useContributionsBoundary();
+
+  if (isNavigating) {
+    return <span aria-label="Loading contributions count">...</span>;
+  }
 
   return (
     <ErrorBoundary

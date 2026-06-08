@@ -1,15 +1,20 @@
+"use client";
+
 import { formatInTimeZone } from "date-fns-tz";
 import type { ReactNode } from "react";
 
+import { useContributionsBoundary } from "@/components/contributions/parts/boundary";
+import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 export function ContributionsDescription({
-  monthStart,
   children,
 }: {
-  monthStart: Date;
   children: ReactNode;
 }) {
+  const { year, month } = useContributionsBoundary();
+  const monthStart = getMonthStartInZone(year, month, CONTRIBUTIONS_TZ);
+
   return (
     <>
       {children} contributions in{" "}
