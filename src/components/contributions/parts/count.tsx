@@ -35,7 +35,10 @@ export function ContributionsCount({
       resetKeys={[cacheKey, attempt, contributionsPromise]}
       fallbackRender={() => <span>0</span>}
     >
-      <Suspense fallback={<span>0</span>}>
+      <Suspense
+        key={cacheKey}
+        fallback={<span aria-label="Loading contributions count">...</span>}
+      >
         <CountValue
           key={cacheKey}
           contributionsPromise={contributionsPromise}

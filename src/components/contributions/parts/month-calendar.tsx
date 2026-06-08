@@ -7,7 +7,7 @@ import {
   startTransition,
   useActionState,
   useEffect,
-  useOptimistic,
+  useMemo,
   useRef,
   type SubmitEvent,
 } from "react";
@@ -19,6 +19,7 @@ import { capture } from "@/lib/analytics";
 import { changeContributionsMonthFormAction } from "@/lib/actions/change-contributions-month-form";
 import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import {
+  buildContributionsMonthFormState,
   stepContributionsMonthFormState,
   type ContributionsMonthFormState,
 } from "@/lib/contributions/contributions-month";
@@ -39,17 +40,22 @@ export function ContributionsMonthCalendar({
   initialState: ContributionsMonthFormState;
   journeyStartAt: string;
 }) {
-  const [state, formAction, isPending] = useActionState(
+  const [, formAction, isPending] = useActionState(
     changeContributionsMonthFormAction,
     initialState,
   );
-  const [optimisticState, setOptimisticState] = useOptimistic(
-    state,
-    (_current, next: ContributionsMonthFormState) => next,
-  );
-  const { clearOptimisticMonth, setOptimisticMonth } =
-    useContributionsBoundary();
+  const boundary = useContributionsBoundary();
+  const { clearOptimisticMonth, setOptimisticMonth } = boundary;
   const hasSubmittedNavigation = useRef(false);
+  const displayState = useMemo(
+    () =>
+      buildContributionsMonthFormState(
+        journeyStartAt,
+        boundary.year,
+        boundary.month,
+      ),
+    [boundary.month, boundary.year, journeyStartAt],
+  );
 
   useEffect(() => {
     if (isPending || !hasSubmittedNavigation.current) return;
@@ -64,7 +70,7 @@ export function ContributionsMonthCalendar({
     if (intent !== "prev" && intent !== "next") return;
 
     const next = stepContributionsMonthFormState(
-      optimisticState,
+      displayState,
       intent,
       journeyStartAt,
     );
@@ -80,12 +86,11 @@ export function ContributionsMonthCalendar({
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
       hasSubmittedNavigation.current = true;
       setOptimisticMonth(next.year, next.month);
-      setOptimisticState(next);
       formAction(formData);
     });
   }
 
-  const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
+  const { year, month, caption, canGoPrev, canGoNext } = displayState;
 
   const monthStart = getMonthStartInZone(year, month, CONTRIBUTIONS_TZ);
   const monthShort = formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM");

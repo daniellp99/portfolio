@@ -47,6 +47,7 @@ export function ContributionsCells({
       >
         <ContributionsCellTransition monthKey={monthKey}>
           <Suspense
+            key={cacheKey}
             fallback={
               <ViewTransition exit="slide-down" default="none">
                 <ContributionsLoadingCells year={year} month={month} />
