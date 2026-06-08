@@ -18,8 +18,20 @@ export function ContributionsCells({
   cacheKey: string;
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
-  const { year, month, attempt } = useContributionsBoundary();
+  const { year, month, attempt, isNavigating } = useContributionsBoundary();
   const monthKey = `${year}-${month}`;
+
+  if (isNavigating) {
+    return (
+      <section className="grid place-items-stretch [grid-template-areas:'cells']">
+        <ContributionsCellTransition monthKey={monthKey}>
+          <ViewTransition exit="slide-down" default="none">
+            <ContributionsLoadingCells year={year} month={month} />
+          </ViewTransition>
+        </ContributionsCellTransition>
+      </section>
+    );
+  }
 
   return (
     <section className="grid place-items-stretch [grid-template-areas:'cells']">
@@ -35,6 +47,7 @@ export function ContributionsCells({
       >
         <ContributionsCellTransition monthKey={monthKey}>
           <Suspense
+            key={cacheKey}
             fallback={
               <ViewTransition exit="slide-down" default="none">
                 <ContributionsLoadingCells year={year} month={month} />

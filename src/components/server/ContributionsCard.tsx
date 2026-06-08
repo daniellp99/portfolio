@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getMonthStartInZone } from "@/lib/contributions/calendar-projection";
 import {
   buildContributionsMonthFormState,
   contributionsMonthCacheKey,
@@ -42,7 +41,6 @@ export default async function ContributionsCard() {
     year,
     month,
   );
-  const monthStart = getMonthStartInZone(year, month);
 
   return (
     <>
@@ -62,7 +60,7 @@ export default async function ContributionsCard() {
         </CardFooter>
         <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">
           <CardDescription className="text-center text-xs">
-            <Contributions.Description monthStart={monthStart}>
+            <Contributions.Description>
               <Contributions.Count
                 cacheKey={contributionsMonthCacheKey(year, month)}
                 contributionsPromise={contributionsPromise}

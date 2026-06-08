@@ -3,6 +3,7 @@
 import {
   createContext,
   use,
+  useCallback,
   useMemo,
   useState,
   useTransition,
@@ -15,7 +16,9 @@ type ContributionsBoundaryValue = {
   year: number;
   month: number;
   attempt: number;
+  isNavigating: boolean;
   retryPending: boolean;
+  clearOptimisticMonth: () => void;
   retry: () => void;
   setOptimisticMonth: (year: number, month: number) => void;
 };
@@ -49,6 +52,7 @@ export function ContributionsBoundary({
     year: number;
     month: number;
   } | null>(null);
+  const clearOptimisticMonth = useCallback(() => setOptimisticMonth(null), []);
 
   if (prevServerMonth.year !== year || prevServerMonth.month !== month) {
     setPrevServerMonth({ year, month });
@@ -58,13 +62,16 @@ export function ContributionsBoundary({
 
   const displayYear = optimisticMonth?.year ?? year;
   const displayMonth = optimisticMonth?.month ?? month;
+  const isNavigating = displayYear !== year || displayMonth !== month;
 
   const value = useMemo<ContributionsBoundaryValue>(
     () => ({
       year: displayYear,
       month: displayMonth,
       attempt,
+      isNavigating,
       retryPending,
+      clearOptimisticMonth,
       setOptimisticMonth: (nextYear, nextMonth) => {
         setOptimisticMonth({ year: nextYear, month: nextMonth });
       },
@@ -79,7 +86,14 @@ export function ContributionsBoundary({
         });
       },
     }),
-    [attempt, displayMonth, displayYear, retryPending],
+    [
+      attempt,
+      clearOptimisticMonth,
+      displayMonth,
+      displayYear,
+      isNavigating,
+      retryPending,
+    ],
   );
 
   return (
