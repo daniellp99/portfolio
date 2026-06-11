@@ -12,12 +12,12 @@ export function bucketClass(bucket: number) {
     case 0:
       return "bg-foreground/5";
     case 1:
-      return "bg-foreground/20";
+      return "bg-foreground/25";
     case 2:
-      return "bg-foreground/40";
+      return "bg-foreground/50";
     case 3:
-      return "bg-foreground/60";
+      return "bg-foreground/75";
     default:
-      return "bg-foreground/80";
+      return "bg-foreground";
   }
 }
