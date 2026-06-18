@@ -1,7 +1,7 @@
 "use client";
 
 import L from "leaflet";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Marker } from "react-leaflet";
 
 import {
@@ -21,10 +21,7 @@ export default function AvatarMarker({
 }) {
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
-  const icon = useMemo(
-    () => L.divIcon(getAvatarMarkerDivIconOptions(markerRootId)),
-    [markerRootId],
-  );
+  const icon = L.divIcon(getAvatarMarkerDivIconOptions(markerRootId));
 
   return (
     <>

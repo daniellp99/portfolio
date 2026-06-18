@@ -3,7 +3,6 @@
 import {
   createContext,
   use,
-  useMemo,
   useState,
   useTransition,
   type ReactNode,
@@ -59,28 +58,25 @@ export function ContributionsBoundary({
   const displayYear = optimisticMonth?.year ?? year;
   const displayMonth = optimisticMonth?.month ?? month;
 
-  const value = useMemo<ContributionsBoundaryValue>(
-    () => ({
-      year: displayYear,
-      month: displayMonth,
-      attempt,
-      retryPending,
-      setOptimisticMonth: (nextYear, nextMonth) => {
-        setOptimisticMonth({ year: nextYear, month: nextMonth });
-      },
-      retry: () => {
-        startTransition(() => {
-          void changeContributionsMonth({
-            year: displayYear,
-            month: displayMonth,
-          }).then(() => {
-            setAttempt((current) => current + 1);
-          });
+  const value: ContributionsBoundaryValue = {
+    year: displayYear,
+    month: displayMonth,
+    attempt,
+    retryPending,
+    setOptimisticMonth: (nextYear, nextMonth) => {
+      setOptimisticMonth({ year: nextYear, month: nextMonth });
+    },
+    retry: () => {
+      startTransition(() => {
+        void changeContributionsMonth({
+          year: displayYear,
+          month: displayMonth,
+        }).then(() => {
+          setAttempt((current) => current + 1);
         });
-      },
-    }),
-    [attempt, displayMonth, displayYear, retryPending],
-  );
+      });
+    },
+  };
 
   return (
     <ContributionsBoundaryContext value={value}>

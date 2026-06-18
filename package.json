@@ -60,6 +60,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.9",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-you-might-not-need-an-effect": "^1.0.1",
     "knip": "^6.17.1",
     "postcss": "^8.5.15",
@@ -72,15 +73,28 @@
   "overrides": {
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
+    "@typescript-eslint/eslint-plugin": "8.61.1",
+    "@typescript-eslint/parser": "8.61.1",
+    "@typescript-eslint/project-service": "8.61.1",
+    "@typescript-eslint/scope-manager": "8.61.1",
+    "@typescript-eslint/tsconfig-utils": "8.61.1",
+    "@typescript-eslint/type-utils": "8.61.1",
+    "@typescript-eslint/types": "8.61.1",
+    "@typescript-eslint/typescript-estree": "8.61.1",
+    "@typescript-eslint/utils": "8.61.1",
+    "@typescript-eslint/visitor-keys": "8.61.1",
+    "baseline-browser-mapping": "2.10.38",
     "brace-expansion": "1.1.14",
     "braces": "3.0.3",
+    "browserslist": "4.28.2",
     "flatted": "3.4.2",
     "mdast-util-to-hast": "13.2.1",
     "micromatch": "4.0.8",
     "minimatch": "3.1.5",
     "nanoid": "3.3.11",
     "picomatch": "2.3.2",
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "typescript-eslint": "8.61.1"
   },
   "trustedDependencies": [
     "@vercel/speed-insights"

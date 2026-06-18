@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useMemo, useOptimistic, type ReactNode } from "react";
+import { startTransition, useOptimistic, type ReactNode } from "react";
 import {
   getBreakpointFromWidth,
   Layout,
@@ -41,9 +41,9 @@ export default function GridResponsive({
       mergeCanonicalBreakpoints(state, newLayouts),
   );
 
-  const policyLayouts = useMemo(
-    () => applyResizePolicyToLayouts(optimisticLayouts, layoutKey),
-    [optimisticLayouts, layoutKey],
+  const policyLayouts = applyResizePolicyToLayouts(
+    optimisticLayouts,
+    layoutKey,
   );
 
   const persistUserLayout = (layout: Layout) => {
