@@ -87,16 +87,24 @@ export async function buildProjectOgImageResponse(slug: string) {
         }}
       >
         {coverSrc ? (
-          <img
-            alt=""
-            height={520}
-            src={coverSrc}
+          <div
             style={{
+              display: "flex",
               borderRadius: 20,
-              border: `1px solid ${ogPalette.accent}`,
+              background: ogPalette.surfaceCard,
+              overflow: "hidden",
             }}
-            width={440}
-          />
+          >
+            <img
+              alt=""
+              height={520}
+              src={coverSrc}
+              style={{
+                borderRadius: 20,
+              }}
+              width={440}
+            />
+          </div>
         ) : (
           <div
             style={{
@@ -106,11 +114,10 @@ export async function buildProjectOgImageResponse(slug: string) {
               borderRadius: 20,
               alignItems: "center",
               justifyContent: "center",
-              background: ogPalette.accent,
-              border: `1px solid ${ogPalette.accent}`,
+              background: ogPalette.surfaceCard,
               fontSize: 120,
               fontWeight: 700,
-              color: ogPalette.muted,
+              color: ogPalette.bg,
             }}
           >
             {initial}

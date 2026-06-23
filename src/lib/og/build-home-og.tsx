@@ -84,16 +84,24 @@ export async function buildHomeOgImageResponse() {
         }}
       >
         {avatarSrc ? (
-          <img
-            alt=""
-            height={360}
-            src={avatarSrc}
+          <div
             style={{
+              display: "flex",
               borderRadius: 28,
-              border: `1px solid ${ogPalette.accent}`,
+              background: ogPalette.surfaceCard,
+              overflow: "hidden",
             }}
-            width={360}
-          />
+          >
+            <img
+              alt=""
+              height={360}
+              src={avatarSrc}
+              style={{
+                borderRadius: 28,
+              }}
+              width={360}
+            />
+          </div>
         ) : (
           <div
             style={{
@@ -103,11 +111,10 @@ export async function buildHomeOgImageResponse() {
               borderRadius: 28,
               alignItems: "center",
               justifyContent: "center",
-              background: ogPalette.accent,
-              border: `1px solid ${ogPalette.accent}`,
+              background: ogPalette.surfaceCard,
               fontSize: 140,
               fontWeight: 700,
-              color: ogPalette.muted,
+              color: ogPalette.bg,
             }}
           >
             {initial}
