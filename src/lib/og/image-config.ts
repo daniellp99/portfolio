@@ -5,21 +5,11 @@ export const ogImageSize = {
 
 export const ogImageContentType = "image/png";
 
-/**
- * OG / link-preview palette aligned with the site dark theme. Main surface uses
- * `background` with light text; avatar / cover cards use `foreground` for contrast.
- *
- * Values match `globals.css` dark-theme tokens (oklch → sRGB).
- */
 export const ogPalette = {
-  /** Main surface — `background` */
   bg: "#09090b",
-  /** Primary text — `foreground` */
   fg: "#fafafa",
-  /** Muted text on the dark surface */
   muted: "#a1a1aa",
-  /** Avatar / cover card — opposite of main surface (`foreground`) */
-  surfaceCard: "#fafafa",
+  accent: "#3f3f46",
 } as const;
 
 export function truncateForOg(text: string, maxChars: number): string {

@@ -91,7 +91,7 @@ export async function buildProjectOgImageResponse(slug: string) {
             style={{
               display: "flex",
               borderRadius: 20,
-              background: ogPalette.surfaceCard,
+              background: ogPalette.fg,
               overflow: "hidden",
             }}
           >
@@ -114,7 +114,7 @@ export async function buildProjectOgImageResponse(slug: string) {
               borderRadius: 20,
               alignItems: "center",
               justifyContent: "center",
-              background: ogPalette.surfaceCard,
+              background: ogPalette.fg,
               fontSize: 120,
               fontWeight: 700,
               color: ogPalette.bg,
