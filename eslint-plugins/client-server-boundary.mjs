@@ -1,12 +1,15 @@
 /**
- * @fileoverview Forbid value imports from @/lib/server/* in modules that start with the "use client" directive.
- * @see CONTEXT.md — props-only data from Server Components; server actions live outside @/lib/server.
+ * @fileoverview Forbid value imports from server-only query modules in "use client" files.
+ * @see CONTEXT.md — props-only data from Server Components; server actions live in feature action files.
  */
 
 /** @param {string | undefined} source */
-function isServerLibImport(source) {
+function isServerQueryImport(source) {
   if (!source) return false;
-  return source === "@/lib/server" || source.startsWith("@/lib/server/");
+  if (source === "@/lib/server" || source.startsWith("@/lib/server/")) {
+    return true;
+  }
+  return /^@\/features\/[^/]+\/[^/]+-queries(?:\/|$)/.test(source);
 }
 
 /** @param {import('eslint').AST.Node} node */
@@ -48,12 +51,12 @@ const plugin = {
         type: "problem",
         docs: {
           description:
-            "Disallow value imports from @/lib/server in use client modules.",
+            "Disallow value imports from feature query modules in use client modules.",
         },
         schema: [],
         messages: {
           noValueImport:
-            'Do not import values from "{{source}}" in a "use client" module. Load data in a Server Component and pass props, or use a server action outside @/lib/server (e.g. @/lib/actions/*). `import type` is allowed.',
+            'Do not import values from "{{source}}" in a "use client" module. Load data in a Server Component and pass props, or use a server action from a feature actions file. `import type` is allowed.',
         },
       },
       create(context) {
@@ -64,7 +67,7 @@ const plugin = {
             client = hasUseClientDirective(node.body);
           },
           ImportDeclaration(node) {
-            if (!client || !isServerLibImport(node.source.value)) return;
+            if (!client || !isServerQueryImport(node.source.value)) return;
             if (isTypeOnlyImportDeclaration(node)) return;
             context.report({
               node,
@@ -75,7 +78,7 @@ const plugin = {
           ImportExpression(node) {
             if (!client || node.source.type !== "Literal") return;
             const v = node.source.value;
-            if (typeof v !== "string" || !isServerLibImport(v)) return;
+            if (typeof v !== "string" || !isServerQueryImport(v)) return;
             context.report({
               node,
               messageId: "noValueImport",

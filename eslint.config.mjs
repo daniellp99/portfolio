@@ -5,6 +5,9 @@ import reactYouMightNotNeedAnEffect from "eslint-plugin-react-you-might-not-need
 
 import clientServerBoundary from "./eslint-plugins/client-server-boundary.mjs";
 
+const contentImportMessage =
+  "Import project content only through feature *-queries.ts (or tests).";
+
 const eslintConfig = [
   {
     ignores: [
@@ -28,8 +31,8 @@ const eslintConfig = [
     ignores: [
       "**/*.test.ts",
       "src/components/**",
-      "src/lib/server/content-load.ts",
-      "src/lib/content/owner.ts",
+      "src/features/**/**-queries.ts",
+      "src/features/owner/owner-schemas.ts",
       "src/lib/content/projects.ts",
     ],
     rules: {
@@ -38,14 +41,8 @@ const eslintConfig = [
         {
           paths: [
             {
-              name: "@/lib/content/owner",
-              message:
-                "Import owner content only through @/lib/server/content-load (or tests).",
-            },
-            {
               name: "@/lib/content/projects",
-              message:
-                "Import project content only through @/lib/server/content-load (or tests).",
+              message: contentImportMessage,
             },
           ],
         },
@@ -54,28 +51,22 @@ const eslintConfig = [
   },
   {
     files: ["src/components/**/*.{ts,tsx}"],
-    ignores: ["src/components/server/**", "**/*.test.ts"],
+    ignores: ["src/components/ui/**", "**/*.test.ts"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
           paths: [
             {
-              name: "@/lib/content/owner",
-              message:
-                "Import owner content only through @/lib/server/content-load (or tests).",
-            },
-            {
               name: "@/lib/content/projects",
-              message:
-                "Import project content only through @/lib/server/content-load (or tests).",
+              message: contentImportMessage,
             },
           ],
           patterns: [
             {
-              group: ["@/lib/server/*"],
+              group: ["@/features/*/*-queries", "@/features/*/*-queries/*"],
               message:
-                "Import @/lib/server/* only from src/components/server/ (RSC data loaders).",
+                "Import feature queries only from feature server components, pages, or layouts.",
             },
           ],
         },
@@ -83,7 +74,7 @@ const eslintConfig = [
     },
   },
   {
-    files: ["src/components/server/**/*.{ts,tsx}"],
+    files: ["src/features/**/components/**/*.{ts,tsx}"],
     ignores: ["**/*.test.ts"],
     rules: {
       "no-restricted-imports": [
@@ -91,14 +82,8 @@ const eslintConfig = [
         {
           paths: [
             {
-              name: "@/lib/content/owner",
-              message:
-                "Import owner content only through @/lib/server/content-load (or tests).",
-            },
-            {
               name: "@/lib/content/projects",
-              message:
-                "Import project content only through @/lib/server/content-load (or tests).",
+              message: contentImportMessage,
             },
           ],
         },

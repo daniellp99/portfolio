@@ -3,19 +3,21 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
+import { Suspense, ViewTransition } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { ThemeProvider } from "@/components/Providers";
-import NavBar from "@/components/server/NavBar";
-
-import { loadOwnerData } from "@/lib/server/content-load";
+import { NavBar } from "@/components/nav-bar";
+import { NavItems } from "@/features/home/components/nav-items";
+import { getOwnerData } from "@/features/owner/owner-queries";
 import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ownerData = loadOwnerData();
+  const ownerData = getOwnerData();
 
   return buildRootLayoutMetadata(ownerData);
 }
@@ -30,11 +32,17 @@ export const viewport: Viewport = {
   ],
 };
 
+function NavItemsSkeleton() {
+  return <Skeleton className="h-12 w-68.25 rounded-full" />;
+}
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const contactEmail = getOwnerData().email;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -54,7 +62,19 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ScrollArea className="h-screen">
             <main id="main" className="w-full">
-              <NavBar />
+              <NavBar contactEmail={contactEmail}>
+                <Suspense
+                  fallback={
+                    <ViewTransition exit="slide-down">
+                      <NavItemsSkeleton />
+                    </ViewTransition>
+                  }
+                >
+                  <ViewTransition enter="slide-up" default="none">
+                    <NavItems />
+                  </ViewTransition>
+                </Suspense>
+              </NavBar>
               {children}
             </main>
           </ScrollArea>

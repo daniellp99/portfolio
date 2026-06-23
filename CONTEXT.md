@@ -1,17 +1,17 @@
 # Domain context
 
-Short glossary for architecture and import rules in this repo.
+Short glossary for architecture and import rules in this repo. See [AGENTS.md](./AGENTS.md) for the feature layout.
 
 ## Server content and owner data
 
-- **Owner data** comes from `owner-data.yaml`, read by `readOwnerData` in `src/lib/content/owner.ts`. App routes and pages load it only through `src/lib/server/content-load.ts` and the cached getters in `src/lib/server/owner.ts` (`getOwnerData`, etc.).
-- **Props-only rule:** Client Components (`"use client"`) must not fetch owner YAML or import **values** from `@/lib/server/*`. They receive owner-derived props from a parent Server Component (or call a **server action** that lives outside `@/lib/server`, e.g. under `src/lib/actions/`).
+- **Owner data** comes from `src/content/owner-data.ts`, validated in `features/owner/owner-queries.ts` (`getOwnerData`).
+- **Props-only rule:** Client Components (`"use client"`) must not import **values** from `*-queries.ts` files. They receive data from a parent Server Component or call a **server action** from `features/*/*-actions.ts`.
 
 ## Client / server import seam
 
-- **`@/lib/server/*`** is for Next-facing loaders, cache tags, and server-only helpers. Client modules must not pull runtime code from there.
-- **ESLint:** `boundary/no-server-value-imports-in-use-client` (see `eslint-plugins/client-server-boundary.mjs`) reports value imports from `@/lib/server/*` in files that start with the `"use client"` directive. `import type` from those paths is still allowed.
-- **Server actions** that must be invoked from the client (e.g. persisting layout cookies, changing the contributions calendar month) live under `src/lib/actions/` so they are not treated as `@/lib/server` imports.
+- **Feature queries** (`@/features/*/*-queries`) are server-only. Client modules must not pull runtime code from there.
+- **ESLint:** `boundary/no-server-value-imports-in-use-client` reports value imports from query modules in `"use client"` files. `import type` is still allowed.
+- **Server actions** invoked from the client live in `features/*/*-actions.ts`.
 
 ## GitHub contributions month
 
@@ -22,10 +22,10 @@ Short glossary for architecture and import rules in this repo.
 
 ## Content readers vs app entry
 
-- **`src/lib/content/*`** holds read/parse logic. Direct imports of `@/lib/content/owner` and `@/lib/content/projects` are restricted outside the content modules and `content-load`; use the server stack instead.
-- **`src/lib/server/content-load.ts`** is the single app seam for mapping I/O errors and calling readers; it uses `import "server-only"`.
+- **`src/lib/content/*`** holds read/parse logic. Direct imports of `@/lib/content/projects` are restricted outside feature query files and tests.
+- **Feature queries** map I/O errors and call readers; they use `import "server-only"`.
 
 ## Project MDX: read results and strictness
 
-- **`readProject`** in `src/lib/content/projects.ts` returns a discriminated **`ReadProjectResult`** (`ok` | `missing` | `invalid`) instead of overloading `null`. **`loadProjectDetails`** maps `missing` → `notFound()` (404) and `invalid` → throws **`InvalidProjectFrontMatterError`** (500 / error boundary), returning **`ProjectDetails`** only for `ok`.
+- **`readProject`** in `src/lib/content/projects.ts` returns a discriminated **`ReadProjectResult`** (`ok` | `missing` | `invalid`) instead of overloading `null`. Project queries map `missing` → `notFound()` (404) and `invalid` → throws **`InvalidProjectFrontMatterError`** (500 / error boundary).
 - **Listing** (`readAllProjectSummaries`): invalid front matter is **strict** by default when `process.env.CI` is truthy or `process.env.NODE_ENV === "development"` (throws `InvalidProjectFrontMatterError`). In other environments it **skips** invalid files and logs. Set **`PROJECT_CONTENT_STRICT`** to `0` or `1` to override that default (tests use this for split coverage).

@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-import { getProjectSlugs } from "@/lib/server/projects";
+import { getProjectSlugs } from "@/features/projects/projects-queries";
 import { getCanonicalUrl } from "@/lib/site/metadata";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

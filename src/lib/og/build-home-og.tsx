@@ -1,15 +1,15 @@
 /* eslint-disable @next/next/no-img-element -- next/og ImageResponse uses Satori, not next/image */
 import { ImageResponse } from "next/og";
 
+import { getOwnerData } from "@/features/owner/owner-queries";
 import { renderAboutMe } from "@/lib/content/render-about-me";
 import { brandTitle } from "@/lib/site/metadata/brand";
 
-import { loadOwnerData } from "@/lib/server/content-load";
 import { ogImageSize, ogPalette, truncateForOg } from "./image-config";
 import { loadImageForOg } from "./load-image-for-og";
 
 export async function buildHomeOgImageResponse() {
-  const ownerData = loadOwnerData();
+  const ownerData = getOwnerData();
   const ownerName = ownerData.name;
   const brand = brandTitle(ownerData.name);
   const subtitle = ownerData.aboutMe

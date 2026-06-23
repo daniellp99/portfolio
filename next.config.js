@@ -28,6 +28,7 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   reactCompiler: true,
   cacheComponents: true,
+  typedRoutes: true,
   experimental: {
     viewTransition: true,
     optimizePackageImports: [

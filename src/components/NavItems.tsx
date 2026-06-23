@@ -13,7 +13,7 @@ import { PillTabs } from "@/components/ui/pill-tabs";
 import {
   switchMainGridTabFormAction,
   type MainGridTabFormState,
-} from "@/lib/actions/switch-main-grid-tab-form";
+} from "@/features/home/home-actions";
 import { capture } from "@/lib/analytics";
 import { MAIN_GRID_TABPANEL_ID } from "@/lib/site/constants";
 import { tabs, tabsTypeSchema, type TabsType } from "@/lib/site/tabs";

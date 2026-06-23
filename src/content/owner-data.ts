@@ -1,4 +1,4 @@
-import { type OwnerData } from "@/lib/content/schemas";
+import { type OwnerData } from "@/features/owner/owner-schemas";
 
 export const rawOwnerData = {
   name: "daniellp",
