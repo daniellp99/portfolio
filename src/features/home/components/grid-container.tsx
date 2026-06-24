@@ -12,13 +12,8 @@ function subscribeNoop() {
   return () => {};
 }
 
-function readViewportGridWidth(): number | null {
+function readViewportGridWidth(): number {
   return gridSectionInitialWidth(window.innerWidth);
-}
-
-/** Defer RGL on the server so hydration matches; client picks width on first paint after hydrate. */
-function readServerGridWidth(): null {
-  return null;
 }
 
 function GridContainerLayout({
@@ -58,12 +53,14 @@ export function GridContainer({
   children,
   layouts,
   layoutKey,
+  ssrInitialWidth,
   allowedLayoutIds,
   imageSrcs,
 }: {
   children: ReactNode;
   layouts: ResponsiveLayouts;
   layoutKey: LayoutKey;
+  ssrInitialWidth: number;
   allowedLayoutIds?: readonly string[];
   imageSrcs?: readonly string[];
 }) {
@@ -74,12 +71,8 @@ export function GridContainer({
   const initialWidth = useSyncExternalStore(
     subscribeNoop,
     readViewportGridWidth,
-    readServerGridWidth,
+    () => ssrInitialWidth,
   );
-
-  if (initialWidth === null) {
-    return <div className="relative" />;
-  }
 
   return (
     <GridContainerLayout

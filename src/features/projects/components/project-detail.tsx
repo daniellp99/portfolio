@@ -20,7 +20,9 @@ function LineSkeleton({
   widthClass?: string;
 }) {
   return (
-    <span className={cn("inline-block align-text-bottom", widthClass, className)}>
+    <span
+      className={cn("inline-block align-text-bottom", widthClass, className)}
+    >
       <Skeleton className="h-lh w-full" />
     </span>
   );

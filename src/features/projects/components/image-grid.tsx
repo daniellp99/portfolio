@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import {
   imageLayoutsKeyForSlug,
 } from "@/lib/site/constants";
 import { imageGridCardSizes } from "@/lib/site/image-sizes";
+import { gridInitialWidthFromHeaders } from "@/lib/site/viewport-from-headers";
 
 export async function ImageGrid({
   slug,
@@ -20,7 +21,7 @@ export async function ImageGrid({
   slug: string | undefined;
   images: Images;
 }) {
-  const cookieStore = await cookies();
+  const [headerList, cookieStore] = await Promise.all([headers(), cookies()]);
 
   const layouts = await getLayouts(
     {
@@ -36,6 +37,7 @@ export async function ImageGrid({
     <GridContainer
       layouts={layouts}
       layoutKey={layoutKey}
+      ssrInitialWidth={gridInitialWidthFromHeaders(headerList)}
       imageSrcs={imageSrcsFromImages(images)}
     >
       {images.map((image) => (

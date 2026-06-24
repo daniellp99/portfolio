@@ -2,9 +2,8 @@
 
 import { ArrowUpRightIcon } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import Image from "next/image";
 import Link from "next/link";
-import { use, useState, ViewTransition } from "react";
+import { useState, ViewTransition, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { CardGrayscale } from "@/components/ui/grayscale";
@@ -12,14 +11,14 @@ import { CardGrayscale } from "@/components/ui/grayscale";
 import { capture } from "@/lib/analytics";
 import type { Project } from "@/lib/content/display";
 import { UI_SPRING } from "@/lib/motion";
-import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 
-export default function ProjectCardClient({
-  projectPromise,
+export default function ProjectCardChrome({
+  project,
+  children,
 }: {
-  projectPromise: Promise<Project>;
+  project: Pick<Project, "slug" | "name">;
+  children: ReactNode;
 }) {
-  const project = use(projectPromise);
   const reduceMotion = useReducedMotion() ?? false;
   const [isHovered, setIsHovered] = useState(false);
 
@@ -33,20 +32,7 @@ export default function ProjectCardClient({
       onPointerEnter={() => setIsHovered(true)}
       onPointerLeave={() => setIsHovered(false)}
     >
-      <Image
-        className="rounded-lg px-4"
-        alt={project.name}
-        src={`/${project.coverImage}`}
-        fill
-        loading="eager"
-        sizes={MAIN_GRID_CARD_IMAGE_SIZES}
-        priority={true}
-        fetchPriority="high"
-        style={{
-          objectFit: "scale-down",
-          objectPosition: "top",
-        }}
-      />
+      {children}
       <motion.div className="cancelDrag absolute bottom-2 left-2">
         <Button
           variant="projectLink"

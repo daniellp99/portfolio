@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Contributions } from "@/features/contributions/components/contributions";
 import { getMonthStartInZone } from "@/features/contributions/lib/calendar-projection";
@@ -80,4 +81,8 @@ export function ContributionsCard({
       </Contributions.Boundary>
     </>
   );
+}
+
+export function ContributionsCardSkeleton() {
+  return <Skeleton className="size-full" />;
 }
