@@ -13,7 +13,8 @@
     "test": "bun test --conditions react-server",
     "measure:project-listing": "bun run scripts/measure-project-listing.ts",
     "extract:stack-icons": "bun run scripts/extract-stack-icons.ts",
-    "typecheck": "next typegen && tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -62,6 +63,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-you-might-not-need-an-effect": "^1.0.1",
+    "husky": "^9.1.7",
     "knip": "^6.18.0",
     "postcss": "^8.5.15",
     "prettier": "^3.8.4",

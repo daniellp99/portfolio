@@ -19,14 +19,14 @@ import {
 } from "@/lib/site/grid";
 import { getActiveTab } from "@/lib/site/tabs";
 
-export type GetMainLayoutsParams = {
+type GetMainLayoutsParams = {
   layoutKey: typeof MAIN_LAYOUTS_KEY;
   projectSlugs: ProjectSlugs;
   projectSlug?: never;
   images?: never;
 };
 
-export type GetImageLayoutsParams = {
+type GetImageLayoutsParams = {
   layoutKey: typeof IMAGE_LAYOUTS_KEY;
   projectSlug: string | undefined | null;
   images: Images;
