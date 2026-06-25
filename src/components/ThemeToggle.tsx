@@ -29,7 +29,7 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Skeleton className="cancelDrag mx-auto h-9 w-full max-w-28 rounded-full" />
+        <Skeleton className="cancelDrag mx-auto h-11 w-full max-w-28 rounded-full" />
       </div>
     );
   }
