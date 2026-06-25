@@ -70,8 +70,8 @@ export async function MainGrid() {
   ]);
 
   const ownerData = getOwnerData();
-  const layouts = await getLayouts(
-    { layoutKey: MAIN_LAYOUTS_KEY },
+  const layouts = getLayouts(
+    { layoutKey: MAIN_LAYOUTS_KEY, projectSlugs },
     cookieStore,
   );
   const allowedLayoutIds = mainGridAllowedLayoutIds(projectSlugs);

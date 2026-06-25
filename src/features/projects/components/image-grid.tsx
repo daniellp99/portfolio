@@ -23,7 +23,7 @@ export async function ImageGrid({
 }) {
   const [headerList, cookieStore] = await Promise.all([headers(), cookies()]);
 
-  const layouts = await getLayouts(
+  const layouts = getLayouts(
     {
       layoutKey: IMAGE_LAYOUTS_KEY,
       projectSlug: slug,
