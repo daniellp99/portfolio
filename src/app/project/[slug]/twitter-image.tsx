@@ -6,8 +6,6 @@ import {
 
 export { contentType, size };
 
-export const runtime = "nodejs";
-
 export default async function Image(props: {
   params: Promise<{ slug: string }>;
 }) {
