@@ -28,8 +28,10 @@ const nextConfig = {
   skipTrailingSlashRedirect: true,
   reactCompiler: true,
   cacheComponents: true,
+  partialPrefetching: true,
   typedRoutes: true,
   experimental: {
+    cachedNavigations: "allow-runtime",
     viewTransition: true,
     optimizePackageImports: [
       "motion",

@@ -5,16 +5,21 @@ type SkeletonStyle = React.CSSProperties & {
   "--loader-skeleton-gradient"?: string;
 };
 
-function Skeleton({
+type SkeletonProps<T extends React.ElementType = "div"> = {
+  as?: T;
+  highlightColor?: string;
+  duration?: number;
+} & React.ComponentPropsWithoutRef<T>;
+
+function Skeleton<T extends React.ElementType = "div">({
+  as,
   className,
   highlightColor,
   duration = 1.5,
   style,
   ...props
-}: React.ComponentProps<"div"> & {
-  highlightColor?: string;
-  duration?: number;
-}) {
+}: SkeletonProps<T>) {
+  const Component = as ?? "div";
   const skeletonStyle: SkeletonStyle = {
     ...style,
     "--loader-skeleton-duration": `${duration}s`,
@@ -23,7 +28,7 @@ function Skeleton({
     }, transparent)`,
   };
   return (
-    <div
+    <Component
       data-slot="skeleton"
       className={cn(
         "relative overflow-hidden rounded-md bg-muted-foreground dark:bg-muted",

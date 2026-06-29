@@ -41,6 +41,7 @@ export default function ProjectCardChrome({
           render={
             <Link
               href={`/project/${project.slug}`}
+              prefetch={true}
               transitionTypes={["nav-forward"]}
               onClick={() =>
                 capture("project_card_clicked", {

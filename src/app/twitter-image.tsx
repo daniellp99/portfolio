@@ -6,6 +6,4 @@ import {
 
 export { contentType, size };
 
-export const runtime = "nodejs";
-
 export default buildHomeOgImageResponse;
