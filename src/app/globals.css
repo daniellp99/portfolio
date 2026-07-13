@@ -211,7 +211,7 @@
 }
 
 .react-grid-item.react-grid-placeholder {
-  @apply rounded-xl bg-muted-foreground;
+  @apply rounded-[calc(var(--radius-4xl)-(--spacing(1)))] bg-muted-foreground;
 }
 
 /* .leaflet-tile {
