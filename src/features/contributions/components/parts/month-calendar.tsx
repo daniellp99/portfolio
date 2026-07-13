@@ -98,7 +98,7 @@ export function ContributionsMonthCalendar({
         size="icon"
         disabled={!canGoPrev}
         aria-label="Go to the previous month"
-        className="size-8.5"
+        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
       >
         <ChevronLeftIcon className="size-5" aria-hidden="true" />
       </Button>
@@ -130,7 +130,7 @@ export function ContributionsMonthCalendar({
         size="icon"
         disabled={!canGoNext}
         aria-label="Go to the next month"
-        className="size-8.5"
+        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
       >
         <ChevronRightIcon className="size-5" aria-hidden="true" />
       </Button>
