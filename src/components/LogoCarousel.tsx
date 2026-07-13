@@ -1,9 +1,6 @@
 "use client";
 import AutoScroll from "embla-carousel-auto-scroll";
-import { useTheme } from "next-themes";
-import { useId } from "react";
-import { useSkillHoverSetter } from "@/components/SkillHoverContext";
-import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
+
 import type { CarouselOptions } from "@/components/ui/carousel";
 import {
   Carousel,
@@ -12,7 +9,9 @@ import {
 } from "@/components/ui/carousel";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
+import { useSkillHoverSetter } from "@/components/SkillHoverContext";
 import type { Logo } from "@/lib/content/display";
+import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
 
 export function LogoCarousel({
   logos,
@@ -21,8 +20,8 @@ export function LogoCarousel({
   logos: Logo[];
   opts?: CarouselOptions;
 }) {
-  const id = useId();
-  const { resolvedTheme } = useTheme();
+  const direction = opts?.direction ?? "ltr";
+
   const setHoveredTitle = useSkillHoverSetter();
 
   if (logos.length === 0) return null;
@@ -49,7 +48,7 @@ export function LogoCarousel({
       <CarouselContent className="ml-0">
         {logos.map((logo, idx) => (
           <CarouselItem
-            key={`${logo.title}-${idx}-${id}`}
+            key={`${direction}-${logo.title}-${idx}`}
             className="basis-1/13 pl-0"
           >
             <a
@@ -70,7 +69,6 @@ export function LogoCarousel({
                 <figure role="img" aria-label={`${logo.title} logo`}>
                   <SkillStackIcon
                     name={logo.key}
-                    variant={resolvedTheme === "light" ? "light" : "dark"}
                     className="aspect-square size-10 xl:size-16"
                   />
                 </figure>

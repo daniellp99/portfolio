@@ -2,15 +2,9 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-import { LogoCarousel } from "@/components/LogoCarousel";
-import {
-  SkillHoverProvider,
-  useSkillHoverTitle,
-} from "@/components/SkillHoverContext";
+import { useSkillHoverTitle } from "@/components/SkillHoverContext";
 
-import type { Logo } from "@/lib/content/display";
-
-function SkillsHoverLabel() {
+export function SkillsHoverLabel() {
   const hoveredTitle = useSkillHoverTitle();
   const reduceMotion = useReducedMotion() ?? false;
 
@@ -52,17 +46,5 @@ function SkillsHoverLabel() {
         ) : null}
       </AnimatePresence>
     </div>
-  );
-}
-
-export default function SkillsCardClient({ logos }: { logos: Logo[] }) {
-  return (
-    <SkillHoverProvider>
-      <div className="relative isolate flex size-full flex-col items-center justify-evenly">
-        <SkillsHoverLabel />
-        <LogoCarousel logos={logos} opts={{ direction: "ltr" }} />
-        <LogoCarousel logos={logos} opts={{ direction: "rtl" }} />
-      </div>
-    </SkillHoverProvider>
   );
 }

@@ -1,7 +1,18 @@
-import SkillsCardClient from "@/features/owner/components/skills-card-client";
+import { LogoCarousel } from "@/components/LogoCarousel";
+import { SkillHoverProvider } from "@/components/SkillHoverContext";
+import { SkillsHoverLabel } from "@/features/owner/components/skills-hover-label";
 import { getOwnerData } from "@/features/owner/owner-queries";
 
 export function SkillsCard() {
-  const ownerData = getOwnerData();
-  return <SkillsCardClient logos={ownerData.skills} />;
+  const logos = getOwnerData().skills;
+
+  return (
+    <SkillHoverProvider>
+      <div className="relative isolate flex size-full flex-col items-center justify-evenly">
+        <SkillsHoverLabel />
+        <LogoCarousel logos={logos} opts={{ direction: "ltr" }} />
+        <LogoCarousel logos={logos} opts={{ direction: "rtl" }} />
+      </div>
+    </SkillHoverProvider>
+  );
 }
