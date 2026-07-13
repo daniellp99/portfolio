@@ -26,7 +26,6 @@
   --border: oklch(91.973% 0.00413 285.946);
   --input: oklch(91.973% 0.00413 285.946);
   --ring: oklch(21.033% 0.00588 285.832);
-  --radius: 1.5rem;
 
   /* sugar high colors */
   --sh-class: #2d5e9d;
@@ -119,10 +118,6 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -171,11 +166,6 @@
       transform: translateX(100%);
     }
   }
-
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 @utility container {

@@ -16,7 +16,7 @@ export function ContributionsLegend({ className }: { className?: string }) {
           <li
             key={idx}
             className={cn(
-              "size-4 rounded ring-1 ring-foreground/10",
+              "size-4 rounded-sm ring-1 ring-foreground/10",
               bucketClass(idx),
             )}
           />

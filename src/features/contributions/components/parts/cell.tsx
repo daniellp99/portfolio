@@ -25,7 +25,7 @@ export function ContributionsCell({
       data-outside={outside || undefined}
       data-bucket={outside ? undefined : bucket}
       className={cn(
-        "grid aspect-square place-content-stretch rounded ring-1 ring-foreground/10",
+        "grid aspect-square place-content-stretch rounded-sm ring-1 ring-foreground/10",
         state === "idle" && !outside && bucketClass(bucket),
         // loading: same look as <Skeleton>
         "data-[state=loading]:bg-muted-foreground dark:data-[state=loading]:bg-muted",

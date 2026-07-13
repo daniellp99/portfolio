@@ -5,10 +5,10 @@ import { formatInTimeZone } from "date-fns-tz";
 import { AlertTriangleIcon } from "lucide-react";
 import { ViewTransition } from "react";
 
+import { Button } from "@/components/ui/button";
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { ContributionsCell } from "@/features/contributions/components/parts/cell";
 import { ContributionsCellTransition } from "@/features/contributions/components/parts/cell-transition";
-import { Button } from "@/components/ui/button";
 
 import {
   getMonthHeatmapGridDates,
@@ -60,7 +60,7 @@ export function ContributionsErrorCells({
         <div
           role="alert"
           aria-live="polite"
-          className="grid h-fit place-items-center gap-1 place-self-center rounded p-1 [grid-area:cells]"
+          className="grid h-fit place-items-center gap-1 place-self-center rounded-sm p-1 [grid-area:cells]"
         >
           <AlertTriangleIcon
             aria-hidden="true"

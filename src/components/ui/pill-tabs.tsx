@@ -28,7 +28,7 @@ function usePillTabsContext() {
 }
 
 const pillTabsListVariants = cva(
-  "rounded-full bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
+  "rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
   {
     variants: {
       size: {
@@ -43,7 +43,7 @@ const pillTabsListVariants = cva(
 );
 
 const pillTabsItemVariants = cva(
-  "relative z-0 rounded-full data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
+  "relative z-0 rounded-4xl data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
   {
     variants: {
       size: {
@@ -128,7 +128,7 @@ function PillTabsItem({
       {isActive ? (
         <motion.span
           layoutId={`${layoutGroupId}-indicator`}
-          className="pointer-events-none absolute inset-0 z-0 rounded-full bg-foreground"
+          className="pointer-events-none absolute inset-0 z-0 rounded-4xl bg-foreground"
           transition={indicatorTransition}
           aria-hidden="true"
         />
