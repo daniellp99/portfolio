@@ -19,6 +19,7 @@ import {
   applyResizePolicyToLayouts,
   GRID_RESPONSIVE_STATIC_PROPS,
   mergeCanonicalBreakpoints,
+  rowHeightForContainerWidth,
   syncLayoutsForPersistence,
 } from "@/lib/site/grid";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,8 @@ export default function GridResponsive({
     optimisticLayouts,
     layoutKey,
   );
+
+  const rowHeight = rowHeightForContainerWidth(width);
 
   const persistUserLayout = (layout: Layout) => {
     if (!interactive) return;
@@ -89,6 +92,7 @@ export default function GridResponsive({
       onDragStop={persistUserLayout}
       onResizeStop={persistUserLayout}
       {...GRID_RESPONSIVE_STATIC_PROPS}
+      rowHeight={rowHeight}
     >
       {children}
     </Responsive>

@@ -24,53 +24,53 @@ const PROJECT_SLOTS: Record<
 > = {
   default: {
     lg: [
-      { x: 1, y: 0, w: 1, h: 1 },
-      { x: 0, y: 1, w: 1, h: 1 },
-      { x: 2, y: 1, w: 1, h: 1 },
+      { x: 1, y: 0, w: 1, h: 2 },
+      { x: 0, y: 2, w: 1, h: 2 },
+      { x: 2, y: 2, w: 1, h: 2 },
     ],
     sm: [
-      { x: 3, y: 0, w: 1, h: 1 },
-      { x: 0, y: 2, w: 1, h: 1 },
-      { x: 2, y: 2, w: 1, h: 1 },
+      { x: 3, y: 0, w: 1, h: 2 },
+      { x: 0, y: 4, w: 1, h: 2 },
+      { x: 2, y: 4, w: 1, h: 2 },
     ],
     xs: [
-      { x: 1, y: 3, w: 1, h: 1 },
-      { x: 0, y: 6, w: 1, h: 1 },
-      { x: 0, y: 4, w: 1, h: 1 },
+      { x: 1, y: 6, w: 1, h: 2 },
+      { x: 0, y: 12, w: 1, h: 2 },
+      { x: 0, y: 8, w: 1, h: 2 },
     ],
   },
   about: {
     lg: [
-      { x: 3, y: 1, w: 1, h: 1 },
-      { x: 2, y: 3, w: 1, h: 1 },
-      { x: 2, y: 1, w: 1, h: 1 },
+      { x: 3, y: 2, w: 1, h: 2 },
+      { x: 2, y: 6, w: 1, h: 2 },
+      { x: 2, y: 2, w: 1, h: 2 },
     ],
     sm: [
-      { x: 3, y: 1, w: 1, h: 1 },
-      { x: 0, y: 3, w: 1, h: 1 },
-      { x: 2, y: 1, w: 1, h: 1 },
+      { x: 3, y: 2, w: 1, h: 2 },
+      { x: 0, y: 6, w: 1, h: 2 },
+      { x: 2, y: 2, w: 1, h: 2 },
     ],
     xs: [
-      { x: 1, y: 3, w: 1, h: 1 },
-      { x: 1, y: 5, w: 1, h: 1 },
-      { x: 0, y: 4, w: 1, h: 1 },
+      { x: 1, y: 6, w: 1, h: 2 },
+      { x: 1, y: 10, w: 1, h: 2 },
+      { x: 0, y: 8, w: 1, h: 2 },
     ],
   },
   projects: {
     lg: [
-      { x: 1, y: 0, w: 1, h: 1 },
-      { x: 0, y: 0, w: 1, h: 1 },
-      { x: 3, y: 0, w: 1, h: 1 },
+      { x: 1, y: 0, w: 1, h: 2 },
+      { x: 0, y: 0, w: 1, h: 2 },
+      { x: 3, y: 0, w: 1, h: 2 },
     ],
     sm: [
-      { x: 1, y: 0, w: 1, h: 1 },
-      { x: 0, y: 0, w: 1, h: 1 },
-      { x: 3, y: 0, w: 1, h: 1 },
+      { x: 1, y: 0, w: 1, h: 2 },
+      { x: 0, y: 0, w: 1, h: 2 },
+      { x: 3, y: 0, w: 1, h: 2 },
     ],
     xs: [
-      { x: 1, y: 0, w: 1, h: 1 },
-      { x: 0, y: 1, w: 1, h: 1 },
-      { x: 0, y: 0, w: 1, h: 1 },
+      { x: 1, y: 0, w: 1, h: 2 },
+      { x: 0, y: 2, w: 1, h: 2 },
+      { x: 0, y: 0, w: 1, h: 2 },
     ],
   },
 };
@@ -89,71 +89,71 @@ const BASE_SLOTS: Record<
 > = {
   default: {
     lg: {
-      me: { x: 0, y: 0, w: 2, h: 1 },
-      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
-      skills: { x: 2, y: 2, w: 1, h: 1 },
-      maps: { x: 2, y: 0, w: 1, h: 1 },
-      contributions: { x: 3, y: 1, w: 1, h: 1.5 },
+      me: { x: 0, y: 0, w: 2, h: 2 },
+      "toggle-theme": { x: 3, y: 4, w: 1, h: 1 },
+      skills: { x: 2, y: 4, w: 1, h: 2 },
+      maps: { x: 2, y: 0, w: 1, h: 2 },
+      contributions: { x: 3, y: 2, w: 1, h: 3 },
     },
     sm: {
-      me: { x: 0, y: 0, w: 2, h: 2 },
-      "toggle-theme": { x: 2, y: 1, w: 1, h: 0.5 },
-      skills: { x: 3, y: 2, w: 1, h: 1 },
-      maps: { x: 3, y: 0, w: 1, h: 1 },
-      contributions: { x: 2, y: 0, w: 1, h: 1.5 },
+      me: { x: 0, y: 0, w: 2, h: 4 },
+      "toggle-theme": { x: 2, y: 2, w: 1, h: 1 },
+      skills: { x: 3, y: 4, w: 1, h: 2 },
+      maps: { x: 3, y: 0, w: 1, h: 2 },
+      contributions: { x: 2, y: 0, w: 1, h: 3 },
     },
     xs: {
-      me: { x: 0, y: 0, w: 2, h: 2 },
-      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
-      skills: { x: 1, y: 5, w: 1, h: 1 },
-      maps: { x: 0, y: 2, w: 2, h: 1 },
-      contributions: { x: 0, y: 3, w: 1, h: 1.5 },
+      me: { x: 0, y: 0, w: 2, h: 4 },
+      "toggle-theme": { x: 1, y: 10, w: 1, h: 1 },
+      skills: { x: 1, y: 10, w: 1, h: 2 },
+      maps: { x: 0, y: 4, w: 2, h: 2 },
+      contributions: { x: 0, y: 6, w: 1, h: 3 },
     },
   },
   about: {
     lg: {
-      me: { x: 0, y: 0, w: 2, h: 1 },
-      "toggle-theme": { x: 1, y: 1, w: 1, h: 0.5 },
-      skills: { x: 3, y: 0, w: 1, h: 1 },
-      maps: { x: 2, y: 0, w: 1, h: 1 },
-      contributions: { x: 0, y: 1, w: 1, h: 1.5 },
+      me: { x: 0, y: 0, w: 2, h: 2 },
+      "toggle-theme": { x: 1, y: 2, w: 1, h: 1 },
+      skills: { x: 3, y: 0, w: 1, h: 2 },
+      maps: { x: 2, y: 0, w: 1, h: 2 },
+      contributions: { x: 0, y: 2, w: 1, h: 3 },
     },
     sm: {
-      me: { x: 0, y: 0, w: 2, h: 2 },
-      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
-      skills: { x: 3, y: 0, w: 1, h: 1 },
-      maps: { x: 2, y: 0, w: 1, h: 1 },
-      contributions: { x: 2, y: 2, w: 1, h: 1.5 },
+      me: { x: 0, y: 0, w: 2, h: 4 },
+      "toggle-theme": { x: 1, y: 10, w: 1, h: 1 },
+      skills: { x: 3, y: 0, w: 1, h: 2 },
+      maps: { x: 2, y: 0, w: 1, h: 2 },
+      contributions: { x: 2, y: 4, w: 1, h: 3 },
     },
     xs: {
-      me: { x: 0, y: 1, w: 2, h: 2 },
-      "toggle-theme": { x: 1, y: 5, w: 1, h: 0.5 },
-      skills: { x: 0, y: 3, w: 1, h: 1 },
-      maps: { x: 0, y: 0, w: 2, h: 1 },
-      contributions: { x: 0, y: 8, w: 1, h: 1.5 },
+      me: { x: 0, y: 2, w: 2, h: 4 },
+      "toggle-theme": { x: 1, y: 10, w: 1, h: 1 },
+      skills: { x: 0, y: 6, w: 1, h: 2 },
+      maps: { x: 0, y: 0, w: 2, h: 2 },
+      contributions: { x: 0, y: 16, w: 1, h: 3 },
     },
   },
   projects: {
     lg: {
-      me: { x: 0, y: 1, w: 2, h: 1 },
-      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
-      skills: { x: 2, y: 2, w: 1, h: 1 },
-      maps: { x: 2, y: 2, w: 1, h: 1 },
-      contributions: { x: 3, y: 0, w: 1, h: 1.5 },
+      me: { x: 0, y: 2, w: 2, h: 2 },
+      "toggle-theme": { x: 3, y: 4, w: 1, h: 1 },
+      skills: { x: 2, y: 4, w: 1, h: 2 },
+      maps: { x: 2, y: 4, w: 1, h: 2 },
+      contributions: { x: 3, y: 0, w: 1, h: 3 },
     },
     sm: {
-      me: { x: 0, y: 1, w: 2, h: 2 },
-      "toggle-theme": { x: 3, y: 2, w: 1, h: 0.5 },
-      skills: { x: 2, y: 1, w: 1, h: 1 },
-      maps: { x: 2, y: 2, w: 1, h: 1 },
-      contributions: { x: 3, y: 0, w: 1, h: 1.5 },
+      me: { x: 0, y: 2, w: 2, h: 4 },
+      "toggle-theme": { x: 3, y: 4, w: 1, h: 1 },
+      skills: { x: 2, y: 2, w: 1, h: 2 },
+      maps: { x: 2, y: 4, w: 1, h: 2 },
+      contributions: { x: 3, y: 0, w: 1, h: 3 },
     },
     xs: {
-      me: { x: 0, y: 5, w: 2, h: 2 },
-      "toggle-theme": { x: 0, y: 3, w: 1, h: 0.5 },
-      skills: { x: 0, y: 2, w: 1, h: 1 },
-      maps: { x: 0, y: 4, w: 2, h: 1 },
-      contributions: { x: 1, y: 2, w: 1, h: 1.5 },
+      me: { x: 0, y: 10, w: 2, h: 4 },
+      "toggle-theme": { x: 0, y: 6, w: 1, h: 1 },
+      skills: { x: 0, y: 4, w: 1, h: 2 },
+      maps: { x: 0, y: 8, w: 2, h: 2 },
+      contributions: { x: 1, y: 4, w: 1, h: 3 },
     },
   },
 };
@@ -234,10 +234,10 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
     if (totalW < colsNumber) {
       x = totalW;
     } else if (totalW === colsNumber) {
-      y = 1;
+      y = 2;
     } else {
       x = Math.ceil(totalW % colsNumber);
-      y = Math.floor(totalW / colsNumber);
+      y = Math.floor(totalW / colsNumber) * 2;
     }
 
     totalWSoFar += image.width;
@@ -248,7 +248,7 @@ function imageLayout(size: LogicalLayoutBreakpoint, images: Images): Layout {
         x,
         y: scale(size, y),
         w: image.width,
-        h: scale(size, image.height),
+        h: scale(size, image.height * 2),
       },
       "image",
       cols,

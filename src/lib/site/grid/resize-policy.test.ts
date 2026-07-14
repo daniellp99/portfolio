@@ -32,16 +32,16 @@ describe("applyResizePolicyToLayoutItem", () => {
     expect(out.h).toBe(1);
   });
 
-  it("keeps toggle-theme at h 0.5 without min constraints", () => {
+  it("keeps toggle-theme at h 1 without min constraints", () => {
     const out = applyResizePolicyToLayoutItem(
-      { i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 },
+      { i: "toggle-theme", x: 3, y: 4, w: 1, h: 1 },
       "main",
       4,
     );
     expect(out.isResizable).toBe(false);
     expect(out.minW).toBeUndefined();
     expect(out.minH).toBeUndefined();
-    expect(out.h).toBe(0.5);
+    expect(out.h).toBe(1);
   });
 
   it("strips legacy min/max and isResizable from non-map items", () => {
@@ -94,17 +94,17 @@ describe("applyResizePolicyToLayouts", () => {
       {
         lg: [
           { i: MAP_LAYOUT_ITEM_ID, x: 2, y: 0, w: 1, h: 1 },
-          { i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 },
+          { i: "toggle-theme", x: 3, y: 4, w: 1, h: 1 },
         ],
         md: [
           { i: MAP_LAYOUT_ITEM_ID, x: 2, y: 0, w: 1, h: 1 },
-          { i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 },
+          { i: "toggle-theme", x: 3, y: 4, w: 1, h: 1 },
         ],
       },
       MAIN_LAYOUTS_KEY,
     );
     expect(layouts.lg?.[0]?.isResizable).toBe(true);
-    expect(layouts.lg?.[1]?.h).toBe(0.5);
+    expect(layouts.lg?.[1]?.h).toBe(1);
     expect(layouts.md?.[0]?.isResizable).toBe(true);
   });
 });

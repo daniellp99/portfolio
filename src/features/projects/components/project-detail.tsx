@@ -92,7 +92,7 @@ function ProjectMdxSkeleton() {
 
 function ProjectImageGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-[15.5px] md:grid-cols-4 md:gap-4">
+    <div className="grid grid-cols-2 gap-[15px] md:grid-cols-4 md:gap-4">
       <Skeleton className="col-span-2 h-52 rounded-xl md:col-span-3 md:h-64" />
       <Skeleton className="h-52 rounded-xl md:row-span-2 md:h-full md:min-h-64" />
       <Skeleton className="h-36 rounded-xl md:h-40" />

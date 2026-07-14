@@ -22,7 +22,11 @@ export const SCALE_Y: Record<LogicalLayoutBreakpoint, number> = {
   xs: 1,
 };
 
-const GRID_ROW_HEIGHT = 164;
+/**
+ * Fallback when width is unknown. Prefer {@link rowHeightForContainerWidth}:
+ * a fixed rowHeight cannot keep colWidth-matching squares at every breakpoint.
+ */
+const GRID_ROW_HEIGHT = 75;
 
 export const MAIN_GRID_PROJECT_SLOT_COUNT = 3;
 
@@ -42,23 +46,26 @@ const GRID_RGL_COLS = {
   xxs: 2,
 } as const;
 
+/** Include `lg` so RGL does not fall back to the first map entry (xxs). */
 const GRID_RGL_CONTAINER_PADDING = {
-  xxs: [15.5, 15.5],
-  xs: [15.5, 15.5],
+  xxs: [15, 15],
+  xs: [15, 15],
   sm: [16, 16],
   md: [16, 16],
+  lg: [16, 16],
 } as const satisfies Record<
-  "xxs" | "xs" | "sm" | "md",
+  "xxs" | "xs" | "sm" | "md" | "lg",
   readonly [number, number]
 >;
 
 const GRID_RGL_MARGIN = {
-  xxs: [15.5, 15.5],
-  xs: [15.5, 15.5],
+  xxs: [15, 15],
+  xs: [15, 15],
   sm: [16, 16],
   md: [16, 16],
+  lg: [16, 16],
 } as const satisfies Record<
-  "xxs" | "xs" | "sm" | "md",
+  "xxs" | "xs" | "sm" | "md" | "lg",
   readonly [number, number]
 >;
 

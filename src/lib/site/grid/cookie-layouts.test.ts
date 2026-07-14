@@ -9,6 +9,8 @@ import {
   compactForCookie,
   cookieValueWithinLimit,
   expandFromCookie,
+  isPreRescaleImageLayoutCookie,
+  isPreRescaleMainLayoutCookie,
   syncLayoutsForPersistence,
 } from "./cookie-layouts";
 import { applyResizePolicyToLayouts } from "./resize-policy";
@@ -16,9 +18,9 @@ import { applyResizePolicyToLayouts } from "./resize-policy";
 const sampleItem = {
   i: "me",
   x: 0,
-  y: 1.645123,
+  y: 3.290123,
   w: 2,
-  h: 1.645,
+  h: 3.29,
   isResizable: false,
 };
 
@@ -40,9 +42,9 @@ describe("compactForCookie / expandFromCookie", () => {
     expect(expanded?.lg?.[0]).toMatchObject({
       i: "me",
       x: 0,
-      y: 1.645,
+      y: 3.29,
       w: 2,
-      h: 1.645,
+      h: 3.29,
     });
     expect(expanded?.md?.[0]?.i).toBe("me");
     expect(expanded?.xxs?.[0]?.i).toBe("xs");
@@ -162,8 +164,8 @@ describe("compactForCookie / expandFromCookie", () => {
     const layouts = applyResizePolicyToLayouts(
       {
         lg: [
-          { i: "maps", x: 2, y: 0, w: 2, h: 2 },
-          { i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 },
+          { i: "maps", x: 2, y: 0, w: 2, h: 4 },
+          { i: "toggle-theme", x: 3, y: 4, w: 1, h: 1 },
         ],
       },
       MAIN_LAYOUTS_KEY,
@@ -188,5 +190,51 @@ describe("cookieValueWithinLimit", () => {
     const key = "portfolio-main-layouts";
     const value = "x".repeat(4096 - key.length + 1);
     expect(cookieValueWithinLimit(key, value)).toBe(false);
+  });
+});
+
+describe("isPreRescaleMainLayoutCookie", () => {
+  it("detects legacy toggle-theme heights below 1", () => {
+    const legacy: ResponsiveLayouts = {
+      lg: [{ i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 }],
+    };
+    expect(isPreRescaleMainLayoutCookie(legacy)).toBe(true);
+  });
+
+  it("accepts post-rescale toggle-theme heights", () => {
+    const current: ResponsiveLayouts = {
+      lg: [{ i: "toggle-theme", x: 3, y: 4, w: 1, h: 1.645 }],
+      xs: [{ i: "toggle-theme", x: 1, y: 10, w: 1, h: 1 }],
+    };
+    expect(isPreRescaleMainLayoutCookie(current)).toBe(false);
+  });
+});
+
+describe("isPreRescaleImageLayoutCookie", () => {
+  const defaults: ResponsiveLayouts = {
+    lg: [
+      { i: "a", x: 0, y: 0, w: 2, h: 3.29 },
+      { i: "b", x: 2, y: 0, w: 1, h: 3.29 },
+    ],
+  };
+
+  it("detects undoubled image heights vs current defaults", () => {
+    const legacy: ResponsiveLayouts = {
+      lg: [
+        { i: "a", x: 0, y: 0, w: 2, h: 1.645 },
+        { i: "b", x: 2, y: 0, w: 1, h: 1.645 },
+      ],
+    };
+    expect(isPreRescaleImageLayoutCookie(legacy, defaults)).toBe(true);
+  });
+
+  it("accepts post-rescale image heights", () => {
+    const current: ResponsiveLayouts = {
+      lg: [
+        { i: "a", x: 0, y: 0, w: 2, h: 3.29 },
+        { i: "b", x: 2, y: 0, w: 1, h: 3.29 },
+      ],
+    };
+    expect(isPreRescaleImageLayoutCookie(current, defaults)).toBe(false);
   });
 });

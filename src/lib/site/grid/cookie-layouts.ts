@@ -287,3 +287,59 @@ export function expandFromCookie(
   if (!result.success) return null;
   return expandLogicalToResponsive(result.data, options.imageSrcs);
 }
+
+/**
+ * Pre-rescale main layouts stored toggle-theme at h < 1 (half-row units).
+ * Those cookies would render at wrong pixel sizes under the doubled row units.
+ */
+export function isPreRescaleMainLayoutCookie(
+  layouts: ResponsiveLayouts,
+): boolean {
+  for (let i = 0; i < CANONICAL_KEY_COUNT; i++) {
+    const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
+    const layout = layouts[key];
+    if (layout === undefined) continue;
+    for (let j = 0; j < layout.length; j++) {
+      const item = layout[j]!;
+      if (item.i === "toggle-theme" && item.h < 1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Pre-rescale image layouts used undoubled `h` (about half of current defaults).
+ * With the square rowHeight those cookied cards render ~2× too short.
+ */
+export function isPreRescaleImageLayoutCookie(
+  cookieLayouts: ResponsiveLayouts,
+  defaultLayouts: ResponsiveLayouts,
+): boolean {
+  let compared = 0;
+  let halfHeight = 0;
+
+  for (let i = 0; i < CANONICAL_KEY_COUNT; i++) {
+    const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
+    const cookieLayout = cookieLayouts[key];
+    const defaultLayout = defaultLayouts[key];
+    if (cookieLayout === undefined || defaultLayout === undefined) continue;
+
+    const expectedH: Record<string, number> = Object.create(null);
+    for (let j = 0; j < defaultLayout.length; j++) {
+      const item = defaultLayout[j]!;
+      expectedH[item.i] = item.h;
+    }
+
+    for (let j = 0; j < cookieLayout.length; j++) {
+      const item = cookieLayout[j]!;
+      const expected = expectedH[item.i];
+      if (expected === undefined || expected <= 0) continue;
+      compared++;
+      if (item.h <= expected * 0.6) halfHeight++;
+    }
+  }
+
+  return compared > 0 && halfHeight * 2 >= compared;
+}
