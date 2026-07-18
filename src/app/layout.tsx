@@ -1,8 +1,7 @@
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense, ViewTransition } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,6 +14,16 @@ import { getOwnerData } from "@/features/owner/owner-queries";
 import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = getOwnerData();
@@ -44,7 +53,11 @@ export default function RootLayout({
   const contactEmail = getOwnerData().email;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geist.variable} ${geistMono.variable}`}
+    >
       <head>
         <link
           rel="preconnect"
@@ -52,7 +65,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"

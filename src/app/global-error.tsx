@@ -1,8 +1,7 @@
 "use client";
 
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import { CircleAlertIcon, RefreshCwIcon } from "lucide-react";
+import { Geist, Geist_Mono } from "next/font/google";
 import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -17,6 +16,16 @@ import {
 } from "@/components/ui/empty";
 
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+});
 
 const THEME_STORAGE_KEY = "theme";
 
@@ -38,10 +47,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
-  const htmlClassName =
-    typeof window !== "undefined" && resolveDocumentTheme()
-      ? "dark"
-      : undefined;
+  const themeClassName =
+    typeof window !== "undefined" && resolveDocumentTheme() ? "dark" : "";
 
   useEffect(() => {
     console.error(error);
@@ -52,8 +59,12 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en" suppressHydrationWarning className={htmlClassName}>
-      <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${geist.variable} ${geistMono.variable} ${themeClassName}`}
+    >
+      <body>
         <section className="flex min-h-screen items-center justify-center p-6">
           <Empty className="max-w-md border">
             <EmptyHeader>
