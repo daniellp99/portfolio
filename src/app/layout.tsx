@@ -1,7 +1,8 @@
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense, ViewTransition } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,16 +15,6 @@ import { getOwnerData } from "@/features/owner/owner-queries";
 import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist",
-});
-
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-});
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = getOwnerData();
@@ -56,7 +47,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geist.variable} ${geistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
         <link

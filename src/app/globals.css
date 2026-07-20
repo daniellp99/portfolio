@@ -5,8 +5,8 @@
 @plugin "tailwindcss-animate";
 
 .typeset-docs {
-  --typeset-font-body: var(--font-geist);
-  --typeset-font-heading: var(--font-geist);
+  --typeset-font-body: var(--font-geist-sans);
+  --typeset-font-heading: var(--font-geist-sans);
   --typeset-font-mono: var(--font-geist-mono);
   --typeset-size: 18px;
   --typeset-leading: 1.75;
@@ -97,7 +97,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist);
+  --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
   --color-border: var(--border);
