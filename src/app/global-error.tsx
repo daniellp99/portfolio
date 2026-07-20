@@ -38,10 +38,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
-  const htmlClassName =
-    typeof window !== "undefined" && resolveDocumentTheme()
-      ? "dark"
-      : undefined;
+  const themeClassName =
+    typeof window !== "undefined" && resolveDocumentTheme() ? "dark" : "";
 
   useEffect(() => {
     console.error(error);
@@ -52,8 +50,12 @@ export default function GlobalError({
   }, [error]);
 
   return (
-    <html lang="en" suppressHydrationWarning className={htmlClassName}>
-      <body className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable} ${themeClassName}`}
+    >
+      <body>
         <section className="flex min-h-screen items-center justify-center p-6">
           <Empty className="max-w-md border">
             <EmptyHeader>

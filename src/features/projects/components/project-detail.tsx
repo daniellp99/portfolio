@@ -9,8 +9,7 @@ import PostHogProjectView from "@/features/projects/components/posthog-project-v
 import { ProjectJsonLd } from "@/features/projects/components/project-json-ld";
 import { getProjectDetails } from "@/features/projects/projects-queries";
 
-const proseSectionClassName =
-  "prose size-full max-w-none prose-zinc lg:prose-xl dark:prose-invert";
+const typesetSectionClassName = "typeset typeset-docs max-w-[37em] size-full";
 
 function LineSkeleton({
   className,
@@ -123,7 +122,7 @@ export async function ProjectDetail({ slug }: { slug: string }) {
             </ViewTransition>
             <p className="text-4xl text-pretty">{project.description}</p>
           </section>
-          <section className={proseSectionClassName}>
+          <section className={typesetSectionClassName}>
             <Suspense
               fallback={
                 <ViewTransition exit="slide-down">
@@ -163,7 +162,7 @@ export function ProjectDetailSkeleton() {
           <ProjectTitleSkeleton />
           <ProjectDescriptionSkeleton />
         </section>
-        <section className={proseSectionClassName}>
+        <section className={typesetSectionClassName}>
           <ProjectMdxSkeleton />
         </section>
       </article>
