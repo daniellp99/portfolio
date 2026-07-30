@@ -25,7 +25,7 @@ export default function HomePage() {
         id={MAIN_GRID_TABPANEL_ID}
         role="tabpanel"
         aria-label="Portfolio grid"
-        className="group/main mx-auto block max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]"
+        className="group/main mx-auto block max-w-93.75 md:max-w-200 xl:max-w-300"
       >
         <SlideSuspense fallback={<MainGridSkeleton />}>
           <MainGrid />
