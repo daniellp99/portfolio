@@ -1,6 +1,7 @@
-import { Suspense, ViewTransition } from "react";
+import { ViewTransition } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { SlideSuspense } from "@/components/SlideSuspense";
 import { cn } from "@/lib/utils";
 
 import { CustomMDX } from "@/features/projects/components/mdx-remote";
@@ -123,31 +124,15 @@ export async function ProjectDetail({ slug }: { slug: string }) {
             <p className="text-4xl text-pretty">{project.description}</p>
           </section>
           <section className={typesetSectionClassName}>
-            <Suspense
-              fallback={
-                <ViewTransition exit="slide-down">
-                  <ProjectMdxSkeleton />
-                </ViewTransition>
-              }
-            >
-              <ViewTransition enter="slide-up" default="none">
-                <CustomMDX source={project.content} />
-              </ViewTransition>
-            </Suspense>
+            <SlideSuspense fallback={<ProjectMdxSkeleton />}>
+              <CustomMDX source={project.content} />
+            </SlideSuspense>
           </section>
         </article>
         <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
-          <Suspense
-            fallback={
-              <ViewTransition exit="slide-down">
-                <ProjectImageGridSkeleton />
-              </ViewTransition>
-            }
-          >
-            <ViewTransition enter="slide-up" default="none">
-              <ImageGrid slug={slug} images={project.images} />
-            </ViewTransition>
-          </Suspense>
+          <SlideSuspense fallback={<ProjectImageGridSkeleton />}>
+            <ImageGrid slug={slug} images={project.images} />
+          </SlideSuspense>
         </section>
       </div>
     </>

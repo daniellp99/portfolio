@@ -3,12 +3,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Metadata, Viewport } from "next";
-import { Suspense, ViewTransition } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { ThemeProvider } from "@/components/Providers";
+import { SlideSuspense } from "@/components/SlideSuspense";
 import { NavBar } from "@/components/nav-bar";
 import { NavItems } from "@/features/home/components/nav-items";
 import { getOwnerData } from "@/features/owner/owner-queries";
@@ -67,17 +67,9 @@ export default function RootLayout({
           <ScrollArea className="h-screen">
             <main id="main" className="w-full">
               <NavBar contactEmail={contactEmail}>
-                <Suspense
-                  fallback={
-                    <ViewTransition exit="slide-down">
-                      <NavItemsSkeleton />
-                    </ViewTransition>
-                  }
-                >
-                  <ViewTransition enter="slide-up" default="none">
-                    <NavItems />
-                  </ViewTransition>
-                </Suspense>
+                <SlideSuspense fallback={<NavItemsSkeleton />}>
+                  <NavItems />
+                </SlideSuspense>
               </NavBar>
               {children}
             </main>

@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import { Suspense, ViewTransition } from "react";
 
 import DirectionalTransition from "@/components/DirectionalTransition";
+import { SlideSuspense } from "@/components/SlideSuspense";
+import { getOwnerData } from "@/features/owner/owner-queries";
 import {
   ProjectDetail,
   ProjectDetailSkeleton,
 } from "@/features/projects/components/project-detail";
-import { getOwnerData } from "@/features/owner/owner-queries";
 import {
   getProjectDetails,
   getProjectSlugs,
@@ -39,19 +39,11 @@ export default function ProjectPage(props: {
 }) {
   return (
     <DirectionalTransition>
-      <Suspense
-        fallback={
-          <ViewTransition exit="slide-down">
-            <ProjectDetailSkeleton />
-          </ViewTransition>
-        }
-      >
-        <ViewTransition enter="slide-up" default="none">
-          {props.params.then(({ slug }) => (
-            <ProjectDetail slug={slug} />
-          ))}
-        </ViewTransition>
-      </Suspense>
+      <SlideSuspense fallback={<ProjectDetailSkeleton />}>
+        {props.params.then(({ slug }) => (
+          <ProjectDetail slug={slug} />
+        ))}
+      </SlideSuspense>
     </DirectionalTransition>
   );
 }
