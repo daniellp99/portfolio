@@ -32,7 +32,9 @@ function usePillTabsContext() {
 
 /** Matches production / pre-refactor pill chrome (h-11, px-px py-0, gap-1). */
 const pillTabsListVariants = cva(
-  "relative rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
+  // Override TabsList default padding/height; stretch so full-height items
+  // keep the sliding indicator vertically centered.
+  "relative items-stretch rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
   {
     variants: {
       size: {
@@ -47,13 +49,15 @@ const pillTabsListVariants = cva(
 );
 
 const pillTabsItemVariants = cva(
-  "relative z-0 rounded-4xl data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
+  // `h-full` + `py-0` override TabsTrigger's `h-[calc(100%-1px)]` / `py-1`,
+  // which otherwise leave the sliding indicator optically low in the list.
+  "relative z-0 h-full rounded-4xl py-0 data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
   {
     variants: {
       size: {
         default: "px-4 text-xl",
         compact:
-          "p-0 xl:px-3 xl:text-xl [&_svg:not([class*='size-'])]:size-4 xl:[&_svg:not([class*='size-'])]:size-5",
+          "px-0 xl:px-3 xl:text-xl [&_svg:not([class*='size-'])]:size-4 xl:[&_svg:not([class*='size-'])]:size-5",
       },
     },
     defaultVariants: {
