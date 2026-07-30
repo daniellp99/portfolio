@@ -10,8 +10,8 @@ export function SkillsCard() {
     <SkillHoverProvider>
       <div className="relative isolate flex size-full flex-col items-center justify-evenly">
         <SkillsHoverLabel />
-        <LogoCarousel logos={logos} opts={{ direction: "ltr" }} />
-        <LogoCarousel logos={logos} opts={{ direction: "rtl" }} />
+        <LogoCarousel logos={logos} direction="ltr" />
+        <LogoCarousel logos={logos} direction="rtl" />
       </div>
     </SkillHoverProvider>
   );

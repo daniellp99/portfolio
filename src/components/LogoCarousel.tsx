@@ -1,82 +1,82 @@
 "use client";
-import AutoScroll from "embla-carousel-auto-scroll";
 
-import type { CarouselOptions } from "@/components/ui/carousel";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { CardGrayscale } from "@/components/ui/grayscale";
 
 import { useSkillHoverSetter } from "@/components/SkillHoverContext";
 import type { Logo } from "@/lib/content/display";
 import { SkillStackIcon } from "@/lib/icons/SkillStackIcon";
+import { cn } from "@/lib/utils";
+
+function LogoLink({
+  logo,
+  onHover,
+}: {
+  logo: Logo;
+  onHover: (title: string | null) => void;
+}) {
+  return (
+    <a
+      href={logo.href}
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label={logo.title}
+      className="block shrink-0 px-3 py-2 transition-transform duration-200 hover:scale-110 active:scale-110"
+      onPointerEnter={() => onHover(logo.title)}
+      onPointerLeave={() => onHover(null)}
+      onFocus={() => onHover(logo.title)}
+      onBlur={() => onHover(null)}
+    >
+      <CardGrayscale
+        duration={0.2}
+        className="inline-flex items-center justify-center"
+      >
+        <figure role="img" aria-label={`${logo.title} logo`}>
+          <SkillStackIcon
+            name={logo.key}
+            className="aspect-square size-10 xl:size-16"
+          />
+        </figure>
+      </CardGrayscale>
+    </a>
+  );
+}
 
 export function LogoCarousel({
   logos,
-  opts,
+  direction = "ltr",
 }: {
   logos: Logo[];
-  opts?: CarouselOptions;
+  direction?: "ltr" | "rtl";
 }) {
-  const direction = opts?.direction ?? "ltr";
-
   const setHoveredTitle = useSkillHoverSetter();
 
   if (logos.length === 0) return null;
 
+  const track = logos.map((logo, idx) => (
+    <LogoLink
+      key={`${direction}-${logo.title}-${idx}`}
+      logo={logo}
+      onHover={setHoveredTitle}
+    />
+  ));
+
   return (
-    <Carousel
+    <div
       aria-label="Tech stack logos carousel"
-      plugins={[
-        AutoScroll({
-          speed: 0.6,
-          stopOnMouseEnter: true,
-          stopOnFocusIn: true,
-          stopOnInteraction: false,
-        }),
-      ]}
-      dir={opts?.direction}
-      opts={{
-        loop: true,
-        dragFree: true,
-        align: "center",
-        ...opts,
-      }}
+      className="logo-marquee w-full overflow-hidden"
+      data-direction={direction}
     >
-      <CarouselContent className="ml-0">
-        {logos.map((logo, idx) => (
-          <CarouselItem
-            key={`${direction}-${logo.title}-${idx}`}
-            className="basis-1/13 pl-0"
-          >
-            <a
-              href={logo.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              aria-label={logo.title}
-              className="block p-2 transition-transform duration-200 hover:scale-110 active:scale-110"
-              onPointerEnter={() => setHoveredTitle(logo.title)}
-              onPointerLeave={() => setHoveredTitle(null)}
-              onFocus={() => setHoveredTitle(logo.title)}
-              onBlur={() => setHoveredTitle(null)}
-            >
-              <CardGrayscale
-                duration={0.2}
-                className="inline-flex items-center justify-center"
-              >
-                <figure role="img" aria-label={`${logo.title} logo`}>
-                  <SkillStackIcon
-                    name={logo.key}
-                    className="aspect-square size-10 xl:size-16"
-                  />
-                </figure>
-              </CardGrayscale>
-            </a>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-    </Carousel>
+      <div
+        className={cn(
+          "logo-marquee-track flex w-max",
+          direction === "rtl" && "logo-marquee-track-rtl",
+        )}
+      >
+        <div className="flex">{track}</div>
+        <div className="flex" aria-hidden="true">
+          {track}
+        </div>
+      </div>
+    </div>
   );
 }
