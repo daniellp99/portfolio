@@ -15,8 +15,6 @@ import {
   generateImageLayouts,
   generateLayouts,
   imageSrcsFromImages,
-  isPreRescaleImageLayoutCookie,
-  isPreRescaleMainLayoutCookie,
   normalizeLayoutsFromCookie,
 } from "@/lib/site/grid";
 import { getActiveTab } from "@/lib/site/tabs";
@@ -44,17 +42,6 @@ function layoutsCookieName(params: GetLayoutsParams): string {
   return imageLayoutsKeyForSlug(params.projectSlug, params.images);
 }
 
-function shouldUseCookieLayouts(
-  layoutKey: GetLayoutsParams["layoutKey"],
-  expanded: ResponsiveLayouts,
-  defaultLayouts: ResponsiveLayouts,
-): boolean {
-  if (layoutKey === MAIN_LAYOUTS_KEY) {
-    return !isPreRescaleMainLayoutCookie(expanded);
-  }
-  return !isPreRescaleImageLayoutCookie(expanded, defaultLayouts);
-}
-
 export function getLayouts(
   params: GetLayoutsParams,
   cookieStore: ReadonlyRequestCookies,
@@ -79,12 +66,9 @@ export function getLayouts(
         ? { imageSrcs: imageSrcsFromImages(params.images) }
         : {};
     const expanded = expandFromCookie(layoutsCookie.value, expandOptions);
-    if (
-      expanded !== null &&
-      shouldUseCookieLayouts(params.layoutKey, expanded, defaultLayouts)
-    ) {
+    if (expanded !== null) {
       return applyResizePolicyToLayouts(
-        normalizeLayoutsFromCookie(expanded, defaultLayouts, true),
+        normalizeLayoutsFromCookie(expanded, defaultLayouts),
         params.layoutKey,
       );
     }

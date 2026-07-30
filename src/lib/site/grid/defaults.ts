@@ -5,7 +5,21 @@ import { TabsType } from "@/lib/site/tabs";
 import type { LogicalLayoutBreakpoint } from "./config";
 import { GRID_RESPONSIVE_STATIC_PROPS, SCALE_Y } from "./config";
 import { applyResizePolicyToLayoutItem } from "./resize-policy";
-import { withRglBreakpointAliases } from "./layout-copy";
+
+function withRglBreakpointAliases(layouts: {
+  lg: Layout;
+  sm: Layout;
+  xs: Layout;
+}): {
+  lg: Layout;
+  md: Layout;
+  sm: Layout;
+  xs: Layout;
+  xxs: Layout;
+} {
+  const { lg, sm, xs } = layouts;
+  return { lg, md: lg, sm, xs, xxs: xs };
+}
 
 type Variant = "default" | "about" | "projects";
 type LayoutItem = Layout[number];

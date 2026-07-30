@@ -3,16 +3,15 @@ import type { ResponsiveLayouts } from "react-grid-layout";
 
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
 
-import { generateImageLayouts } from "./defaults";
 import {
   collapseAliasBreakpointsToLogical,
   compactForCookie,
   cookieValueWithinLimit,
   expandFromCookie,
-  isPreRescaleImageLayoutCookie,
-  isPreRescaleMainLayoutCookie,
+  normalizeLayoutsFromCookie,
   syncLayoutsForPersistence,
-} from "./cookie-layouts";
+} from "./cookie";
+import { generateImageLayouts } from "./defaults";
 import { applyResizePolicyToLayouts } from "./resize-policy";
 
 const sampleItem = {
@@ -66,8 +65,8 @@ describe("compactForCookie / expandFromCookie", () => {
     const srcs = ["/a.jpg", "/b.jpg"];
     const layouts: ResponsiveLayouts = {
       lg: [
-        { i: srcs[0]!, x: 0, y: 0, w: 1, h: 1, isResizable: false },
-        { i: srcs[1]!, x: 1, y: 0, w: 1, h: 1, isResizable: false },
+        { i: "/a.jpg", x: 0, y: 0, w: 1, h: 1, isResizable: false },
+        { i: "/b.jpg", x: 1, y: 0, w: 1, h: 1, isResizable: false },
       ],
     };
     const encoded = compactForCookie(layouts, { imageSrcs: srcs });
@@ -193,48 +192,38 @@ describe("cookieValueWithinLimit", () => {
   });
 });
 
-describe("isPreRescaleMainLayoutCookie", () => {
-  it("detects legacy toggle-theme heights below 1", () => {
-    const legacy: ResponsiveLayouts = {
-      lg: [{ i: "toggle-theme", x: 3, y: 2, w: 1, h: 0.5 }],
+describe("normalizeLayoutsFromCookie", () => {
+  it("fills missing canonical keys from defaults", () => {
+    const defaults: ResponsiveLayouts = {
+      lg: [{ i: "d-lg", x: 0, y: 0, w: 1, h: 1 }],
+      md: [{ i: "d-md", x: 0, y: 0, w: 1, h: 1 }],
+      sm: [{ i: "d-sm", x: 0, y: 0, w: 1, h: 1 }],
+      xs: [{ i: "d-xs", x: 0, y: 0, w: 1, h: 1 }],
+      xxs: [{ i: "d-xxs", x: 0, y: 0, w: 1, h: 1 }],
     };
-    expect(isPreRescaleMainLayoutCookie(legacy)).toBe(true);
+    const decoded: ResponsiveLayouts = {
+      sm: [{ i: "user-sm", x: 2, y: 2, w: 1, h: 1 }],
+      extra: [{ i: "x", x: 0, y: 0, w: 1, h: 1 }],
+    };
+    const out = normalizeLayoutsFromCookie(decoded, defaults);
+    expect(out.extra).toBeUndefined();
+    expect(out.sm?.[0]?.i).toBe("user-sm");
+    expect(out.lg?.[0]?.i).toBe("d-lg");
+    expect(out.xxs?.[0]?.i).toBe("d-xxs");
   });
 
-  it("accepts post-rescale toggle-theme heights", () => {
-    const current: ResponsiveLayouts = {
-      lg: [{ i: "toggle-theme", x: 3, y: 4, w: 1, h: 1.645 }],
-      xs: [{ i: "toggle-theme", x: 1, y: 10, w: 1, h: 1 }],
+  it("reuses expanded layouts without a second clone", () => {
+    const defaults: ResponsiveLayouts = {
+      lg: [{ i: "d-lg", x: 0, y: 0, w: 1, h: 1 }],
+      md: [{ i: "d-md", x: 0, y: 0, w: 1, h: 1 }],
     };
-    expect(isPreRescaleMainLayoutCookie(current)).toBe(false);
-  });
-});
-
-describe("isPreRescaleImageLayoutCookie", () => {
-  const defaults: ResponsiveLayouts = {
-    lg: [
-      { i: "a", x: 0, y: 0, w: 2, h: 3.29 },
-      { i: "b", x: 2, y: 0, w: 1, h: 3.29 },
-    ],
-  };
-
-  it("detects undoubled image heights vs current defaults", () => {
-    const legacy: ResponsiveLayouts = {
-      lg: [
-        { i: "a", x: 0, y: 0, w: 2, h: 1.645 },
-        { i: "b", x: 2, y: 0, w: 1, h: 1.645 },
-      ],
+    const expanded: ResponsiveLayouts = {
+      lg: [{ i: "user-lg", x: 1, y: 1, w: 1, h: 1 }],
+      md: [{ i: "user-lg", x: 1, y: 1, w: 1, h: 1 }],
     };
-    expect(isPreRescaleImageLayoutCookie(legacy, defaults)).toBe(true);
-  });
-
-  it("accepts post-rescale image heights", () => {
-    const current: ResponsiveLayouts = {
-      lg: [
-        { i: "a", x: 0, y: 0, w: 2, h: 3.29 },
-        { i: "b", x: 2, y: 0, w: 1, h: 3.29 },
-      ],
-    };
-    expect(isPreRescaleImageLayoutCookie(current, defaults)).toBe(false);
+    const out = normalizeLayoutsFromCookie(expanded, defaults);
+    expect(out.lg).toBe(expanded.lg);
+    expect(out.md).toBe(expanded.md);
+    expect(out.lg?.[0]?.i).toBe("user-lg");
   });
 });

@@ -6,18 +6,14 @@ export {
   compactForCookie,
   cookieValueWithinLimit,
   expandFromCookie,
-  isPreRescaleImageLayoutCookie,
-  isPreRescaleMainLayoutCookie,
-  syncLayoutsForPersistence,
-} from "./cookie-layouts";
-export { generateImageLayouts, generateLayouts } from "./defaults";
-export {
   imageSrcsFromImages,
   mainGridAllowedLayoutIds,
   mergeCanonicalBreakpoints,
+  normalizeLayoutsFromCookie,
+  syncLayoutsForPersistence,
   type LayoutPersistenceOptions,
-} from "./layout-persistence";
-export { normalizeLayoutsFromCookie } from "./normalize";
+} from "./cookie";
+export { generateImageLayouts, generateLayouts } from "./defaults";
 export {
   applyResizePolicyToLayout,
   applyResizePolicyToLayouts,

@@ -9,14 +9,16 @@ import { COOKIE_VALUE_MAX_LENGTH } from "../constants";
 import {
   CANONICAL_LAYOUT_BREAKPOINT_KEYS,
   LOGICAL_LAYOUT_BREAKPOINT_KEYS,
+  MAIN_GRID_PROJECT_SLOT_COUNT,
   type LogicalLayoutBreakpoint,
 } from "./config";
-import {
-  cloneLayout,
-  cloneLayoutAliasPair,
-  cloneLayoutItem,
-} from "./layout-copy";
-import type { LayoutPersistenceOptions } from "./layout-persistence";
+import { BASE_ITEM_ORDER } from "./defaults";
+
+/** Options for compacting, expanding, and saving layout cookies. */
+export type LayoutPersistenceOptions = {
+  allowedLayoutIds?: readonly string[];
+  imageSrcs?: readonly string[];
+};
 
 export type CompactForCookieOptions = LayoutPersistenceOptions;
 export type ExpandFromCookieOptions = Pick<
@@ -29,6 +31,47 @@ const CANONICAL_KEY_COUNT = CANONICAL_LAYOUT_BREAKPOINT_KEYS.length;
 
 function roundCoord(n: number): number {
   return Math.round(n * 1000) / 1000;
+}
+
+function cloneLayoutItem(item: LayoutItem): LayoutItem {
+  const out: LayoutItem = {
+    i: item.i,
+    x: item.x,
+    y: item.y,
+    w: item.w,
+    h: item.h,
+  };
+  if (item.minW !== undefined) out.minW = item.minW;
+  if (item.maxW !== undefined) out.maxW = item.maxW;
+  if (item.minH !== undefined) out.minH = item.minH;
+  if (item.maxH !== undefined) out.maxH = item.maxH;
+  if (item.isResizable !== undefined) out.isResizable = item.isResizable;
+  if (item.resizeHandles !== undefined) {
+    out.resizeHandles = [...item.resizeHandles];
+  }
+  return out;
+}
+
+function cloneLayout(layout: Layout): Layout {
+  const len = layout.length;
+  const out: LayoutItem[] = new Array(len);
+  for (let i = 0; i < len; i++) {
+    out[i] = cloneLayoutItem(layout[i]!);
+  }
+  return out;
+}
+
+/** Independent lg/md or xs/xxs copies in one pass over items. */
+function cloneLayoutAliasPair(layout: Layout): [Layout, Layout] {
+  const len = layout.length;
+  const a: LayoutItem[] = new Array(len);
+  const b: LayoutItem[] = new Array(len);
+  for (let i = 0; i < len; i++) {
+    const item = layout[i]!;
+    a[i] = cloneLayoutItem(item);
+    b[i] = cloneLayoutItem(item);
+  }
+  return [a, b];
 }
 
 function logicalLayoutSource(
@@ -216,6 +259,49 @@ export function cookieValueWithinLimit(
   return cookieName.length + value.length <= COOKIE_VALUE_MAX_LENGTH;
 }
 
+/** IDs persisted for the main grid cookie (base widgets + up to 3 projects). */
+export function mainGridAllowedLayoutIds(
+  projectSlugs: readonly string[],
+): readonly string[] {
+  const projectCount = Math.min(
+    projectSlugs.length,
+    MAIN_GRID_PROJECT_SLOT_COUNT,
+  );
+  const out = new Array<string>(BASE_ITEM_ORDER.length + projectCount);
+  for (let i = 0; i < BASE_ITEM_ORDER.length; i++) {
+    out[i] = BASE_ITEM_ORDER[i]!;
+  }
+  for (let i = 0; i < projectCount; i++) {
+    out[BASE_ITEM_ORDER.length + i] = projectSlugs[i]!;
+  }
+  return out;
+}
+
+export function imageSrcsFromImages<T extends { src: string }>(
+  images: readonly T[],
+): string[] {
+  const len = images.length;
+  const out = new Array<string>(len);
+  for (let i = 0; i < len; i++) {
+    out[i] = images[i]!.src;
+  }
+  return out;
+}
+
+/** Overlay canonical breakpoint layouts onto a base object (client optimistic updates). */
+export function mergeCanonicalBreakpoints(
+  base: ResponsiveLayouts,
+  patch: ResponsiveLayouts,
+): ResponsiveLayouts {
+  const next: ResponsiveLayouts = { ...base };
+  for (let i = 0; i < CANONICAL_LAYOUT_BREAKPOINT_KEYS.length; i++) {
+    const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
+    const value = patch[key];
+    if (value !== undefined) next[key] = value;
+  }
+  return next;
+}
+
 /** RGL updates md/xxs on drag; cookies store lg/xs. */
 export function collapseAliasBreakpointsToLogical(layouts: ResponsiveLayouts): {
   lg?: Layout;
@@ -289,57 +375,25 @@ export function expandFromCookie(
 }
 
 /**
- * Pre-rescale main layouts stored toggle-theme at h < 1 (half-row units).
- * Those cookies would render at wrong pixel sizes under the doubled row units.
+ * Cookie read path: one pass over canonical keys (use cookie or fill from defaults).
+ * Expanded layouts from `expandFromCookie` are reused without a second clone.
  */
-export function isPreRescaleMainLayoutCookie(
-  layouts: ResponsiveLayouts,
-): boolean {
-  for (let i = 0; i < CANONICAL_KEY_COUNT; i++) {
+export function normalizeLayoutsFromCookie(
+  decoded: ResponsiveLayouts,
+  defaults: ResponsiveLayouts,
+): ResponsiveLayouts {
+  const out: ResponsiveLayouts = {};
+  for (let i = 0; i < CANONICAL_LAYOUT_BREAKPOINT_KEYS.length; i++) {
     const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
-    const layout = layouts[key];
-    if (layout === undefined) continue;
-    for (let j = 0; j < layout.length; j++) {
-      const item = layout[j]!;
-      if (item.i === "toggle-theme" && item.h < 1) {
-        return true;
-      }
+    const fromCookie = decoded[key];
+    if (fromCookie !== undefined) {
+      out[key] = fromCookie;
+      continue;
+    }
+    const fallback = defaults[key];
+    if (fallback !== undefined) {
+      out[key] = cloneLayout(fallback);
     }
   }
-  return false;
-}
-
-/**
- * Pre-rescale image layouts used undoubled `h` (about half of current defaults).
- * With the square rowHeight those cookied cards render ~2× too short.
- */
-export function isPreRescaleImageLayoutCookie(
-  cookieLayouts: ResponsiveLayouts,
-  defaultLayouts: ResponsiveLayouts,
-): boolean {
-  let compared = 0;
-  let halfHeight = 0;
-
-  for (let i = 0; i < CANONICAL_KEY_COUNT; i++) {
-    const key = CANONICAL_LAYOUT_BREAKPOINT_KEYS[i]!;
-    const cookieLayout = cookieLayouts[key];
-    const defaultLayout = defaultLayouts[key];
-    if (cookieLayout === undefined || defaultLayout === undefined) continue;
-
-    const expectedH: Record<string, number> = Object.create(null);
-    for (let j = 0; j < defaultLayout.length; j++) {
-      const item = defaultLayout[j]!;
-      expectedH[item.i] = item.h;
-    }
-
-    for (let j = 0; j < cookieLayout.length; j++) {
-      const item = cookieLayout[j]!;
-      const expected = expectedH[item.i];
-      if (expected === undefined || expected <= 0) continue;
-      compared++;
-      if (item.h <= expected * 0.6) halfHeight++;
-    }
-  }
-
-  return compared > 0 && halfHeight * 2 >= compared;
+  return out;
 }
