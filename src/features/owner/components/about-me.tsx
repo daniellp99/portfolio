@@ -1,14 +1,15 @@
 import { CardHeader } from "@/components/ui/card";
 
 import { getOwnerData } from "@/features/owner/owner-queries";
-import { renderAboutMe } from "@/lib/content/render-about-me";
+import { renderAboutMeCached } from "@/lib/content/render-about-me";
 
-export function AboutMe() {
+export async function AboutMe() {
   const { aboutMe, name, journeyStartAt } = getOwnerData();
-  const renderedAboutMe = renderAboutMe(
-    { aboutMe, name, journeyStartAt },
-    new Date(),
-  );
+  const renderedAboutMe = await renderAboutMeCached({
+    aboutMe,
+    name,
+    journeyStartAt,
+  });
 
   const nameParts = renderedAboutMe.split(name);
   const beforeName = nameParts[0] ?? renderedAboutMe;

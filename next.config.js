@@ -31,10 +31,7 @@ const nextConfig = {
   partialPrefetching: true,
   typedRoutes: true,
   experimental: {
-    cachedNavigations: "allow-runtime",
-    viewTransition: true,
     optimizePackageImports: [
-      "motion",
       "lucide-react",
       "date-fns",
       "react-grid-layout",

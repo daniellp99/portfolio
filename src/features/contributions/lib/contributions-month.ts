@@ -33,7 +33,7 @@ export function formatContributionsMonthCookie({
 export function getContributionsYearMonthFromCookies(
   cookieStore: Pick<ReadonlyRequestCookies, "get">,
   timeZone: string = CONTRIBUTIONS_TZ,
-  now: Date = new Date(),
+  now?: Date,
 ): ContributionsYearMonth {
   const raw = cookieStore.get(CONTRIBUTIONS_MONTH_COOKIE_KEY)?.value;
   const parsed = contributionsMonthCookieSchema.safeParse(raw);
@@ -41,7 +41,7 @@ export function getContributionsYearMonthFromCookies(
     return parsed.data;
   }
   return contributionsYearMonthFromDate(
-    getCurrentContributionsMonthInZone(now, timeZone),
+    getCurrentContributionsMonthInZone(now ?? new Date(), timeZone),
   );
 }
 
@@ -56,7 +56,7 @@ export type ContributionsMonthSnapshot = {
 };
 
 function getCurrentContributionsMonthInZone(
-  now: Date = new Date(),
+  now: Date,
   timeZone: string = CONTRIBUTIONS_TZ,
 ): Date {
   return startOfMonth(toZonedTime(now, timeZone));
@@ -88,22 +88,23 @@ export function normalizeContributionsMonth(
 
 export function buildContributionsMonthSnapshot(
   journeyStartAtIso: string,
-  now: Date = new Date(),
+  now?: Date,
   timeZone: string = CONTRIBUTIONS_TZ,
   initialYearMonth?: ContributionsYearMonth,
 ): ContributionsMonthSnapshot {
+  const referenceNow = now ?? new Date();
   const initialMonth = initialYearMonth
     ? getMonthStartInZone(
         initialYearMonth.year,
         initialYearMonth.month,
         timeZone,
       )
-    : getCurrentContributionsMonthInZone(now, timeZone);
+    : getCurrentContributionsMonthInZone(referenceNow, timeZone);
   const { year: initialYear, month: initialMonthNumber } =
     initialYearMonth ?? contributionsYearMonthFromDate(initialMonth);
 
   const startYear = new Date(journeyStartAtIso).getUTCFullYear();
-  const currentYear = getYear(toZonedTime(now, timeZone));
+  const currentYear = getYear(toZonedTime(referenceNow, timeZone));
   const years: number[] = [];
   for (let y = currentYear; y >= startYear; y -= 1) years.push(y);
 
@@ -147,10 +148,10 @@ export function isCurrentContributionsMonth(
   year: number,
   month: number,
   timeZone: string = CONTRIBUTIONS_TZ,
-  now: Date = new Date(),
+  now?: Date,
 ): boolean {
   const current = contributionsYearMonthFromDate(
-    getCurrentContributionsMonthInZone(now, timeZone),
+    getCurrentContributionsMonthInZone(now ?? new Date(), timeZone),
   );
   return current.year === year && current.month === month;
 }
@@ -185,7 +186,7 @@ export function stepContributionsMonthFormState(
   prevState: ContributionsMonthFormState,
   intent: "prev" | "next",
   journeyStartAtIso: string,
-  now: Date = new Date(),
+  now?: Date,
 ): ContributionsMonthFormState | null {
   if (intent === "prev" && !prevState.canGoPrev) return null;
   if (intent === "next" && !prevState.canGoNext) return null;
@@ -214,7 +215,7 @@ export function buildContributionsMonthFormState(
   year: number,
   month: number,
   timeZone: string = CONTRIBUTIONS_TZ,
-  now: Date = new Date(),
+  now?: Date,
 ): ContributionsMonthFormState {
   const snapshot = buildContributionsMonthSnapshot(
     journeyStartAtIso,

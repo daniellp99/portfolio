@@ -2,7 +2,7 @@
 import { ImageResponse } from "next/og";
 
 import { getOwnerData } from "@/features/owner/owner-queries";
-import { renderAboutMe } from "@/lib/content/render-about-me";
+import { renderAboutMeCached } from "@/lib/content/render-about-me";
 import { brandTitle } from "@/lib/site/metadata/brand";
 
 import { ogImageSize, ogPalette, truncateForOg } from "./image-config";
@@ -14,14 +14,11 @@ export async function buildHomeOgImageResponse() {
   const brand = brandTitle(ownerData.name);
   const subtitle = ownerData.aboutMe
     ? truncateForOg(
-        renderAboutMe(
-          {
-            aboutMe: ownerData.aboutMe,
-            name: ownerData.name,
-            journeyStartAt: ownerData.journeyStartAt,
-          },
-          new Date(),
-        ),
+        await renderAboutMeCached({
+          aboutMe: ownerData.aboutMe,
+          name: ownerData.name,
+          journeyStartAt: ownerData.journeyStartAt,
+        }),
         220,
       )
     : "Full-stack web development";

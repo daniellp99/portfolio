@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { connection } from "next/server";
 import { Suspense } from "react";
 
 import { Card } from "@/components/ui/card";
@@ -31,6 +32,8 @@ import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
 import { gridInitialWidthFromHeaders } from "@/lib/site/viewport-from-headers";
 
 async function ContributionsCardLoader() {
+  // Request-time: default month uses wall-clock "now" when the cookie is absent.
+  await connection();
   const cookieStore = await cookies();
   const ownerData = getOwnerData();
   const login = ownerData.githubUser.trim();
