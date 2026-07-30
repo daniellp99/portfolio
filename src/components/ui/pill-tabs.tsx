@@ -2,17 +2,20 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import { cva, type VariantProps } from "class-variance-authority";
-import { LayoutGroup, motion, useReducedMotion } from "motion/react";
-import { createContext, use } from "react";
+import {
+  createContext,
+  use,
+  useLayoutEffect,
+  useRef,
+  type CSSProperties,
+} from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UI_SPRING } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 type PillTabsSize = "default" | "compact";
 
 type PillTabsContextValue = {
-  layoutGroupId: string;
   activeValue: string | undefined;
 };
 
@@ -27,8 +30,9 @@ function usePillTabsContext() {
   return context;
 }
 
+/** Matches production / pre-refactor pill chrome (h-11, px-px py-0, gap-1). */
 const pillTabsListVariants = cva(
-  "rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
+  "relative rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
   {
     variants: {
       size: {
@@ -58,19 +62,16 @@ const pillTabsItemVariants = cva(
   },
 );
 
-type PillTabsRootProps = TabsPrimitive.Root.Props & {
-  layoutGroupId: string;
-};
+type PillTabsRootProps = TabsPrimitive.Root.Props;
 
 function PillTabsRoot({
-  layoutGroupId,
   value,
   children,
   className,
   ...props
 }: PillTabsRootProps) {
   return (
-    <PillTabsContext value={{ layoutGroupId, activeValue: value }}>
+    <PillTabsContext value={{ activeValue: value }}>
       <Tabs
         value={value}
         className={cn("flex flex-col items-center", className)}
@@ -85,21 +86,78 @@ function PillTabsRoot({
 type PillTabsListProps = TabsPrimitive.List.Props &
   VariantProps<typeof pillTabsListVariants>;
 
+function syncIndicator(
+  list: HTMLElement,
+  indicator: HTMLElement,
+  activeValue: string | undefined,
+) {
+  if (activeValue === undefined) {
+    indicator.hidden = true;
+    return;
+  }
+  const active = list.querySelector<HTMLElement>(
+    `[data-value="${CSS.escape(String(activeValue))}"]`,
+  );
+  if (!active) {
+    indicator.hidden = true;
+    return;
+  }
+
+  // Match former motion `inset-0` on the trigger: padding box, not border box.
+  indicator.hidden = false;
+  indicator.style.transform = `translate(${active.offsetLeft + active.clientLeft}px, ${active.offsetTop + active.clientTop}px)`;
+  indicator.style.width = `${active.clientWidth}px`;
+  indicator.style.height = `${active.clientHeight}px`;
+}
+
 function PillTabsList({
   size = "default",
   className,
   children,
   ...props
 }: PillTabsListProps) {
-  const { layoutGroupId } = usePillTabsContext();
+  const { activeValue } = usePillTabsContext();
+  const listRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    const indicator = indicatorRef.current;
+    if (!list || !indicator) return;
+
+    const update = () => syncIndicator(list, indicator, activeValue);
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(list);
+    const valueNodes = list.querySelectorAll("[data-value]");
+    for (let i = 0; i < valueNodes.length; i++) {
+      observer.observe(valueNodes[i]!);
+    }
+    return () => observer.disconnect();
+  }, [activeValue, children, size]);
+
+  const indicatorStyle: CSSProperties = {
+    transitionProperty: "transform, width, height",
+    transitionDuration: "var(--duration-spring)",
+    transitionTimingFunction: "var(--ease-spring)",
+  };
 
   return (
     <PillTabsSizeContext value={size ?? "default"}>
       <TabsList
+        ref={listRef}
         className={cn(pillTabsListVariants({ size }), className)}
         {...props}
       >
-        <LayoutGroup id={layoutGroupId}>{children}</LayoutGroup>
+        <span
+          ref={indicatorRef}
+          aria-hidden="true"
+          hidden
+          className="pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground motion-reduce:transition-none!"
+          style={indicatorStyle}
+        />
+        {children}
       </TabsList>
     </PillTabsSizeContext>
   );
@@ -113,26 +171,15 @@ function PillTabsItem({
   children,
   ...props
 }: PillTabsItemProps) {
-  const { layoutGroupId, activeValue } = usePillTabsContext();
   const size = use(PillTabsSizeContext);
-  const reduceMotion = useReducedMotion() ?? false;
-  const indicatorTransition = reduceMotion ? { duration: 0 } : UI_SPRING;
-  const isActive = value === activeValue;
 
   return (
     <TabsTrigger
       value={value}
+      data-value={value}
       className={cn(pillTabsItemVariants({ size }), className)}
       {...props}
     >
-      {isActive ? (
-        <motion.span
-          layoutId={`${layoutGroupId}-indicator`}
-          className="pointer-events-none absolute inset-0 z-0 rounded-4xl bg-foreground"
-          transition={indicatorTransition}
-          aria-hidden="true"
-        />
-      ) : null}
       <span className="relative z-10">{children}</span>
     </TabsTrigger>
   );

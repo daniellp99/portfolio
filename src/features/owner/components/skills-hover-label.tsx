@@ -1,27 +1,33 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useState, type TransitionEvent } from "react";
 
 import { useSkillHoverTitle } from "@/components/SkillHoverContext";
+import { cn } from "@/lib/utils";
 
 export function SkillsHoverLabel() {
   const hoveredTitle = useSkillHoverTitle();
-  const reduceMotion = useReducedMotion() ?? false;
+  const [displayTitle, setDisplayTitle] = useState<string | null>(null);
 
-  const transition = reduceMotion
-    ? { duration: 0 }
-    : {
-        opacity: {
-          type: "tween" as const,
-          ease: "easeOut" as const,
-          duration: 0.2,
-        },
-        y: {
-          type: "tween" as const,
-          ease: "easeOut" as const,
-          duration: 0.16,
-        },
-      };
+  if (hoveredTitle !== null && hoveredTitle !== displayTitle) {
+    setDisplayTitle(hoveredTitle);
+  }
+
+  const show = hoveredTitle !== null;
+
+  // `transition-none` under reduced motion never fires `transitionend`.
+  useEffect(() => {
+    if (show || displayTitle === null) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!reduced.matches) return;
+    setDisplayTitle(null);
+  }, [show, displayTitle]);
+
+  function handleTransitionEnd(event: TransitionEvent<HTMLSpanElement>) {
+    if (event.propertyName !== "opacity") return;
+    if (event.target !== event.currentTarget) return;
+    if (!show) setDisplayTitle(null);
+  }
 
   return (
     <div
@@ -30,21 +36,20 @@ export function SkillsHoverLabel() {
       aria-live="polite"
       aria-atomic="true"
     >
-      <AnimatePresence mode="wait">
-        {hoveredTitle ? (
-          <motion.span
-            key={hoveredTitle}
-            style={{ transformOrigin: "top center" }}
-            initial={{ opacity: 0, y: -3 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -3 }}
-            transition={transition}
-            className="inline-flex h-10 max-w-[90%] items-center justify-center truncate rounded-full border-2 border-border bg-foreground px-3 text-center text-sm font-bold text-background ring-border"
-          >
-            {hoveredTitle}
-          </motion.span>
-        ) : null}
-      </AnimatePresence>
+      {displayTitle !== null ? (
+        <span
+          style={{ transformOrigin: "top center" }}
+          className={cn(
+            "inline-flex h-10 max-w-[90%] items-center justify-center truncate rounded-full border-2 border-border bg-foreground px-3 text-center text-sm font-bold text-background ring-border transition-[opacity,translate] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none",
+            show
+              ? "translate-y-0 opacity-100 starting:translate-y-[-0.25rem] starting:opacity-0"
+              : "-translate-y-1 opacity-0",
+          )}
+          onTransitionEnd={handleTransitionEnd}
+        >
+          {displayTitle}
+        </span>
+      ) : null}
     </div>
   );
 }

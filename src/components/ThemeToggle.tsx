@@ -37,7 +37,6 @@ export default function ThemeToggle() {
   return (
     <div className="flex size-full items-center justify-center">
       <PillTabs.Root
-        layoutGroupId="theme-switch"
         value={theme ?? "system"}
         onValueChange={(value) => {
           if (!isThemeOption(value)) {

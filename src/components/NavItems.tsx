@@ -105,7 +105,6 @@ export default function NavItemsClient({
       data-pending={isPending || undefined}
     >
       <PillTabs.Root
-        layoutGroupId="nav-tabs"
         value={optimisticState.activeTab}
         onValueChange={handleValueChange}
       >

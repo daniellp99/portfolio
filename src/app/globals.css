@@ -36,6 +36,29 @@
   --input: oklch(91.973% 0.00413 285.946);
   --ring: oklch(21.033% 0.00588 285.832);
 
+  /*
+   * Approximates the former motion spring (stiffness 420, damping 32, mass 0.85):
+   * slightly underdamped settle with a soft overshoot.
+   */
+  --ease-spring: linear(
+    0,
+    0.009,
+    0.037 2.2%,
+    0.141,
+    0.252 7.5%,
+    0.514,
+    0.651 15.1%,
+    0.834,
+    0.91 23.4%,
+    0.978,
+    0.999 35.1%,
+    1.01 41.8%,
+    1.007 48.2%,
+    0.999,
+    1
+  );
+  --duration-spring: 480ms;
+
   /* sugar high colors */
   --sh-class: #2d5e9d;
   --sh-identifier: #354150;
