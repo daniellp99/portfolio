@@ -5,6 +5,7 @@ import {
   useActionState,
   useOptimistic,
   useRef,
+  useState,
   type SubmitEvent,
 } from "react";
 
@@ -52,6 +53,7 @@ export default function NavItemsClient({
     state,
     (_current, next: MainGridTabFormState) => next,
   );
+  const [error, setError] = useState<string | null>(null);
   const skipSubmitForTab = useRef<TabsType | null>(null);
 
   function commitTab(tab: TabsType) {
@@ -64,6 +66,7 @@ export default function NavItemsClient({
     const next: MainGridTabFormState = { activeTab: tab };
 
     capture("grid_tab_switched", { tab });
+    setError(null);
 
     startTransition(() => {
       setOptimisticState(next);
@@ -74,7 +77,11 @@ export default function NavItemsClient({
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const tab = tabFromSubmit(event);
-    if (!tab || tab === optimisticState.activeTab) {
+    if (!tab) {
+      setError("Choose a valid view tab.");
+      return;
+    }
+    if (tab === optimisticState.activeTab) {
       return;
     }
 
@@ -88,7 +95,11 @@ export default function NavItemsClient({
 
   function handleValueChange(value: string) {
     const parsed = tabsTypeSchema.safeParse(value);
-    if (!parsed.success || parsed.data === optimisticState.activeTab) {
+    if (!parsed.success) {
+      setError("Choose a valid view tab.");
+      return;
+    }
+    if (parsed.data === optimisticState.activeTab) {
       return;
     }
 
@@ -133,6 +144,11 @@ export default function NavItemsClient({
           ))}
         </PillTabs.List>
       </PillTabs.Root>
+      {error ? (
+        <p role="alert" className="sr-only">
+          {error}
+        </p>
+      ) : null}
     </form>
   );
 }

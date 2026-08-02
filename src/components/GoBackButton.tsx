@@ -12,17 +12,17 @@ export default function GoBackButton() {
       size="icon-lg"
       type="button"
       className="cancelDrag"
-      aria-label="Go back to home"
       render={
         <Link
           href="/"
           transitionTypes={["nav-back"]}
+          aria-label="Go back to home"
           onClick={() => capture("back_to_home_clicked")}
         />
       }
       nativeButton={false}
     >
-      <XIcon className="size-6" />
+      <XIcon className="size-6" aria-hidden />
     </Button>
   );
 }
