@@ -22,7 +22,3 @@ export type ContributionsYearMonth = z.infer<
 >;
 
 export const contributionsMonthIntentSchema = z.enum(["prev", "next"]);
-
-export type ContributionsMonthIntent = z.infer<
-  typeof contributionsMonthIntentSchema
->;
