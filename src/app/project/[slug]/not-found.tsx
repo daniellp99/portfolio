@@ -46,6 +46,7 @@ export default function NotFound() {
             nativeButton={false}
           >
             <ChevronLeftIcon className="size-6" aria-hidden />
+            <span className="sr-only">Go back to home</span>
           </Button>
         </CardFooter>
       </Card>

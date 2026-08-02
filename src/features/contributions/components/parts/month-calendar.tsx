@@ -7,6 +7,7 @@ import {
   startTransition,
   useActionState,
   useOptimistic,
+  useState,
   type SubmitEvent,
 } from "react";
 
@@ -20,6 +21,7 @@ import {
   stepContributionsMonthFormState,
   type ContributionsMonthFormState,
 } from "@/features/contributions/lib/contributions-month";
+import { contributionsMonthIntentSchema } from "@/lib/schemas/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 function formDataFromSubmit(event: SubmitEvent<HTMLFormElement>): FormData {
@@ -45,26 +47,37 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
+  const [error, setError] = useState<string | null>(null);
   const { setOptimisticMonth } = useContributionsBoundary();
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = formDataFromSubmit(event);
-    const intent = formData.get("intent");
-    if (intent !== "prev" && intent !== "next") return;
+    const parsed = contributionsMonthIntentSchema.safeParse(
+      formData.get("intent"),
+    );
+    if (!parsed.success) {
+      setError("Choose a valid month direction.");
+      return;
+    }
 
+    const intent = parsed.data;
     const next = stepContributionsMonthFormState(
       optimisticState,
       intent,
       journeyStartAt,
     );
-    if (!next) return;
+    if (!next) {
+      setError("That month is outside the available range.");
+      return;
+    }
 
     capture("contributions_month_changed", {
       year: next.year,
       month: next.month,
       direction: intent,
     });
+    setError(null);
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
@@ -134,6 +147,11 @@ export function ContributionsMonthCalendar({
       >
         <ChevronRightIcon className="size-5" aria-hidden="true" />
       </Button>
+      {error ? (
+        <p role="alert" className="sr-only">
+          {error}
+        </p>
+      ) : null}
     </form>
   );
 }

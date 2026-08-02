@@ -51,7 +51,7 @@ export default function ProjectCardChrome({
               {project.name}
             </p>
           </ViewTransition>
-          <ArrowUpRightIcon className="absolute right-2 size-5" />
+          <ArrowUpRightIcon data-icon="inline-end" className="absolute right-2 size-5" />
         </Button>
       </div>
     </CardGrayscale>

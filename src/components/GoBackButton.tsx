@@ -23,6 +23,7 @@ export default function GoBackButton() {
       nativeButton={false}
     >
       <XIcon className="size-6" aria-hidden />
+      <span className="sr-only">Go back to home</span>
     </Button>
   );
 }

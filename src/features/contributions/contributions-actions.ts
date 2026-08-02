@@ -12,6 +12,7 @@ import {
   stepContributionsMonthFormState,
   type ContributionsMonthFormState,
 } from "@/features/contributions/lib/contributions-month";
+import { contributionsMonthIntentSchema } from "@/lib/schemas/contributions-month";
 import {
   CONTRIBUTIONS_MONTH_COOKIE_KEY,
   CONTRIBUTIONS_TZ,
@@ -69,15 +70,15 @@ export async function changeContributionsMonthFormAction(
   prevState: ContributionsMonthFormState,
   formData: FormData,
 ): Promise<ContributionsMonthFormState> {
-  const intent = formData.get("intent");
-  if (intent !== "prev" && intent !== "next") {
+  const parsed = contributionsMonthIntentSchema.safeParse(formData.get("intent"));
+  if (!parsed.success) {
     return prevState;
   }
 
   const owner = getOwnerData();
   const nextState = stepContributionsMonthFormState(
     prevState,
-    intent,
+    parsed.data,
     owner.journeyStartAt,
   );
   if (!nextState) {
