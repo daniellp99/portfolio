@@ -30,6 +30,7 @@ export default function ProjectCardChrome({
               href={`/project/${project.slug}`}
               prefetch={true}
               transitionTypes={["nav-forward"]}
+              aria-label={project.name}
               onClick={() =>
                 capture("project_card_clicked", {
                   project_slug: project.slug,
@@ -51,7 +52,7 @@ export default function ProjectCardChrome({
               {project.name}
             </p>
           </ViewTransition>
-          <ArrowUpRightIcon className="absolute right-2 size-5" />
+          <ArrowUpRightIcon data-icon="inline-end" className="absolute right-2 size-5" />
         </Button>
       </div>
     </CardGrayscale>

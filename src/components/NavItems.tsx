@@ -8,6 +8,7 @@ import {
   type SubmitEvent,
 } from "react";
 
+import { FieldError } from "@/components/ui/field";
 import { PillTabs } from "@/components/ui/pill-tabs";
 
 import {
@@ -61,7 +62,7 @@ export default function NavItemsClient({
 
     const formData = new FormData();
     formData.set("tab", tab);
-    const next: MainGridTabFormState = { activeTab: tab };
+    const next: MainGridTabFormState = { status: "ok", activeTab: tab };
 
     capture("grid_tab_switched", { tab });
 
@@ -74,7 +75,13 @@ export default function NavItemsClient({
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const tab = tabFromSubmit(event);
-    if (!tab || tab === optimisticState.activeTab) {
+    if (!tab) {
+      startTransition(() => {
+        formAction(formDataFromSubmit(event));
+      });
+      return;
+    }
+    if (tab === optimisticState.activeTab) {
       return;
     }
 
@@ -88,13 +95,24 @@ export default function NavItemsClient({
 
   function handleValueChange(value: string) {
     const parsed = tabsTypeSchema.safeParse(value);
-    if (!parsed.success || parsed.data === optimisticState.activeTab) {
+    if (!parsed.success) {
+      const formData = new FormData();
+      formData.set("tab", value);
+      startTransition(() => {
+        formAction(formData);
+      });
+      return;
+    }
+    if (parsed.data === optimisticState.activeTab) {
       return;
     }
 
     skipSubmitForTab.current = parsed.data;
     commitTab(parsed.data);
   }
+
+  const error =
+    optimisticState.status === "error" ? optimisticState.error : null;
 
   return (
     <form
@@ -133,6 +151,7 @@ export default function NavItemsClient({
           ))}
         </PillTabs.List>
       </PillTabs.Root>
+      <FieldError className="sr-only">{error}</FieldError>
     </form>
   );
 }

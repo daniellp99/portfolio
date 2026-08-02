@@ -12,6 +12,7 @@ import {
 
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { Button } from "@/components/ui/button";
+import { FieldError } from "@/components/ui/field";
 import { capture } from "@/lib/analytics";
 
 import { changeContributionsMonthFormAction } from "@/features/contributions/contributions-actions";
@@ -20,6 +21,7 @@ import {
   stepContributionsMonthFormState,
   type ContributionsMonthFormState,
 } from "@/features/contributions/lib/contributions-month";
+import { contributionsMonthIntentSchema } from "@/lib/schemas/contributions-month";
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
 function formDataFromSubmit(event: SubmitEvent<HTMLFormElement>): FormData {
@@ -50,15 +52,28 @@ export function ContributionsMonthCalendar({
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = formDataFromSubmit(event);
-    const intent = formData.get("intent");
-    if (intent !== "prev" && intent !== "next") return;
+    const parsed = contributionsMonthIntentSchema.safeParse(
+      formData.get("intent"),
+    );
+    if (!parsed.success) {
+      startTransition(() => {
+        formAction(formData);
+      });
+      return;
+    }
 
+    const intent = parsed.data;
     const next = stepContributionsMonthFormState(
       optimisticState,
       intent,
       journeyStartAt,
     );
-    if (!next) return;
+    if (!next) {
+      startTransition(() => {
+        formAction(formData);
+      });
+      return;
+    }
 
     capture("contributions_month_changed", {
       year: next.year,
@@ -75,6 +90,8 @@ export function ContributionsMonthCalendar({
   }
 
   const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
+  const error =
+    optimisticState.status === "error" ? optimisticState.error : null;
 
   const monthStart = getMonthStartInZone(year, month, CONTRIBUTIONS_TZ);
   const monthShort = formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM");
@@ -134,6 +151,7 @@ export function ContributionsMonthCalendar({
       >
         <ChevronRightIcon className="size-5" aria-hidden="true" />
       </Button>
+      <FieldError className="sr-only">{error}</FieldError>
     </form>
   );
 }

@@ -174,13 +174,32 @@ export function contributionsMonthCacheKey(
   return `${year}-${month}-${timeZone}`;
 }
 
-export type ContributionsMonthFormState = {
+type ContributionsMonthFormFields = {
   year: number;
   month: number;
   caption: string;
   canGoPrev: boolean;
   canGoNext: boolean;
 };
+
+export type ContributionsMonthFormState =
+  | (ContributionsMonthFormFields & { status: "ok" })
+  | (ContributionsMonthFormFields & { status: "error"; error: string });
+
+export function contributionsMonthFormError(
+  prevState: ContributionsMonthFormState,
+  error: string,
+): ContributionsMonthFormState {
+  return {
+    status: "error",
+    year: prevState.year,
+    month: prevState.month,
+    caption: prevState.caption,
+    canGoPrev: prevState.canGoPrev,
+    canGoNext: prevState.canGoNext,
+    error,
+  };
+}
 
 export function stepContributionsMonthFormState(
   prevState: ContributionsMonthFormState,
@@ -230,6 +249,7 @@ export function buildContributionsMonthFormState(
   const end = startOfMonth(calendarEndMonth);
 
   return {
+    status: "ok",
     year,
     month,
     caption: formatInTimeZone(current, timeZone, "MMM yyyy"),

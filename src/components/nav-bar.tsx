@@ -22,7 +22,9 @@ export function NavBar({
       <Button
         variant="link"
         className="hidden text-xl/6 sm:block"
-        render={<Link href={`mailto:${contactEmail}`} />}
+        render={
+          <Link href={`mailto:${contactEmail}`} aria-label="Contact" />
+        }
         nativeButton={false}
       >
         Contact

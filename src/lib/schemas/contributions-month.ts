@@ -20,3 +20,5 @@ export const contributionsMonthCookieSchema =
 export type ContributionsYearMonth = z.infer<
   typeof contributionsMonthCookieSchema
 >;
+
+export const contributionsMonthIntentSchema = z.enum(["prev", "next"]);

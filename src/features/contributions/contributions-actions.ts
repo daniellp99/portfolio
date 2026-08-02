@@ -7,11 +7,13 @@ import { getOwnerData } from "@/features/owner/owner-queries";
 import {
   buildContributionsMonthSnapshot,
   contributionsMonthCacheTag,
+  contributionsMonthFormError,
   formatContributionsMonthCookie,
   isCurrentContributionsMonth,
   stepContributionsMonthFormState,
   type ContributionsMonthFormState,
 } from "@/features/contributions/lib/contributions-month";
+import { contributionsMonthIntentSchema } from "@/lib/schemas/contributions-month";
 import {
   CONTRIBUTIONS_MONTH_COOKIE_KEY,
   CONTRIBUTIONS_TZ,
@@ -69,19 +71,25 @@ export async function changeContributionsMonthFormAction(
   prevState: ContributionsMonthFormState,
   formData: FormData,
 ): Promise<ContributionsMonthFormState> {
-  const intent = formData.get("intent");
-  if (intent !== "prev" && intent !== "next") {
-    return prevState;
+  const parsed = contributionsMonthIntentSchema.safeParse(formData.get("intent"));
+  if (!parsed.success) {
+    return contributionsMonthFormError(
+      prevState,
+      "Choose a valid month direction.",
+    );
   }
 
   const owner = getOwnerData();
   const nextState = stepContributionsMonthFormState(
     prevState,
-    intent,
+    parsed.data,
     owner.journeyStartAt,
   );
   if (!nextState) {
-    return prevState;
+    return contributionsMonthFormError(
+      prevState,
+      "That month is outside the available range.",
+    );
   }
 
   await changeContributionsMonth({

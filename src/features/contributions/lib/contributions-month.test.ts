@@ -216,6 +216,7 @@ describe("buildContributionsMonthFormState", () => {
       now,
     );
     expect(state).toEqual({
+      status: "ok",
       year: 2024,
       month: 3,
       caption: "Mar 2024",
@@ -232,6 +233,7 @@ describe("buildContributionsMonthFormState", () => {
       CONTRIBUTIONS_TZ,
       now,
     );
+    expect(state.status).toBe("ok");
     expect(state.canGoPrev).toBe(false);
     expect(state.canGoNext).toBe(true);
   });
@@ -244,6 +246,7 @@ describe("buildContributionsMonthFormState", () => {
       CONTRIBUTIONS_TZ,
       now,
     );
+    expect(state.status).toBe("ok");
     expect(state.canGoPrev).toBe(true);
     expect(state.canGoNext).toBe(false);
   });
@@ -263,6 +266,7 @@ describe("buildContributionsMonthFormState", () => {
       now,
     );
     expect(next).toEqual({
+      status: "ok",
       year: 2024,
       month: 4,
       caption: "Apr 2024",

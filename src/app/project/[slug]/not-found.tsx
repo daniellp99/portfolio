@@ -36,11 +36,17 @@ export default function NotFound() {
           <Button
             variant="projectLink"
             size="icon-lg"
-            aria-label="Go back to home"
-            render={<Link href="/" transitionTypes={["nav-back"]} />}
+            render={
+              <Link
+                href="/"
+                transitionTypes={["nav-back"]}
+                aria-label="Go back to home"
+              />
+            }
             nativeButton={false}
           >
-            <ChevronLeftIcon className="size-6" />
+            <ChevronLeftIcon className="size-6" aria-hidden />
+            <span className="sr-only">Go back to home</span>
           </Button>
         </CardFooter>
       </Card>
