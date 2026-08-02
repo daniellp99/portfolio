@@ -12,7 +12,7 @@ import {
 
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { Button } from "@/components/ui/button";
-import { Field, FieldError } from "@/components/ui/field";
+import { FieldError } from "@/components/ui/field";
 import { capture } from "@/lib/analytics";
 
 import { changeContributionsMonthFormAction } from "@/features/contributions/contributions-actions";
@@ -107,53 +107,51 @@ export function ContributionsMonthCalendar({
       data-pending={isPending || undefined}
       className="cancelDrag group/calendar flex h-10 items-center rounded-full bg-input px-1"
     >
-      <Field data-invalid={error ? true : undefined} className="contents">
-        <Button
-          type="submit"
-          name="intent"
-          value="prev"
-          variant="ghost"
-          size="icon"
-          disabled={!canGoPrev}
-          aria-label="Go to the previous month"
-          className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+      <Button
+        type="submit"
+        name="intent"
+        value="prev"
+        variant="ghost"
+        size="icon"
+        disabled={!canGoPrev}
+        aria-label="Go to the previous month"
+        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+      >
+        <ChevronLeftIcon className="size-5" aria-hidden="true" />
+      </Button>
+      <div role="status" aria-live="polite" aria-atomic="true">
+        <span className="sr-only">{caption}</span>
+        <time
+          dateTime={monthIso}
+          aria-hidden="true"
+          className="hidden text-sm leading-4 font-medium whitespace-nowrap select-none xl:inline"
         >
-          <ChevronLeftIcon className="size-5" aria-hidden="true" />
-        </Button>
-        <div role="status" aria-live="polite" aria-atomic="true">
-          <span className="sr-only">{caption}</span>
-          <time
-            dateTime={monthIso}
-            aria-hidden="true"
-            className="hidden text-sm leading-4 font-medium whitespace-nowrap select-none xl:inline"
-          >
-            {caption}
-          </time>
-          <time
-            dateTime={monthIso}
-            aria-hidden="true"
-            className="flex flex-col items-center justify-center leading-none select-none xl:hidden"
-          >
-            <span className="text-sm font-medium">{monthShort}</span>
-            <span className="text-[10px] font-medium tabular-nums">
-              {yearLabel}
-            </span>
-          </time>
-        </div>
-        <Button
-          type="submit"
-          name="intent"
-          value="next"
-          variant="ghost"
-          size="icon"
-          disabled={!canGoNext}
-          aria-label="Go to the next month"
-          className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+          {caption}
+        </time>
+        <time
+          dateTime={monthIso}
+          aria-hidden="true"
+          className="flex flex-col items-center justify-center leading-none select-none xl:hidden"
         >
-          <ChevronRightIcon className="size-5" aria-hidden="true" />
-        </Button>
-        <FieldError className="sr-only">{error}</FieldError>
-      </Field>
+          <span className="text-sm font-medium">{monthShort}</span>
+          <span className="text-[10px] font-medium tabular-nums">
+            {yearLabel}
+          </span>
+        </time>
+      </div>
+      <Button
+        type="submit"
+        name="intent"
+        value="next"
+        variant="ghost"
+        size="icon"
+        disabled={!canGoNext}
+        aria-label="Go to the next month"
+        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+      >
+        <ChevronRightIcon className="size-5" aria-hidden="true" />
+      </Button>
+      <FieldError className="sr-only">{error}</FieldError>
     </form>
   );
 }

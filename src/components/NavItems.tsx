@@ -8,7 +8,7 @@ import {
   type SubmitEvent,
 } from "react";
 
-import { Field, FieldError } from "@/components/ui/field";
+import { FieldError } from "@/components/ui/field";
 import { PillTabs } from "@/components/ui/pill-tabs";
 
 import {
@@ -122,38 +122,36 @@ export default function NavItemsClient({
       aria-busy={isPending || undefined}
       data-pending={isPending || undefined}
     >
-      <Field data-invalid={error ? true : undefined} className="contents">
-        <PillTabs.Root
-          value={optimisticState.activeTab}
-          onValueChange={handleValueChange}
+      <PillTabs.Root
+        value={optimisticState.activeTab}
+        onValueChange={handleValueChange}
+      >
+        <PillTabs.List
+          size="default"
+          aria-label="Main grid views"
+          activateOnFocus
         >
-          <PillTabs.List
-            size="default"
-            aria-label="Main grid views"
-            activateOnFocus
-          >
-            {tabs.map((tabId) => (
-              <PillTabs.Item
-                key={tabId}
-                id={mainGridTabId(tabId)}
-                value={tabId}
-                aria-controls={MAIN_GRID_TABPANEL_ID}
-                render={
-                  <button
-                    type="submit"
-                    name="tab"
-                    value={tabId}
-                    aria-labelledby={mainGridTabLabelId(tabId)}
-                  />
-                }
-              >
-                <span id={mainGridTabLabelId(tabId)}>{tabId}</span>
-              </PillTabs.Item>
-            ))}
-          </PillTabs.List>
-        </PillTabs.Root>
-        <FieldError className="sr-only">{error}</FieldError>
-      </Field>
+          {tabs.map((tabId) => (
+            <PillTabs.Item
+              key={tabId}
+              id={mainGridTabId(tabId)}
+              value={tabId}
+              aria-controls={MAIN_GRID_TABPANEL_ID}
+              render={
+                <button
+                  type="submit"
+                  name="tab"
+                  value={tabId}
+                  aria-labelledby={mainGridTabLabelId(tabId)}
+                />
+              }
+            >
+              <span id={mainGridTabLabelId(tabId)}>{tabId}</span>
+            </PillTabs.Item>
+          ))}
+        </PillTabs.List>
+      </PillTabs.Root>
+      <FieldError className="sr-only">{error}</FieldError>
     </form>
   );
 }
