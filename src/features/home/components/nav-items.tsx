@@ -7,6 +7,7 @@ import { getActiveTab } from "@/lib/site/tabs";
 export async function NavItems() {
   const cookieStore = await cookies();
   const initialState: MainGridTabFormState = {
+    status: "ok",
     activeTab: getActiveTab(cookieStore),
   };
 

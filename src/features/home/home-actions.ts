@@ -75,9 +75,9 @@ async function switchMainGridTab(
   });
 }
 
-export type MainGridTabFormState = {
-  activeTab: TabsType;
-};
+export type MainGridTabFormState =
+  | { status: "ok"; activeTab: TabsType }
+  | { status: "error"; activeTab: TabsType; error: string };
 
 export async function switchMainGridTabFormAction(
   prevState: MainGridTabFormState,
@@ -85,16 +85,20 @@ export async function switchMainGridTabFormAction(
 ): Promise<MainGridTabFormState> {
   const parsed = tabsTypeSchema.safeParse(formData.get("tab"));
   if (!parsed.success) {
-    return prevState;
+    return {
+      status: "error",
+      activeTab: prevState.activeTab,
+      error: "Choose a valid view tab.",
+    };
   }
 
   const tab = parsed.data;
   if (tab === prevState.activeTab) {
-    return prevState;
+    return { status: "ok", activeTab: tab };
   }
 
   const projectSlugs = await getProjectSlugs();
   await switchMainGridTab(tab, projectSlugs);
 
-  return { activeTab: tab };
+  return { status: "ok", activeTab: tab };
 }

@@ -7,7 +7,6 @@ import {
   startTransition,
   useActionState,
   useOptimistic,
-  useState,
   type SubmitEvent,
 } from "react";
 
@@ -47,7 +46,6 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
-  const [error, setError] = useState<string | null>(null);
   const { setOptimisticMonth } = useContributionsBoundary();
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
@@ -57,7 +55,9 @@ export function ContributionsMonthCalendar({
       formData.get("intent"),
     );
     if (!parsed.success) {
-      setError("Choose a valid month direction.");
+      startTransition(() => {
+        formAction(formData);
+      });
       return;
     }
 
@@ -68,7 +68,9 @@ export function ContributionsMonthCalendar({
       journeyStartAt,
     );
     if (!next) {
-      setError("That month is outside the available range.");
+      startTransition(() => {
+        formAction(formData);
+      });
       return;
     }
 
@@ -77,7 +79,6 @@ export function ContributionsMonthCalendar({
       month: next.month,
       direction: intent,
     });
-    setError(null);
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
@@ -88,6 +89,7 @@ export function ContributionsMonthCalendar({
   }
 
   const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
+  const error = optimisticState.status === "error" ? optimisticState.error : null;
 
   const monthStart = getMonthStartInZone(year, month, CONTRIBUTIONS_TZ);
   const monthShort = formatInTimeZone(monthStart, CONTRIBUTIONS_TZ, "MMM");

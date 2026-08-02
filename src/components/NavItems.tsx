@@ -5,7 +5,6 @@ import {
   useActionState,
   useOptimistic,
   useRef,
-  useState,
   type SubmitEvent,
 } from "react";
 
@@ -53,7 +52,6 @@ export default function NavItemsClient({
     state,
     (_current, next: MainGridTabFormState) => next,
   );
-  const [error, setError] = useState<string | null>(null);
   const skipSubmitForTab = useRef<TabsType | null>(null);
 
   function commitTab(tab: TabsType) {
@@ -63,10 +61,9 @@ export default function NavItemsClient({
 
     const formData = new FormData();
     formData.set("tab", tab);
-    const next: MainGridTabFormState = { activeTab: tab };
+    const next: MainGridTabFormState = { status: "ok", activeTab: tab };
 
     capture("grid_tab_switched", { tab });
-    setError(null);
 
     startTransition(() => {
       setOptimisticState(next);
@@ -78,7 +75,9 @@ export default function NavItemsClient({
     event.preventDefault();
     const tab = tabFromSubmit(event);
     if (!tab) {
-      setError("Choose a valid view tab.");
+      startTransition(() => {
+        formAction(formDataFromSubmit(event));
+      });
       return;
     }
     if (tab === optimisticState.activeTab) {
@@ -96,7 +95,11 @@ export default function NavItemsClient({
   function handleValueChange(value: string) {
     const parsed = tabsTypeSchema.safeParse(value);
     if (!parsed.success) {
-      setError("Choose a valid view tab.");
+      const formData = new FormData();
+      formData.set("tab", value);
+      startTransition(() => {
+        formAction(formData);
+      });
       return;
     }
     if (parsed.data === optimisticState.activeTab) {
@@ -106,6 +109,8 @@ export default function NavItemsClient({
     skipSubmitForTab.current = parsed.data;
     commitTab(parsed.data);
   }
+
+  const error = optimisticState.status === "error" ? optimisticState.error : null;
 
   return (
     <form
