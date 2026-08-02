@@ -30,6 +30,7 @@ export default function ProjectCardChrome({
               href={`/project/${project.slug}`}
               prefetch={true}
               transitionTypes={["nav-forward"]}
+              aria-label={project.name}
               onClick={() =>
                 capture("project_card_clicked", {
                   project_slug: project.slug,

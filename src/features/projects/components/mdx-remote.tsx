@@ -45,23 +45,28 @@ const components: MDXComponents = {
   h4: (props) => <Heading level="h4" {...props} />,
   h5: (props) => <Heading level="h5" {...props} />,
   h6: (props) => <Heading level="h6" {...props} />,
-  a: ({ ...props }) => {
-    const href = props.href;
-
+  a: ({ children, href, ...props }) => {
     if (href?.startsWith("/")) {
-      const url = new URL(href);
       return (
-        <Link href={url} {...props}>
-          {props.children}
+        <Link href={href} {...props}>
+          {children}
         </Link>
       );
     }
 
     if (href?.startsWith("#")) {
-      return <a {...props} />;
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
     }
 
-    return <a target="_blank" rel="noopener noreferrer" {...props} />;
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+        {children}
+      </a>
+    );
   },
   code: ({ children, ...props }) => {
     const codeHTML = highlight(children?.toString());
