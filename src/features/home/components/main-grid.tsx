@@ -8,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AvatarMarker } from "@/components/avatar-marker";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { Spinner } from "@/components/ui/spinner";
 import {
   ContributionsCard,
   ContributionsCardSkeleton,
@@ -28,7 +27,12 @@ import {
 import { getProjectSlugs } from "@/features/projects/projects-queries";
 import { AVATAR_MARKER_ROOT_ID } from "@/lib/site/avatar-marker";
 import { MAIN_LAYOUTS_KEY } from "@/lib/site/constants";
-import { mainGridAllowedLayoutIds } from "@/lib/site/grid";
+import {
+  applyResizePolicyToLayouts,
+  generateLayouts,
+  gridSectionInitialWidth,
+  mainGridAllowedLayoutIds,
+} from "@/lib/site/grid";
 import { gridInitialWidthFromHeaders } from "@/lib/site/viewport-from-headers";
 
 async function ContributionsCardLoader() {
@@ -117,6 +121,44 @@ export async function MainGrid() {
   );
 }
 
-export function MainGridSkeleton() {
-  return <Spinner className="mx-auto mt-[23.5%] size-11" />;
+/** Default desktop estimate — no request headers, so the shell stays prerenderable. */
+const SKELETON_VIEWPORT_WIDTH = 1350;
+
+export async function MainGridSkeleton() {
+  const projectSlugs = await getProjectSlugs();
+  const layouts = applyResizePolicyToLayouts(
+    generateLayouts("All", projectSlugs),
+    MAIN_LAYOUTS_KEY,
+  );
+  const allowedLayoutIds = mainGridAllowedLayoutIds(projectSlugs);
+
+  return (
+    <GridContainer
+      layouts={layouts}
+      layoutKey={MAIN_LAYOUTS_KEY}
+      ssrInitialWidth={gridSectionInitialWidth(SKELETON_VIEWPORT_WIDTH)}
+      allowedLayoutIds={allowedLayoutIds}
+    >
+      <Card variant="item" key="me">
+        <Skeleton className="size-full" />
+      </Card>
+      <Card variant="item" key="toggle-theme">
+        <Skeleton className="size-full" />
+      </Card>
+      <Card variant="item" key="skills">
+        <Skeleton className="size-full" />
+      </Card>
+      <Card variant="item" key="maps">
+        <MapCardSkeleton />
+      </Card>
+      <Card variant="item" key="contributions" className="flex flex-col">
+        <ContributionsCardSkeleton />
+      </Card>
+      {projectSlugs.map((projectSlug) => (
+        <Card variant="item" key={projectSlug}>
+          <ProjectCardSkeleton />
+        </Card>
+      ))}
+    </GridContainer>
+  );
 }

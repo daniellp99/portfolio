@@ -1,7 +1,7 @@
 "use client";
 
+import { catchError } from "next/error";
 import { Suspense, use } from "react";
-import { ErrorBoundary } from "react-error-boundary";
 
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 
@@ -17,6 +17,12 @@ function CountValue({
   return <span>{data.calendar.totalContributions}</span>;
 }
 
+const ContributionsCountErrorBoundary = catchError(
+  function CountErrorFallback() {
+    return <span>0</span>;
+  },
+);
+
 export function ContributionsCount({
   cacheKey,
   contributionsPromise,
@@ -27,16 +33,13 @@ export function ContributionsCount({
   const { attempt } = useContributionsBoundary();
 
   return (
-    <ErrorBoundary
-      resetKeys={[cacheKey, attempt, contributionsPromise]}
-      fallbackRender={() => <span>0</span>}
-    >
+    <ContributionsCountErrorBoundary key={`${cacheKey}-${attempt}`}>
       <Suspense fallback={<span>0</span>}>
         <CountValue
           key={cacheKey}
           contributionsPromise={contributionsPromise}
         />
       </Suspense>
-    </ErrorBoundary>
+    </ContributionsCountErrorBoundary>
   );
 }

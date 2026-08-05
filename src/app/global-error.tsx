@@ -33,10 +33,10 @@ function resolveDocumentTheme(): boolean {
 
 export default function GlobalError({
   error,
-  unstable_retry,
+  retry,
 }: {
   error: Error & { digest?: string };
-  unstable_retry: () => void;
+  retry: () => void;
 }) {
   const themeClassName =
     typeof window !== "undefined" && resolveDocumentTheme() ? "dark" : "";
@@ -69,7 +69,7 @@ export default function GlobalError({
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button type="button" onClick={() => unstable_retry()}>
+              <Button type="button" onClick={() => retry()}>
                 <RefreshCwIcon data-icon="inline-start" />
                 Try again
               </Button>
