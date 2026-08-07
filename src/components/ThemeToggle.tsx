@@ -29,7 +29,7 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Skeleton className="cancelDrag mx-auto h-11 w-full max-w-28 rounded-full" />
+        <Skeleton className="cancelDrag h-10 w-full max-w-[calc(--spacing(10)*3+4px)] rounded-full" />
       </div>
     );
   }
@@ -45,13 +45,9 @@ export default function ThemeToggle() {
           setTheme(value);
           capture("theme_selected", { theme: value });
         }}
-        className="cancelDrag mx-auto w-full max-w-28"
+        className="cancelDrag"
       >
-        <PillTabs.List
-          size="compact"
-          aria-label="Color theme"
-          className="w-full"
-        >
+        <PillTabs.List size="compact" aria-label="Color theme">
           <PillTabs.Item value="light" aria-label="Light theme">
             <SunIcon aria-hidden />
           </PillTabs.Item>

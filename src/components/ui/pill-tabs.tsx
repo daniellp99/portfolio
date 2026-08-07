@@ -39,7 +39,7 @@ const pillTabsListVariants = cva(
     variants: {
       size: {
         default: "h-11 w-fit gap-1",
-        compact: "h-9 w-full gap-px xl:h-11 xl:w-fit xl:gap-1",
+        compact: "h-10 w-fit gap-px",
       },
     },
     defaultVariants: {
@@ -57,7 +57,7 @@ const pillTabsItemVariants = cva(
       size: {
         default: "px-4 text-xl",
         compact:
-          "px-0 xl:px-3 xl:text-xl [&_svg:not([class*='size-'])]:size-4 xl:[&_svg:not([class*='size-'])]:size-5",
+          "aspect-square flex-none px-0 [&_svg:not([class*='size-'])]:size-4",
       },
     },
     defaultVariants: {
