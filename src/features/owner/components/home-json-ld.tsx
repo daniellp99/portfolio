@@ -1,4 +1,5 @@
 import { getOwnerData } from "@/features/owner/owner-queries";
+import { getProjectSummaries } from "@/features/projects/projects-queries";
 import { renderAboutMeCached } from "@/lib/content/render-about-me";
 import { serializeJsonLd } from "@/lib/json-ld";
 import {
@@ -9,6 +10,7 @@ import {
 
 export async function HomeJsonLd() {
   const ownerData = getOwnerData();
+  const projects = await getProjectSummaries();
   const ownerName = ownerData.name;
   const homeUrl = getCanonicalUrl("");
   const brandName = `${ownerName}'s Portfolio`;
@@ -22,6 +24,7 @@ export async function HomeJsonLd() {
 
   const personId = `${homeUrl}#person`;
   const websiteId = `${homeUrl}#website`;
+  const itemListId = `${homeUrl}#projects`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -42,6 +45,28 @@ export async function HomeJsonLd() {
         name: brandName,
         description,
         publisher: { "@id": personId },
+      },
+      {
+        "@type": "ItemList",
+        "@id": itemListId,
+        name: "Projects",
+        numberOfItems: projects.length,
+        itemListElement: projects.map((project, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: project.name,
+          url: getCanonicalUrl(`/project/${project.slug}`),
+          item: {
+            "@type": "CreativeWork",
+            name: project.name,
+            url: getCanonicalUrl(`/project/${project.slug}`),
+            image: getAbsoluteImageUrl(
+              project.coverImage.startsWith("/")
+                ? project.coverImage
+                : `/${project.coverImage}`,
+            ),
+          },
+        })),
       },
     ],
   };

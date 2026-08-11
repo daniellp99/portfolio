@@ -10,7 +10,12 @@ import {
 } from "./fragments";
 import { OWNER_AVATAR_PATH } from "@/content/owner-assets";
 
-import { getCanonicalUrl, getHomeOgImageUrl, getMetadataBase } from "./urls";
+import {
+  getCanonicalUrl,
+  getHomeOgImageUrl,
+  getMetadataBase,
+  getProjectOgImageUrl,
+} from "./urls";
 
 type OwnerForMetadata = {
   name?: string | null;
@@ -149,6 +154,7 @@ export function buildProjectPageMetadata(input: {
   const ownerName = owner?.name || "";
   const brand = brandTitle(ownerName);
   const projectUrl = getCanonicalUrl(`/project/${slug}`);
+  const projectOgImageUrl = getProjectOgImageUrl(slug);
 
   return {
     title: projectName,
@@ -167,10 +173,13 @@ export function buildProjectPageMetadata(input: {
       siteName: brand,
       title: projectName,
       description: projectDescription,
+      imageUrl: projectOgImageUrl,
+      imageAlt: projectName,
     }),
     twitter: twitterSummaryLargeImage({
       title: projectName,
       description: projectDescription,
+      imageUrl: projectOgImageUrl,
       ...(owner?.githubUser ? { creator: `@${owner.githubUser}` } : {}),
     }),
     alternates: {

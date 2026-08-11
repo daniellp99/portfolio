@@ -4,6 +4,7 @@ import {
   ogImageSize as size,
 } from "@/lib/og/image-config";
 
+export const alt = "Portfolio project";
 export { contentType, size };
 
 export default async function Image(props: {

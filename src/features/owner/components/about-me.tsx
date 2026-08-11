@@ -16,11 +16,11 @@ export async function AboutMe() {
   const afterName = nameParts.length >= 2 ? nameParts.slice(1).join(name) : "";
   return (
     <CardHeader className="size-full content-center">
-      <p className="text-xl leading-relaxed tracking-wide text-pretty antialiased">
+      <div className="text-xl leading-relaxed tracking-wide text-pretty antialiased">
         {beforeName}
-        <span className="font-sans text-4xl font-extrabold">{name}</span>
+        <h1 className="inline font-sans text-4xl font-extrabold">{name}</h1>
         {afterName}
-      </p>
+      </div>
     </CardHeader>
   );
 }

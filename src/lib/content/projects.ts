@@ -186,3 +186,38 @@ export async function readAllProjectSummaries(
 
   return summaries;
 }
+
+export type ProjectSitemapEntry = {
+  slug: string;
+  name: string;
+  coverImage: string;
+  lastModified: Date;
+};
+
+/** Project listing for sitemap.xml (cover + MDX mtime). */
+export async function readProjectsForSitemap(
+  paths: ContentPaths = createContentPaths(),
+): Promise<ProjectSitemapEntry[]> {
+  const summaries = await readAllProjectSummaries(paths);
+  const entries = await Promise.all(
+    summaries.map(async (summary) => {
+      const filePath = projectFilePathForSlug(summary.slug, paths);
+      let lastModified = new Date();
+      if (filePath) {
+        try {
+          const stat = await fs.stat(filePath);
+          lastModified = stat.mtime;
+        } catch {
+          // Keep build-time fallback when the file disappears mid-read.
+        }
+      }
+      return {
+        slug: summary.slug,
+        name: summary.name,
+        coverImage: summary.coverImage,
+        lastModified,
+      };
+    }),
+  );
+  return entries;
+}

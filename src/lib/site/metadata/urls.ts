@@ -46,6 +46,11 @@ export function getHomeOgImageUrl(journeyStartAt?: string | null): string {
   );
 }
 
+/** Absolute URL for a project route's generated Open Graph image. */
+export function getProjectOgImageUrl(slug: string): string {
+  return getAbsoluteImageUrl(`/project/${slug}/opengraph-image`);
+}
+
 /**
  * Get metadataBase URL object for Next.js metadata
  * Always returns a URL object - uses NEXT_PUBLIC_SITE_URL, VERCEL_URL,

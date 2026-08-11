@@ -7,8 +7,11 @@ import { cache } from "react";
 import type { Project } from "@/lib/content/display";
 import {
   listProjectSlugs,
+  readAllProjectSummaries,
   readProject,
+  readProjectsForSitemap,
   readProjectSummary,
+  type ProjectSitemapEntry,
 } from "@/lib/content/projects";
 import {
   InvalidProjectFrontMatterError,
@@ -81,3 +84,35 @@ export const getProjectSlugs = cache(async () => {
   cacheTag("project_slugs");
   return await loadProjectSlugs();
 });
+
+export const getProjectSummaries = cache(async (): Promise<Project[]> => {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("projects", "project_slugs");
+  try {
+    return await readAllProjectSummaries();
+  } catch (error) {
+    if (error instanceof InvalidProjectFrontMatterError) {
+      throw error;
+    }
+    console.error("Failed to fetch project summaries:", error);
+    return [];
+  }
+});
+
+export const getProjectsForSitemap = cache(
+  async (): Promise<ProjectSitemapEntry[]> => {
+    "use cache";
+    cacheLife("hours");
+    cacheTag("projects", "project_slugs");
+    try {
+      return await readProjectsForSitemap();
+    } catch (error) {
+      if (error instanceof InvalidProjectFrontMatterError) {
+        throw error;
+      }
+      console.error("Failed to fetch projects for sitemap:", error);
+      return [];
+    }
+  },
+);

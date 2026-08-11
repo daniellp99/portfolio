@@ -8,6 +8,7 @@ import {
   listProjectSlugs,
   readAllProjectSummaries,
   readProject,
+  readProjectsForSitemap,
   readProjectSummary,
 } from "./projects";
 import { InvalidProjectFrontMatterError } from "./projects-read";
@@ -123,5 +124,19 @@ describe("readAllProjectSummaries", () => {
       if (prevStrict === undefined) delete process.env.PROJECT_CONTENT_STRICT;
       else process.env.PROJECT_CONTENT_STRICT = prevStrict;
     }
+  });
+});
+
+describe("readProjectsForSitemap", () => {
+  it("includes cover image and lastModified from MDX mtime", async () => {
+    const rows = await readProjectsForSitemap(paths);
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      slug: "sample",
+      name: "Sample Project",
+      coverImage: "https://example.com/cover.webp",
+    });
+    expect(rows[0]?.lastModified).toBeInstanceOf(Date);
+    expect(Number.isNaN(rows[0]!.lastModified.getTime())).toBe(false);
   });
 });

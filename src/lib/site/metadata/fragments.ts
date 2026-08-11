@@ -25,6 +25,8 @@ export function openGraphArticleFragment(input: {
   siteName: string;
   title: string;
   description: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }): NonNullable<Metadata["openGraph"]> {
   return {
     type: "article",
@@ -33,6 +35,16 @@ export function openGraphArticleFragment(input: {
     siteName: input.siteName,
     title: input.title,
     description: input.description,
+    ...(input.imageUrl
+      ? {
+          images: [
+            {
+              url: input.imageUrl,
+              ...(input.imageAlt ? { alt: input.imageAlt } : {}),
+            },
+          ],
+        }
+      : {}),
   };
 }
 

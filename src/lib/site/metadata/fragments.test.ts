@@ -39,6 +39,23 @@ describe("openGraphArticleFragment", () => {
       title: "Foo",
     });
   });
+
+  it("includes image url and alt when provided", () => {
+    const og = openGraphArticleFragment({
+      url: "https://example.com/project/foo",
+      siteName: "Pat's Portfolio",
+      title: "Foo",
+      description: "A project",
+      imageUrl: "https://example.com/project/foo/opengraph-image",
+      imageAlt: "Foo",
+    });
+    expect(og.images).toEqual([
+      {
+        url: "https://example.com/project/foo/opengraph-image",
+        alt: "Foo",
+      },
+    ]);
+  });
 });
 
 describe("twitterSummaryLargeImage", () => {
@@ -62,5 +79,14 @@ describe("twitterSummaryLargeImage", () => {
       creator: "@pat",
     });
     expect(tw).toMatchObject({ creator: "@pat" });
+  });
+
+  it("includes image when provided", () => {
+    const tw = twitterSummaryLargeImage({
+      title: "T",
+      description: "D",
+      imageUrl: "https://example.com/og.png",
+    });
+    expect(tw.images).toEqual(["https://example.com/og.png"]);
   });
 });
