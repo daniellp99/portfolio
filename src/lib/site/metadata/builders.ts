@@ -101,6 +101,9 @@ export async function buildRootLayoutMetadata(
         "max-snippet": -1,
       },
     },
+    verification: {
+      google: "yVeuf9V9PmJ9j1077xF3_gPNF0P7JzYvFYdmMi_VG9A",
+    },
   };
 }
 
