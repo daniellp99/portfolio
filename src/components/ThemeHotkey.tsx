@@ -3,6 +3,10 @@
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
+import {
+  type ColorScheme,
+  nextThemePreference,
+} from "@/components/theme-preference";
 import { capture } from "@/lib/analytics";
 
 function isTypingTarget(target: EventTarget | null) {
@@ -15,7 +19,7 @@ function isTypingTarget(target: EventTarget | null) {
 }
 
 export function ThemeHotkey() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, systemTheme, setTheme } = useTheme();
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -32,14 +36,17 @@ export function ThemeHotkey() {
       }
 
       event.preventDefault();
-      const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+      const resolved: ColorScheme =
+        resolvedTheme === "dark" ? "dark" : "light";
+      const system: ColorScheme = systemTheme === "dark" ? "dark" : "light";
+      const nextTheme = nextThemePreference(resolved, system);
       setTheme(nextTheme);
       capture("theme_selected", { theme: nextTheme });
     }
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [resolvedTheme, setTheme]);
+  }, [resolvedTheme, systemTheme, setTheme]);
 
   return null;
 }
