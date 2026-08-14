@@ -1,23 +1,26 @@
 "use client";
 
-import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
+import {
+  type ColorScheme,
+  themePreferenceForScheme,
+} from "@/components/theme-preference";
 import { PillTabs } from "@/components/ui/pill-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { capture } from "@/lib/analytics";
 
-const THEME_OPTIONS = ["light", "system", "dark"] as const;
-type ThemeOption = (typeof THEME_OPTIONS)[number];
+const SCHEME_OPTIONS = ["light", "dark"] as const;
 
-function isThemeOption(value: string): value is ThemeOption {
-  return (THEME_OPTIONS as readonly string[]).includes(value);
+function isColorScheme(value: string): value is ColorScheme {
+  return (SCHEME_OPTIONS as readonly string[]).includes(value);
 }
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, systemTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,30 +32,33 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <div className="flex size-full items-center justify-center">
-        <Skeleton className="cancelDrag h-10 w-full max-w-[calc(--spacing(10)*3+4px)] rounded-full" />
+        <Skeleton className="cancelDrag h-10 w-full max-w-[calc(--spacing(10)*2+4px)] rounded-full" />
       </div>
     );
   }
 
+  const activeScheme: ColorScheme =
+    resolvedTheme === "dark" ? "dark" : "light";
+  const systemScheme: ColorScheme =
+    systemTheme === "dark" ? "dark" : "light";
+
   return (
     <div className="flex size-full items-center justify-center">
       <PillTabs.Root
-        value={theme ?? "system"}
+        value={activeScheme}
         onValueChange={(value) => {
-          if (!isThemeOption(value)) {
+          if (!isColorScheme(value)) {
             return;
           }
-          setTheme(value);
-          capture("theme_selected", { theme: value });
+          const preference = themePreferenceForScheme(value, systemScheme);
+          setTheme(preference);
+          capture("theme_selected", { theme: preference });
         }}
         className="cancelDrag"
       >
         <PillTabs.List size="compact" aria-label="Color theme">
           <PillTabs.Item value="light" aria-label="Light theme">
             <SunIcon aria-hidden />
-          </PillTabs.Item>
-          <PillTabs.Item value="system" aria-label="System theme">
-            <MonitorIcon aria-hidden />
           </PillTabs.Item>
           <PillTabs.Item value="dark" aria-label="Dark theme">
             <MoonIcon aria-hidden />
