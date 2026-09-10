@@ -95,7 +95,15 @@ export async function MainGrid() {
         <AboutMe />
       </Card>
       <Card variant="item" key="toggle-theme">
-        <ThemeToggle />
+        <Suspense
+          fallback={
+            <div className="flex size-full items-center justify-center">
+              <Skeleton className="cancelDrag h-10 w-full max-w-[calc(--spacing(10)*2+4px)] rounded-full" />
+            </div>
+          }
+        >
+          <ThemeToggle />
+        </Suspense>
       </Card>
       <Card variant="item" key="skills">
         <SkillsCard />
