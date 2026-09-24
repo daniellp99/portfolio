@@ -20,6 +20,16 @@ const eslintConfig = [
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
+  // eslint-plugin-react still defaults to version "detect", which calls
+  // context.getFilename() — removed in ESLint 10. Pin the version so lint
+  // works until the plugin supports ESLint 10 (jsx-eslint/eslint-plugin-react#3977).
+  {
+    settings: {
+      react: {
+        version: "19.3",
+      },
+    },
+  },
   reactYouMightNotNeedAnEffect.configs.strict,
   {
     files: ["**/*.{jsx,tsx}"],
