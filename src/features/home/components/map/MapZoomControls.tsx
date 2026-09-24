@@ -28,31 +28,37 @@ export default function MapZoomControls() {
 
   return (
     <div className="z-1000 flex justify-between self-end px-2 pb-2 [grid-area:'map']">
-      <Button
-        variant="projectLink"
-        size="icon-lg"
-        aria-label="Zoom out"
-        onClick={() => handleZoomOut()}
+      <span
         className={cn(
-          "cancelDrag invisible transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",
+          "cancelDrag invisible",
           zoomLevel !== map.getMinZoom() && "visible",
         )}
       >
-        <MinusIcon className="size-6" />
-      </Button>
+        <Button
+          variant="projectLink"
+          size="icon-lg"
+          aria-label="Zoom out"
+          onClick={() => handleZoomOut()}
+        >
+          <MinusIcon className="size-6" />
+        </Button>
+      </span>
 
-      <Button
-        variant="projectLink"
-        size="icon-lg"
-        aria-label="Zoom in"
-        onClick={() => handleZoomIn()}
+      <span
         className={cn(
-          "cancelDrag invisible transition-[transform,opacity,box-shadow,filter] duration-150 ease-linear",
+          "cancelDrag invisible",
           zoomLevel !== map.getMaxZoom() && "visible",
         )}
       >
-        <PlusIcon className="size-6" />
-      </Button>
+        <Button
+          variant="projectLink"
+          size="icon-lg"
+          aria-label="Zoom in"
+          onClick={() => handleZoomIn()}
+        >
+          <PlusIcon className="size-6" />
+        </Button>
+      </span>
     </div>
   );
 }

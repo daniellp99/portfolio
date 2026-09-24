@@ -23,8 +23,7 @@ export default function ProjectCardChrome({
       <div className="cancelDrag absolute bottom-2 left-2">
         <Button
           variant="projectLink"
-          className="relative flex w-fit items-center overflow-hidden p-2"
-          size="icon-lg"
+          size="icon-lg-fit"
           render={
             <Link
               href={`/project/${project.slug}`}
@@ -46,9 +45,7 @@ export default function ProjectCardChrome({
             share="text-morph"
             default="none"
           >
-            <p
-              className="max-w-0 -translate-x-[18px] truncate pr-5 text-sm font-bold opacity-0 transition-[max-width,translate,opacity] duration-500 ease-out group-hover:max-w-[252px] group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none group-focus-within:max-w-[252px] group-focus-within:translate-x-0 group-focus-within:opacity-100"
-            >
+            <p className="max-w-0 -translate-x-[18px] truncate pr-5 text-sm font-bold opacity-0 transition-reveal duration-500 ease-out group-hover:max-w-[252px] group-hover:translate-x-0 group-hover:opacity-100 motion-reduce:transition-none group-focus-within:max-w-[252px] group-focus-within:translate-x-0 group-focus-within:opacity-100">
               {project.name}
             </p>
           </ViewTransition>

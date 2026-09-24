@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 };
 
 function NavItemsSkeleton() {
-  return <Skeleton className="h-12 w-68.25 rounded-full" />;
+  return <Skeleton variant="pill" className="h-12 w-68.25" />;
 }
 
 export default function RootLayout({

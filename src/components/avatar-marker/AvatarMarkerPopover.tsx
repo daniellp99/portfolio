@@ -38,7 +38,7 @@ export function AvatarMarkerPopover({
             aria-label={tooltip}
             className={cn(
               "group relative grid size-11 place-items-center p-0.5",
-              "before:absolute before:inset-0 before:-z-10 before:-rotate-45 before:rounded-[50%_50%_50%_0] before:border before:border-foreground before:bg-foreground before:content-['']",
+              "before:absolute before:inset-0 before:-z-10 before:-rotate-45 before:rounded-teardrop before:border before:border-foreground before:bg-foreground before:content-['']",
             )}
           >
             <Activity mode={isActive ? "hidden" : "visible"}>

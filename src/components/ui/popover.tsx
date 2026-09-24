@@ -49,6 +49,8 @@ function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
 
 const popoverViewportClassName = cn(
   "relative isolate w-full min-w-0 overflow-hidden",
+  // fill-mode-forwards is animation-fill-mode, not a color token.
+  // eslint-disable-next-line shadcn/no-raw-colors -- Base UI viewport exit animation; `forwards` is fill-mode, not a palette color.
   "**:data-previous:pointer-events-none **:data-previous:absolute **:data-previous:inset-0 **:data-previous:z-10 **:data-previous:fill-mode-forwards",
   "**:data-previous:animate-out **:data-previous:fade-out-0",
   "**:data-current:relative **:data-current:z-20",

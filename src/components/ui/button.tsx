@@ -33,6 +33,9 @@ const buttonVariants = cva(
         "icon-sm":
           "size-8 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-md",
         "icon-lg": "size-10",
+        /** Expanding label chrome (project cards): fixed height, grow width. */
+        "icon-lg-fit":
+          "relative flex h-10 w-fit min-w-10 items-center overflow-hidden p-2",
       },
     },
     defaultVariants: {

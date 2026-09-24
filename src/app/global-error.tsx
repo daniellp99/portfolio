@@ -57,7 +57,7 @@ export default function GlobalError({
     >
       <body>
         <section className="flex min-h-screen items-center justify-center p-6">
-          <Empty className="max-w-md border">
+          <Empty className="max-w-md">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <CircleAlertIcon />

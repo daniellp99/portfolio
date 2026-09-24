@@ -14,8 +14,7 @@ export function NavBar({
 }) {
   return (
     <nav
-      style={{ viewTransitionName: "persistent-nav" }}
-      className="peer relative mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row"
+      className="view-transition-persistent-nav peer relative mt-10 flex h-fit flex-col items-center justify-between gap-8 pb-8 sm:mx-10 sm:mt-0 sm:h-32 sm:flex-row"
     >
       <Logo />
       <NavBarCenter>{children}</NavBarCenter>

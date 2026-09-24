@@ -84,10 +84,7 @@ export default function GridResponsive({
       dragConfig={{ enabled: interactive, cancel: ".cancelDrag" }}
       resizeConfig={{ enabled: interactive }}
       width={width}
-      className={cn(
-        "layout",
-        interactive && "duration-1000 animate-in fade-in",
-      )}
+      className={cn(interactive && "duration-1000 animate-in fade-in")}
       layouts={policyLayouts}
       onDragStop={persistUserLayout}
       onResizeStop={persistUserLayout}

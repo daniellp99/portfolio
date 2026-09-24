@@ -52,10 +52,7 @@ export async function ImageGrid({
             fill
             sizes={imageGridCardSizes(image.width)}
             quality={92}
-            style={{
-              objectFit: "cover",
-            }}
-            className="rounded-lg"
+            className="rounded-lg object-cover"
           />
         </Card>
       ))}

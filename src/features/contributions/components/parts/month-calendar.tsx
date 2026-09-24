@@ -115,7 +115,7 @@ export function ContributionsMonthCalendar({
         size="icon"
         disabled={!canGoPrev}
         aria-label="Go to the previous month"
-        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+        className="size-8.5"
       >
         <ChevronLeftIcon className="size-5" aria-hidden="true" />
       </Button>
@@ -134,7 +134,7 @@ export function ContributionsMonthCalendar({
           className="flex flex-col items-center justify-center leading-none select-none xl:hidden"
         >
           <span className="text-sm font-medium">{monthShort}</span>
-          <span className="text-[10px] font-medium tabular-nums">
+          <span className="text-xs font-medium tabular-nums">
             {yearLabel}
           </span>
         </time>
@@ -147,7 +147,7 @@ export function ContributionsMonthCalendar({
         size="icon"
         disabled={!canGoNext}
         aria-label="Go to the next month"
-        className="size-8.5 transition-[transform,opacity,box-shadow,filter]"
+        className="size-8.5"
       >
         <ChevronRightIcon className="size-5" aria-hidden="true" />
       </Button>
