@@ -7,7 +7,6 @@ import {
   use,
   useLayoutEffect,
   useRef,
-  type CSSProperties,
 } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -141,12 +140,6 @@ function PillTabsList({
     return () => observer.disconnect();
   }, [activeValue, children, size]);
 
-  const indicatorStyle: CSSProperties = {
-    transitionProperty: "transform, width, height",
-    transitionDuration: "var(--duration-spring)",
-    transitionTimingFunction: "var(--ease-spring)",
-  };
-
   return (
     <PillTabsSizeContext value={size ?? "default"}>
       <TabsList
@@ -158,8 +151,7 @@ function PillTabsList({
           ref={indicatorRef}
           aria-hidden="true"
           hidden
-          className="pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground motion-reduce:transition-none!"
-          style={indicatorStyle}
+          className="pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground transition-[transform,width,height] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none!"
         />
         {children}
       </TabsList>

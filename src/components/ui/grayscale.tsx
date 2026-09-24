@@ -10,6 +10,11 @@ export interface CardGrayscaleProps extends React.ComponentProps<"div"> {
   duration?: number;
 }
 
+type CardGrayscaleStyle = React.CSSProperties & {
+  "--grayscale-duration"?: string;
+  "--card-image"?: string;
+};
+
 export function CardGrayscale({
   image,
   children,
@@ -34,6 +39,11 @@ export function CardGrayscale({
     };
   }, [pressed]);
 
+  const grayscaleStyle = {
+    ...style,
+    "--grayscale-duration": `${duration}s`,
+  } as CardGrayscaleStyle;
+
   return (
     <div
       data-pressed={pressed ? "true" : undefined}
@@ -43,25 +53,23 @@ export function CardGrayscale({
         setPressed(true);
       }}
       className={cn(
-        "relative overflow-hidden grayscale transition-[filter]",
+        "relative overflow-hidden grayscale transition-[filter] [transition-duration:var(--grayscale-duration)] ease-out",
         "[@media(hover:hover)_and_(pointer:fine)]:hover:grayscale-0",
         "data-[pressed=true]:grayscale-0",
         "motion-reduce:grayscale-0 motion-reduce:transition-none",
         className,
       )}
-      style={{
-        transitionDuration: `${duration}s`,
-        transitionTimingFunction: "ease-out",
-        ...style,
-      }}
+      style={grayscaleStyle}
       {...props}
     >
-      {image && (
+      {image ? (
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${image})` }}
+          className="absolute inset-0 bg-cover bg-center [background-image:var(--card-image)]"
+          style={
+            { "--card-image": `url(${image})` } as CardGrayscaleStyle
+          }
         />
-      )}
+      ) : null}
       {children}
     </div>
   );

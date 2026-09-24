@@ -29,7 +29,7 @@ export default function ThemeToggle() {
     systemTheme === "dark" ? "dark" : "light";
 
   return (
-    <div className="flex size-full items-center justify-center">
+    <div className="cancelDrag flex size-full items-center justify-center">
       <PillTabs.Root
         value={activeScheme}
         onValueChange={(value) => {
@@ -40,7 +40,6 @@ export default function ThemeToggle() {
           setTheme(preference);
           capture("theme_selected", { theme: preference });
         }}
-        className="cancelDrag"
       >
         <PillTabs.List size="compact" aria-label="Color theme">
           <PillTabs.Item value="light" aria-label="Light theme">

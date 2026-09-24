@@ -66,22 +66,21 @@ export function ContributionsErrorCells({
             aria-hidden="true"
             className="size-4 text-destructive sm:size-5 xl:size-6"
           />
-          <p className="text-[11px] leading-tight font-medium sm:text-xs xl:text-sm">
+          <p className="text-xs leading-tight font-medium sm:text-xs xl:text-sm">
             Couldn’t load data
           </p>
-          <p className="hidden text-[10px] text-muted-foreground md:block xl:text-xs">
+          <p className="hidden text-xs text-muted-foreground md:block xl:text-xs">
             Please try again in a moment.
           </p>
           <Button
-            size="sm"
+            size="xs"
             disabled={retryPending}
             onClick={() => retry()}
-            className="h-6 px-2 text-[11px] sm:h-7 sm:text-xs xl:h-8 xl:text-sm"
           >
             {retryPending ? "Retrying…" : "Retry"}
           </Button>
           {!isProd && (
-            <details className="hidden max-w-full text-[10px] text-muted-foreground xl:block xl:text-xs">
+            <details className="hidden max-w-full text-xs text-muted-foreground xl:block xl:text-xs">
               <summary className="cursor-pointer select-none">
                 Technical details
               </summary>

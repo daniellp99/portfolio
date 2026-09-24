@@ -213,6 +213,35 @@
   }
 }
 
+/* Marker class for react-grid-layout `dragConfig.cancel` (selector only). */
+@utility cancelDrag {
+  --cancel-drag: 1;
+}
+
+@utility rounded-teardrop {
+  border-radius: 50% 50% 50% 0;
+}
+
+@utility view-transition-persistent-nav {
+  view-transition-name: persistent-nav;
+}
+
+@utility transition-spring {
+  transition-property: opacity, translate;
+  transition-duration: var(--duration-spring);
+  transition-timing-function: var(--ease-spring);
+}
+
+@utility transition-spring-reduce {
+  transition-property: opacity, translate;
+  transition-duration: 0s;
+  transition-timing-function: var(--ease-spring);
+}
+
+@utility transition-reveal {
+  transition-property: max-width, translate, opacity;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -23,10 +23,7 @@ export function ContributionsLoadingCells({
       )}
     >
       {Array.from({ length: cellCount }).map((_, idx) => (
-        <Skeleton
-          key={idx}
-          className="aspect-square rounded-sm ring-1 ring-foreground/10"
-        />
+        <Skeleton key={idx} variant="cell" className="aspect-square" />
       ))}
     </ol>
   );

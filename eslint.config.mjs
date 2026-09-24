@@ -1,3 +1,4 @@
+import { plugin as shadcn } from "@shadcn/lint";
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -110,7 +111,34 @@ const eslintConfig = [
   },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
+    plugins: { shadcn },
     rules: {
+      // Official @shadcn/lint core set (adoption.md “Add more rules”).
+      "shadcn/no-restyle": [
+        "error",
+        {
+          allow: ["layout"],
+          contracts: [
+            {
+              pattern: "^CardTitle$",
+              allow: ["layout", "typography"],
+            },
+            {
+              pattern: "^CardDescription$",
+              allow: ["layout", "typography"],
+            },
+            {
+              pattern: "^Card(Header|Content|Footer)$",
+              allow: ["layout", "spacing"],
+            },
+          ],
+        },
+      ],
+      "shadcn/no-raw-colors": "error",
+      "shadcn/no-arbitrary-values": ["error", { allow: ["layout"] }],
+      "shadcn/no-inline-styles": "error",
+      "shadcn/require-static-classes": "error",
+      "shadcn/no-unknown-classes": "error",
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/aria-props": "error",
       "jsx-a11y/aria-proptypes": "error",
@@ -119,6 +147,22 @@ const eslintConfig = [
       "jsx-a11y/heading-has-content": "error",
       "jsx-a11y/img-redundant-alt": "warn",
       "jsx-a11y/no-redundant-roles": "warn",
+    },
+  },
+  // UI primitives own appearance; may use structural arbitrary values.
+  {
+    files: ["src/components/ui/**"],
+    rules: {
+      "shadcn/no-restyle": "off",
+      "shadcn/no-arbitrary-values": "off",
+      "shadcn/require-static-classes": "off",
+    },
+  },
+  // next/og (Satori) requires inline styles — classes are not supported.
+  {
+    files: ["src/lib/og/**"],
+    rules: {
+      "shadcn/no-inline-styles": "off",
     },
   },
 ];

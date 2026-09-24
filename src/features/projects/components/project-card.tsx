@@ -22,7 +22,7 @@ export async function ProjectCard({
   return (
     <ProjectCardChrome project={project}>
       <Image
-        className="rounded-lg px-4"
+        className="rounded-lg object-scale-down object-top px-4"
         alt={project.name}
         src={`/${project.coverImage}`}
         fill
@@ -30,10 +30,6 @@ export async function ProjectCard({
         sizes={MAIN_GRID_CARD_IMAGE_SIZES}
         priority={priority}
         fetchPriority={priority ? "high" : undefined}
-        style={{
-          objectFit: "scale-down",
-          objectPosition: "top",
-        }}
       />
     </ProjectCardChrome>
   );
