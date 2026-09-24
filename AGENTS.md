@@ -31,6 +31,7 @@ content/       — static MDX + owner data
 - Skeletons export alongside their component from the same file.
 - Client components import actions directly; never import `*-queries.ts`.
 - Raw `@/lib/content/*` imports only inside feature query files and tests.
+- After making changes, run `bun run lint` and fix all errors.
 
 See [CONTEXT.md](./CONTEXT.md) for domain-specific notes.
 
