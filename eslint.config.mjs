@@ -1,3 +1,4 @@
+import { plugin as shadcn } from "@shadcn/lint";
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 import nextTypescript from "eslint-config-next/typescript";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -110,6 +111,7 @@ const eslintConfig = [
   },
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
+    plugins: { shadcn },
     rules: {
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/aria-props": "error",
