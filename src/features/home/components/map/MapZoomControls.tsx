@@ -6,8 +6,10 @@ import { useMap, useMapEvents } from "react-leaflet";
 
 import { Button } from "@/components/ui/button";
 
-import { DEFAULT_ZOOM } from "@/lib/site/constants";
+import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 import { cn } from "@/lib/utils";
+
+const ZOOM_DELTA = 1;
 
 export default function MapZoomControls() {
   const map = useMap();
@@ -19,11 +21,17 @@ export default function MapZoomControls() {
     },
   });
 
+  function zoomTo(nextZoom: number) {
+    // Always re-center on the marker; MapLibre sync can drift the view
+    // when using zoomIn/zoomOut around a shifted center.
+    map.setView(DEFAULT_CENTER, nextZoom, { animate: false });
+  }
+
   function handleZoomOut() {
-    map.zoomOut();
+    zoomTo(map.getZoom() - ZOOM_DELTA);
   }
   function handleZoomIn() {
-    map.zoomIn();
+    zoomTo(map.getZoom() + ZOOM_DELTA);
   }
 
   return (
