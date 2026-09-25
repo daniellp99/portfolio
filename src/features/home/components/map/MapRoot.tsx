@@ -32,9 +32,7 @@ export default function MapRoot({ children }: { children: React.ReactNode }) {
       scrollWheelZoom={false}
       doubleClickZoom={false}
       dragging={false}
-      // MapLibre GL Leaflet desyncs during Leaflet CSS zoom animations;
-      // jump zoom + keep center on the marker instead.
-      zoomAnimation={false}
+      // MapLibre GL Leaflet: avoid zoom 0 sync issues; keep fractional DEFAULT_ZOOM.
       minZoom={1}
       zoomSnap={0.01}
       center={DEFAULT_CENTER}

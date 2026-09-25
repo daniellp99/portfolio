@@ -24,7 +24,7 @@ export default function MapZoomControls() {
   function zoomTo(nextZoom: number) {
     // Always re-center on the marker; MapLibre sync can drift the view
     // when using zoomIn/zoomOut around a shifted center.
-    map.setView(DEFAULT_CENTER, nextZoom, { animate: false });
+    map.setView(DEFAULT_CENTER, nextZoom, { animate: true });
   }
 
   function handleZoomOut() {
