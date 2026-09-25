@@ -292,6 +292,12 @@
   border: none;
 }
 
+/* Match existing card chrome: hide MapLibre logo (attribution control already off). */
+.leaflet-container .maplibregl-ctrl-logo,
+.leaflet-container .maplibregl-ctrl-attrib {
+  display: none;
+}
+
 /* React ViewTransition: avatar hover cross-fade (fade-in emphasis) */
 ::view-transition-old(.avatar-marker-fade) {
   animation: avatar-marker-fade-out 160ms ease-out both;

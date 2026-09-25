@@ -17,6 +17,8 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      // Vendored MapLibre workers (copied from node_modules)
+      "public/maplibre/**",
     ],
   },
   ...nextCoreWebVitals,
