@@ -37,6 +37,7 @@ const nextConfig = {
       "react-grid-layout",
       "react-leaflet",
       "leaflet",
+      "maplibre-gl",
     ],
   },
   images: {
@@ -71,11 +72,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "c.basemaps.cartocdn.com",
         pathname: "/**",
       },
     ],

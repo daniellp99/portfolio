@@ -32,6 +32,11 @@ export default function MapRoot({ children }: { children: React.ReactNode }) {
       scrollWheelZoom={false}
       doubleClickZoom={false}
       dragging={false}
+      // Leaflet CSS zoom scales the MapLibre canvas then jumpTo-resyncs
+      // (visible end-snap). Zoom is animated via MapLibre easeTo instead.
+      zoomAnimation={false}
+      minZoom={1}
+      zoomSnap={0.01}
       center={DEFAULT_CENTER}
       zoom={DEFAULT_ZOOM}
       maxZoom={16}

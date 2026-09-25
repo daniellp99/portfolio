@@ -52,7 +52,7 @@ export default function RootLayout({
       <head>
         <link
           rel="preconnect"
-          href="https://c.basemaps.cartocdn.com"
+          href="https://tiles.openfreemap.org"
           crossOrigin="anonymous"
         />
       </head>
