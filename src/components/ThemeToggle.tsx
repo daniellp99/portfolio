@@ -29,27 +29,29 @@ export default function ThemeToggle() {
     systemTheme === "dark" ? "dark" : "light";
 
   return (
-    <div className="cancelDrag flex size-full items-center justify-center">
-      <PillTabs.Root
-        value={activeScheme}
-        onValueChange={(value) => {
-          if (!isColorScheme(value)) {
-            return;
-          }
-          const preference = themePreferenceForScheme(value, systemScheme);
-          setTheme(preference);
-          capture("theme_selected", { theme: preference });
-        }}
-      >
-        <PillTabs.List size="compact" aria-label="Color theme">
-          <PillTabs.Item value="light" aria-label="Light theme">
-            <SunIcon aria-hidden />
-          </PillTabs.Item>
-          <PillTabs.Item value="dark" aria-label="Dark theme">
-            <MoonIcon aria-hidden />
-          </PillTabs.Item>
-        </PillTabs.List>
-      </PillTabs.Root>
+    <div className="flex size-full items-center justify-center">
+      <div className="cancelDrag">
+        <PillTabs.Root
+          value={activeScheme}
+          onValueChange={(value) => {
+            if (!isColorScheme(value)) {
+              return;
+            }
+            const preference = themePreferenceForScheme(value, systemScheme);
+            setTheme(preference);
+            capture("theme_selected", { theme: preference });
+          }}
+        >
+          <PillTabs.List size="compact" aria-label="Color theme">
+            <PillTabs.Item value="light" aria-label="Light theme">
+              <SunIcon aria-hidden />
+            </PillTabs.Item>
+            <PillTabs.Item value="dark" aria-label="Dark theme">
+              <MoonIcon aria-hidden />
+            </PillTabs.Item>
+          </PillTabs.List>
+        </PillTabs.Root>
+      </div>
     </div>
   );
 }

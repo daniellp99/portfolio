@@ -97,11 +97,13 @@ export async function MainGrid() {
       <Card variant="item" key="toggle-theme">
         <Suspense
           fallback={
-            <div className="cancelDrag flex size-full items-center justify-center">
-              <Skeleton
-                variant="pill"
-                className="h-10 w-full max-w-[calc(--spacing(10)*2+4px)]"
-              />
+            <div className="flex size-full items-center justify-center">
+              <div className="cancelDrag">
+                <Skeleton
+                  variant="pill"
+                  className="h-10 w-full max-w-[calc(--spacing(10)*2+4px)]"
+                />
+              </div>
             </div>
           }
         >
