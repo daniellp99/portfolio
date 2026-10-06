@@ -8,7 +8,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { Contributions } from "@/features/contributions/components/contributions";
-import { getMonthStartInZone } from "@/features/contributions/lib/calendar-projection";
 import {
   buildContributionsMonthFormState,
   contributionsMonthCacheKey,
@@ -41,7 +40,6 @@ export function ContributionsCard({
     year,
     month,
   );
-  const monthStart = getMonthStartInZone(year, month);
   const cacheKey = contributionsMonthCacheKey(year, month);
 
   return (
@@ -62,7 +60,7 @@ export function ContributionsCard({
         </CardFooter>
         <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">
           <CardDescription className="text-center text-xs">
-            <Contributions.Description monthStart={monthStart}>
+            <Contributions.Description>
               <Contributions.Count
                 cacheKey={cacheKey}
                 contributionsPromise={contributionsPromise}

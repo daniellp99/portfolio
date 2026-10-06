@@ -30,11 +30,18 @@ export function ContributionsCount({
   cacheKey: string;
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
-  const { attempt } = useContributionsBoundary();
+  const { attempt, isNavigating } = useContributionsBoundary();
+
+  if (isNavigating) {
+    return <span aria-label="Loading contributions count">...</span>;
+  }
 
   return (
     <ContributionsCountErrorBoundary key={`${cacheKey}-${attempt}`}>
-      <Suspense fallback={<span>0</span>}>
+      <Suspense
+        key={cacheKey}
+        fallback={<span aria-label="Loading contributions count">...</span>}
+      >
         <CountValue
           key={cacheKey}
           contributionsPromise={contributionsPromise}

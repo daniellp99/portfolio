@@ -14,6 +14,8 @@ type ContributionsBoundaryValue = {
   year: number;
   month: number;
   attempt: number;
+  /** True while an optimistic month is ahead of the server-confirmed props. */
+  isNavigating: boolean;
   retryPending: boolean;
   retry: () => void;
   setOptimisticMonth: (year: number, month: number) => void;
@@ -57,11 +59,13 @@ export function ContributionsBoundary({
 
   const displayYear = optimisticMonth?.year ?? year;
   const displayMonth = optimisticMonth?.month ?? month;
+  const isNavigating = displayYear !== year || displayMonth !== month;
 
   const value: ContributionsBoundaryValue = {
     year: displayYear,
     month: displayMonth,
     attempt,
+    isNavigating,
     retryPending,
     setOptimisticMonth: (nextYear, nextMonth) => {
       setOptimisticMonth({ year: nextYear, month: nextMonth });
