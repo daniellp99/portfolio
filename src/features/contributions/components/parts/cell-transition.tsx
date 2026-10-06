@@ -14,18 +14,23 @@ const directionalExit = {
   default: "none",
 } as const;
 
+/**
+ * Stable ViewTransition around heatmap cells. Do not key-remount this wrapper
+ * on month change — that remounts Suspense children and flashes LoadingCells
+ * even when the target month promise is warm. Content swaps use `update`
+ * with the nav-forward / nav-back transition types from addTransitionType.
+ */
 export function ContributionsCellTransition({
-  monthKey,
   children,
 }: {
-  monthKey: string;
   children: ReactNode;
 }) {
   return (
     <ViewTransition
-      key={monthKey}
+      name="contrib-heatmap-cells"
       enter={directionalEnter}
       exit={directionalExit}
+      update={directionalEnter}
       default="none"
     >
       {children}

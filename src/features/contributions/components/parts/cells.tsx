@@ -1,7 +1,7 @@
 "use client";
 
 import { catchError, type ErrorInfo } from "next/error";
-import { Suspense, useDeferredValue, ViewTransition } from "react";
+import { Suspense, useDeferredValue } from "react";
 
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { ContributionsCellTransition } from "@/features/contributions/components/parts/cell-transition";
@@ -36,12 +36,12 @@ export function ContributionsCells({
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
   const { year, month, attempt } = useContributionsBoundary();
-  // Keep previous heatmap until the new month promise is ready.
+  // Keep showing the previous month's promise until React commits the deferred
+  // update. Suspense must stay mounted across month changes — remounting it
+  // (via error-boundary / ViewTransition keys) forces LoadingCells even when
+  // `'use cache'` already has the month warm (new thenable per RSC render).
   const deferredPromise = useDeferredValue(contributionsPromise);
-  const deferredCacheKey = useDeferredValue(cacheKey);
-  const isStale =
-    deferredPromise !== contributionsPromise || deferredCacheKey !== cacheKey;
-  const monthKey = `${year}-${month}`;
+  const isStale = deferredPromise !== contributionsPromise;
 
   return (
     <section
@@ -50,27 +50,22 @@ export function ContributionsCells({
         isStale && CONTRIBUTIONS_PENDING_PULSE_CLASS,
       )}
       data-pending={isStale || undefined}
+      data-month-key={cacheKey}
     >
       <ContributionsCellsErrorBoundary
-        key={`${deferredCacheKey}-${attempt}`}
+        key={attempt}
         year={year}
         month={month}
       >
-        <ContributionsCellTransition monthKey={monthKey}>
-          <Suspense
-            fallback={
-              <ViewTransition exit="slide-down" default="none">
-                <ContributionsLoadingCells year={year} month={month} />
-              </ViewTransition>
-            }
-          >
-            <ViewTransition enter="slide-up" default="none">
-              <ContributionsDataCellsAsync
-                contributionsPromise={deferredPromise}
-              />
-            </ViewTransition>
-          </Suspense>
-        </ContributionsCellTransition>
+        <Suspense
+          fallback={<ContributionsLoadingCells year={year} month={month} />}
+        >
+          <ContributionsCellTransition>
+            <ContributionsDataCellsAsync
+              contributionsPromise={deferredPromise}
+            />
+          </ContributionsCellTransition>
+        </Suspense>
       </ContributionsCellsErrorBoundary>
     </section>
   );
