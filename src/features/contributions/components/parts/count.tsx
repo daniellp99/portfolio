@@ -42,8 +42,9 @@ export function ContributionsCount({
     <span
       className={cn(isStale && CONTRIBUTIONS_PENDING_PULSE_CLASS)}
       data-pending={isStale || undefined}
+      data-month-key={cacheKey}
     >
-      <ContributionsCountErrorBoundary key={`${cacheKey}-${attempt}`}>
+      <ContributionsCountErrorBoundary key={attempt}>
         <Suspense fallback={<span>0</span>}>
           <CountValue contributionsPromise={deferredPromise} />
         </Suspense>

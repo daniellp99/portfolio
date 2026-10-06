@@ -28,7 +28,6 @@ export function ContributionsErrorCells({
   const { retry, retryPending } = useContributionsBoundary();
   const year = yearProp;
   const month = monthProp;
-  const monthKey = `${year}-${month}`;
 
   const isProd = process.env.NODE_ENV === "production";
   const monthStart = getMonthStartInZone(year, month);
@@ -36,7 +35,7 @@ export function ContributionsErrorCells({
 
   return (
     <>
-      <ContributionsCellTransition monthKey={monthKey}>
+      <ContributionsCellTransition>
         <ol
           aria-hidden="true"
           inert
