@@ -6,6 +6,7 @@ import { cache } from "react";
 
 import type { Project } from "@/lib/content/display";
 import {
+  listValidProjectSlugs,
   readAllProjectSummaries,
   readProject,
   readProjectsForSitemap,
@@ -20,10 +21,9 @@ import type { ProjectDetails } from "@/lib/content/schemas";
 
 async function loadProjectSlugs(): Promise<string[]> {
   try {
-    // Validated summaries only — skip invalid front matter in non-strict
-    // production so homepage cards / static params never call notFound().
-    const summaries = await readAllProjectSummaries();
-    return summaries.map((project) => project.slug);
+    // Cheap readdir + front-matter validation only (no summary objects).
+    // Skips invalid slugs in non-strict production so cards never notFound().
+    return await listValidProjectSlugs();
   } catch (error) {
     if (error instanceof InvalidProjectFrontMatterError) {
       throw error;

@@ -6,6 +6,7 @@ import { describe, expect, it } from "bun:test";
 import { createFixtureContentPaths } from "./paths";
 import {
   listProjectSlugs,
+  listValidProjectSlugs,
   readAllProjectSummaries,
   readProject,
   readProjectsForSitemap,
@@ -31,6 +32,35 @@ describe("listProjectSlugs", () => {
       path.join(fixtureDir, "no-projects-dir"),
     );
     await expect(listProjectSlugs(empty)).resolves.toEqual([]);
+  });
+});
+
+describe("listValidProjectSlugs", () => {
+  it("returns valid slugs only in non-strict mode", async () => {
+    const prevStrict = process.env.PROJECT_CONTENT_STRICT;
+    process.env.PROJECT_CONTENT_STRICT = "0";
+    try {
+      await expect(listValidProjectSlugs(multiPaths)).resolves.toEqual([
+        "alpha",
+        "zebra",
+      ]);
+    } finally {
+      if (prevStrict === undefined) delete process.env.PROJECT_CONTENT_STRICT;
+      else process.env.PROJECT_CONTENT_STRICT = prevStrict;
+    }
+  });
+
+  it("throws in strict mode when any listed project has invalid front matter", async () => {
+    const prevStrict = process.env.PROJECT_CONTENT_STRICT;
+    process.env.PROJECT_CONTENT_STRICT = "1";
+    try {
+      await expect(listValidProjectSlugs(multiPaths)).rejects.toBeInstanceOf(
+        InvalidProjectFrontMatterError,
+      );
+    } finally {
+      if (prevStrict === undefined) delete process.env.PROJECT_CONTENT_STRICT;
+      else process.env.PROJECT_CONTENT_STRICT = prevStrict;
+    }
   });
 });
 

@@ -96,6 +96,47 @@ export async function listProjectSlugs(
     .sort();
 }
 
+/**
+ * Filesystem slug candidates whose front matter parses successfully.
+ * Skips invalid entries in non-strict mode; throws in strict (CI/dev).
+ * Returns slugs only — does not build summary objects.
+ */
+export async function listValidProjectSlugs(
+  paths: ContentPaths = createContentPaths(),
+): Promise<string[]> {
+  const candidates = await listProjectSlugs(paths);
+  const results = await Promise.all(
+    candidates.map((slug) => readProjectSource(slug, paths)),
+  );
+
+  const strict = isProjectContentStrict();
+  const valid: string[] = [];
+
+  for (const result of results) {
+    if (result.status === "ok") {
+      valid.push(result.slug);
+      continue;
+    }
+
+    if (result.status === "missing") continue;
+
+    if (strict) {
+      throw new InvalidProjectFrontMatterError(result.slug, result.cause);
+    }
+
+    if (result.kind === "zod") {
+      logInvalidProjectFrontMatterZod(result.slug, result.cause);
+    }
+
+    console.error(
+      `Skipping project "${result.slug}" due to invalid front matter:`,
+      result.cause,
+    );
+  }
+
+  return valid;
+}
+
 export async function readProject(
   slug: string,
   paths: ContentPaths = createContentPaths(),
