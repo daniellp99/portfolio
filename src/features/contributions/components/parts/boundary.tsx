@@ -14,11 +14,8 @@ type ContributionsBoundaryValue = {
   year: number;
   month: number;
   attempt: number;
-  /** True while an optimistic month is ahead of the server-confirmed props. */
-  isNavigating: boolean;
   retryPending: boolean;
   retry: () => void;
-  setOptimisticMonth: (year: number, month: number) => void;
 };
 
 const ContributionsBoundaryContext =
@@ -46,36 +43,20 @@ export function ContributionsBoundary({
   const [retryPending, startTransition] = useTransition();
   const [prevServerMonth, setPrevServerMonth] = useState({ year, month });
   const [attempt, setAttempt] = useState(0);
-  const [optimisticMonth, setOptimisticMonth] = useState<{
-    year: number;
-    month: number;
-  } | null>(null);
 
   if (prevServerMonth.year !== year || prevServerMonth.month !== month) {
     setPrevServerMonth({ year, month });
     setAttempt(0);
-    setOptimisticMonth(null);
   }
 
-  const displayYear = optimisticMonth?.year ?? year;
-  const displayMonth = optimisticMonth?.month ?? month;
-  const isNavigating = displayYear !== year || displayMonth !== month;
-
   const value: ContributionsBoundaryValue = {
-    year: displayYear,
-    month: displayMonth,
+    year,
+    month,
     attempt,
-    isNavigating,
     retryPending,
-    setOptimisticMonth: (nextYear, nextMonth) => {
-      setOptimisticMonth({ year: nextYear, month: nextMonth });
-    },
     retry: () => {
       startTransition(() => {
-        void changeContributionsMonth({
-          year: displayYear,
-          month: displayMonth,
-        }).then(() => {
+        void changeContributionsMonth({ year, month }).then(() => {
           setAttempt((current) => current + 1);
         });
       });

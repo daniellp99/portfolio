@@ -10,7 +10,6 @@ import {
   type SubmitEvent,
 } from "react";
 
-import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
 import { capture } from "@/lib/analytics";
@@ -47,7 +46,6 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
-  const { setOptimisticMonth } = useContributionsBoundary();
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -83,13 +81,18 @@ export function ContributionsMonthCalendar({
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
-      setOptimisticMonth(next.year, next.month);
+      // Optimistic caption stepping only — body stays on server month until
+      // the transition/RSC refresh commits (stale-while-revalidate + pulse).
       setOptimisticState(next);
       formAction(formData);
     });
   }
 
-  const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
+  // While the action is pending, keep showing the previous caption so it
+  // stays aligned with deferred description/count/cells.
+  const displayState = isPending ? state : optimisticState;
+  const { year, month, caption } = displayState;
+  const { canGoPrev, canGoNext } = optimisticState;
   const error =
     optimisticState.status === "error" ? optimisticState.error : null;
 

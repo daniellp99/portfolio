@@ -60,7 +60,7 @@ export function ContributionsCard({
         </CardFooter>
         <CardContent className="group/contribution-content order-2 flex-1 px-1 xl:px-2">
           <CardDescription className="text-center text-xs">
-            <Contributions.Description>
+            <Contributions.Description year={year} month={month}>
               <Contributions.Count
                 cacheKey={cacheKey}
                 contributionsPromise={contributionsPromise}
