@@ -81,18 +81,14 @@ export function ContributionsMonthCalendar({
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
-      // Optimistic caption stepping only — body stays on server month until
-      // the transition/RSC refresh commits (stale-while-revalidate + pulse).
+      // Caption advances immediately; description/count/cells stay stale + pulse
+      // until useDeferredValue / RSC catch up.
       setOptimisticState(next);
       formAction(formData);
     });
   }
 
-  // While the action is pending, keep showing the previous caption so it
-  // stays aligned with deferred description/count/cells.
-  const displayState = isPending ? state : optimisticState;
-  const { year, month, caption } = displayState;
-  const { canGoPrev, canGoNext } = optimisticState;
+  const { year, month, caption, canGoPrev, canGoNext } = optimisticState;
   const error =
     optimisticState.status === "error" ? optimisticState.error : null;
 
