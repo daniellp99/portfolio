@@ -10,7 +10,6 @@ import {
   type SubmitEvent,
 } from "react";
 
-import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
 import { capture } from "@/lib/analytics";
@@ -47,7 +46,6 @@ export function ContributionsMonthCalendar({
     state,
     (_current, next: ContributionsMonthFormState) => next,
   );
-  const { setOptimisticMonth } = useContributionsBoundary();
 
   function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -83,7 +81,8 @@ export function ContributionsMonthCalendar({
 
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
-      setOptimisticMonth(next.year, next.month);
+      // Caption advances immediately; description/count/cells stay stale + pulse
+      // until useDeferredValue / RSC catch up.
       setOptimisticState(next);
       formAction(formData);
     });

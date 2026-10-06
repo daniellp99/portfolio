@@ -6,7 +6,7 @@ import { cache } from "react";
 
 import type { Project } from "@/lib/content/display";
 import {
-  listProjectSlugs,
+  listValidProjectSlugs,
   readAllProjectSummaries,
   readProject,
   readProjectsForSitemap,
@@ -21,8 +21,13 @@ import type { ProjectDetails } from "@/lib/content/schemas";
 
 async function loadProjectSlugs(): Promise<string[]> {
   try {
-    return await listProjectSlugs();
+    // Cheap readdir + front-matter validation only (no summary objects).
+    // Skips invalid slugs in non-strict production so cards never notFound().
+    return await listValidProjectSlugs();
   } catch (error) {
+    if (error instanceof InvalidProjectFrontMatterError) {
+      throw error;
+    }
     console.error("Failed to fetch project slugs:", error);
     return [];
   }
@@ -81,7 +86,7 @@ export const getProjectSummary = cache(
 export const getProjectSlugs = cache(async () => {
   "use cache";
   cacheLife("hours");
-  cacheTag("project_slugs");
+  cacheTag("project_slugs", "projects");
   return await loadProjectSlugs();
 });
 

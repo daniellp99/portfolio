@@ -58,3 +58,7 @@ export const CONTRIBUTIONS_MONTH_COOKIE_KEY =
 /** Heatmap lives inside `group/card`; calendar/retry set `data-pending` on descendants (not heatmap siblings). */
 export const CONTRIBUTIONS_HEATMAP_PEER_PENDING_CLASS =
   "motion-reduce:animate-none group-has-data-[pending=true]/card:animate-pulse peer-has-data-[pending=true]/retry:animate-pulse" as const;
+
+/** Local pulse while deferred month content is stale (description / count / cells). */
+export const CONTRIBUTIONS_PENDING_PULSE_CLASS =
+  "motion-reduce:animate-none animate-pulse" as const;
