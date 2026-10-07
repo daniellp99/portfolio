@@ -13,6 +13,12 @@ import {
 } from "@/features/projects/projects-queries";
 import { buildProjectPageMetadata } from "@/lib/site/metadata";
 
+/**
+ * Project cards use `<Link prefetch={true}>`. Keep per-link prefetches
+ * static; request-specific image-grid layouts await `navigation()`.
+ */
+export const ensureStatic = "prefetch";
+
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {

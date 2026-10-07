@@ -31,6 +31,13 @@ const nextConfig = {
   partialPrefetching: true,
   typedRoutes: true,
   experimental: {
+    // Next 16.4 recommendations (see blog + node_modules/next/dist/docs/)
+    agentUpgrade: "latest",
+    agentFeedback: true,
+    turbopackRustReactCompiler: true,
+    turbopackGc: true,
+    turbopackLazyDynamicImports: true,
+    turbopackPluginRuntimeStrategy: "workerThreads",
     optimizePackageImports: [
       "lucide-react",
       "date-fns",
