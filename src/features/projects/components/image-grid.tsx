@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers";
+import { navigation } from "next/cache";
 import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
@@ -21,6 +22,9 @@ export async function ImageGrid({
   slug: string | undefined;
   images: Images;
 }) {
+  // Defer cookie/header layout reads until navigation so `<Link prefetch>`
+  // stays static (Next 16.4 `navigation()` + `ensureStatic = 'prefetch'`).
+  await navigation();
   const [headerList, cookieStore] = await Promise.all([headers(), cookies()]);
 
   const layouts = getLayouts(

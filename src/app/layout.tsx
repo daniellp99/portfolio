@@ -16,6 +16,9 @@ import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
+/** Keep App Shells static; cookie/header work stays behind Suspense. */
+export const ensureStatic = "shell";
+
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = getOwnerData();
 
