@@ -8,6 +8,10 @@ import {
   contributionsMonthCacheTag,
   isCurrentContributionsMonth,
 } from "@/features/contributions/lib/contributions-month";
+import {
+  githubAuthErrorMessage,
+  resolveGithubToken,
+} from "@/features/contributions/lib/github-token";
 import { toIsoDateRangeForMonth } from "@/features/contributions/lib/month-range";
 import {
   githubContributionGraphqlResponseSchema,
@@ -21,20 +25,32 @@ async function githubGraphql<T>(
   query: string,
   variables: Record<string, unknown>,
 ) {
-  const token = process.env.GITHUB_PAT;
-  if (!token) {
-    throw new Error("Missing GITHUB_PAT");
+  const resolved = resolveGithubToken();
+  if (!resolved) {
+    throw new Error(
+      "Missing GitHub token. Set GITHUB_PAT (preferred) or GITHUB_TOKEN / GH_TOKEN " +
+        "in Vercel → Project → Settings → Environment Variables for Production " +
+        "(and Preview if needed).",
+    );
   }
 
   const res = await fetch("https://api.github.com/graphql", {
     method: "POST",
     headers: {
+      accept: "application/json",
       "content-type": "application/json",
-      authorization: `bearer ${token}`,
+      // GitHub asks for a descriptive User-Agent on API calls.
+      "user-agent": "daniellp99-portfolio-contributions",
+      authorization: `Bearer ${resolved.token}`,
     },
     body: JSON.stringify({ query, variables }),
     cache: "no-store",
   });
+
+  // Auth failures often return a non-GraphQL JSON body; prefer status guidance.
+  if (res.status === 401 || res.status === 403) {
+    throw new Error(githubAuthErrorMessage(res.status));
+  }
 
   const raw = await res.json();
   const parsed = githubContributionGraphqlResponseSchema.safeParse(raw);
@@ -54,7 +70,7 @@ async function githubGraphql<T>(
       json.errors
         ?.map((e) => e.message)
         .filter(Boolean)
-        .join("; ") || `GitHub GraphQL request failed (${res.status})`;
+        .join("; ") || githubAuthErrorMessage(res.status);
     throw new Error(message);
   }
 
