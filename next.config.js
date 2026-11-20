@@ -32,6 +32,8 @@ const nextConfig = {
   typedRoutes: true,
   experimental: {
     // Next 16.4 recommendations (see blog + node_modules/next/dist/docs/)
+    // Keep "latest" for tip-tracking minors; use `npx next@canary upgrade --agent=security`
+    // (or temporarily "security") when responding to a patch-only advisory.
     agentUpgrade: "latest",
     agentFeedback: true,
     turbopackRustReactCompiler: true,
