@@ -1,12 +1,12 @@
 "use client";
 
-import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
+import { TabsIndicator } from "@ui-sdk/react/tabs";
 import { cva, type VariantProps } from "class-variance-authority";
 import {
   createContext,
   use,
-  useLayoutEffect,
-  useRef,
+  type ComponentProps,
+  type ReactNode,
 } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,20 +14,7 @@ import { cn } from "@/lib/utils";
 
 type PillTabsSize = "default" | "compact";
 
-type PillTabsContextValue = {
-  activeValue: string | undefined;
-};
-
-const PillTabsContext = createContext<PillTabsContextValue | null>(null);
 const PillTabsSizeContext = createContext<PillTabsSize>("default");
-
-function usePillTabsContext() {
-  const context = use(PillTabsContext);
-  if (!context) {
-    throw new Error("PillTabs components must be used within PillTabs.Root");
-  }
-  return context;
-}
 
 /** Matches production / pre-refactor pill chrome (h-11, px-px py-0, gap-1). */
 const pillTabsListVariants = cva(
@@ -50,7 +37,7 @@ const pillTabsListVariants = cva(
 const pillTabsItemVariants = cva(
   // `h-full` + `py-0` override TabsTrigger's `h-[calc(100%-1px)]` / `py-1`,
   // which otherwise leave the sliding indicator optically low in the list.
-  "relative z-0 h-full rounded-4xl py-0 data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
+  "relative z-0 h-full rounded-4xl py-0 data-selected:bg-transparent data-selected:text-background data-selected:shadow-none dark:data-selected:border-transparent dark:data-selected:bg-transparent",
   {
     variants: {
       size: {
@@ -65,53 +52,20 @@ const pillTabsItemVariants = cva(
   },
 );
 
-type PillTabsRootProps = TabsPrimitive.Root.Props;
+type PillTabsRootProps = ComponentProps<typeof Tabs>;
 
-function PillTabsRoot({
-  value,
-  children,
-  className,
-  ...props
-}: PillTabsRootProps) {
+function PillTabsRoot({ children, className, ...props }: PillTabsRootProps) {
   return (
-    <PillTabsContext value={{ activeValue: value }}>
-      <Tabs
-        value={value}
-        className={cn("flex flex-col items-center", className)}
-        {...props}
-      >
-        {children}
-      </Tabs>
-    </PillTabsContext>
+    <Tabs className={cn("flex flex-col items-center", className)} {...props}>
+      {children}
+    </Tabs>
   );
 }
 
-type PillTabsListProps = TabsPrimitive.List.Props &
-  VariantProps<typeof pillTabsListVariants>;
-
-function syncIndicator(
-  list: HTMLElement,
-  indicator: HTMLElement,
-  activeValue: string | undefined,
-) {
-  if (activeValue === undefined) {
-    indicator.hidden = true;
-    return;
-  }
-  const active = list.querySelector<HTMLElement>(
-    `[data-value="${CSS.escape(String(activeValue))}"]`,
-  );
-  if (!active) {
-    indicator.hidden = true;
-    return;
-  }
-
-  // Match former motion `inset-0` on the trigger: padding box, not border box.
-  indicator.hidden = false;
-  indicator.style.transform = `translate(${active.offsetLeft + active.clientLeft}px, ${active.offsetTop + active.clientTop}px)`;
-  indicator.style.width = `${active.clientWidth}px`;
-  indicator.style.height = `${active.clientHeight}px`;
-}
+type PillTabsListProps = Omit<ComponentProps<typeof TabsList>, "children"> &
+  VariantProps<typeof pillTabsListVariants> & {
+    children?: ReactNode;
+  };
 
 function PillTabsList({
   size = "default",
@@ -119,39 +73,15 @@ function PillTabsList({
   children,
   ...props
 }: PillTabsListProps) {
-  const { activeValue } = usePillTabsContext();
-  const listRef = useRef<HTMLDivElement>(null);
-  const indicatorRef = useRef<HTMLSpanElement>(null);
-
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    const indicator = indicatorRef.current;
-    if (!list || !indicator) return;
-
-    const update = () => syncIndicator(list, indicator, activeValue);
-    update();
-
-    const observer = new ResizeObserver(update);
-    observer.observe(list);
-    const valueNodes = list.querySelectorAll("[data-value]");
-    for (let i = 0; i < valueNodes.length; i++) {
-      observer.observe(valueNodes[i]!);
-    }
-    return () => observer.disconnect();
-  }, [activeValue, children, size]);
-
   return (
     <PillTabsSizeContext value={size ?? "default"}>
       <TabsList
-        ref={listRef}
         className={cn(pillTabsListVariants({ size }), className)}
         {...props}
       >
-        <span
-          ref={indicatorRef}
+        <TabsIndicator
           aria-hidden="true"
-          hidden
-          className="pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground transition-[transform,width,height] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none!"
+          className="pointer-events-none absolute z-0 rounded-4xl bg-foreground transition-[top,left,width,height] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none! data-[activation-direction=none]:transition-none top-(--active-tab-top) left-(--active-tab-left) h-(--active-tab-height) w-(--active-tab-width)"
         />
         {children}
       </TabsList>
@@ -159,7 +89,9 @@ function PillTabsList({
   );
 }
 
-type PillTabsItemProps = TabsPrimitive.Tab.Props;
+type PillTabsItemProps = Omit<ComponentProps<typeof TabsTrigger>, "children"> & {
+  children?: ReactNode;
+};
 
 function PillTabsItem({
   className,
@@ -172,7 +104,6 @@ function PillTabsItem({
   return (
     <TabsTrigger
       value={value}
-      data-value={value}
       className={cn(pillTabsItemVariants({ size }), className)}
       {...props}
     >

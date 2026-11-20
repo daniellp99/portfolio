@@ -43,7 +43,6 @@ export default function NotFound() {
                 aria-label="Go back to home"
               />
             }
-            nativeButton={false}
           >
             <ChevronLeftIcon className="size-6" aria-hidden />
             <span className="sr-only">Go back to home</span>

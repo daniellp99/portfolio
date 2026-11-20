@@ -1,7 +1,7 @@
 "use client";
 
-import { Popover as PopoverBase } from "@base-ui/react/popover";
-import { type ReactNode } from "react";
+import { createPopoverController } from "@ui-sdk/react/popover";
+import { type ReactNode, useState } from "react";
 
 import { ContributionsCell } from "@/features/contributions/components/parts/cell";
 import {
@@ -16,8 +16,6 @@ import { cn } from "@/lib/utils";
 
 import type { ContributionsCellBucket } from "@/features/contributions/components/parts/cell";
 
-const contributionsPopoverHandle = PopoverBase.createHandle<ReactNode>();
-
 export function ContributionsDataCells({
   cells,
   className,
@@ -26,6 +24,7 @@ export function ContributionsDataCells({
   className?: string;
 }) {
   const openOnHover = usePrefersFinePointer();
+  const [popover] = useState(() => createPopoverController<ReactNode>());
 
   return (
     <ol
@@ -47,11 +46,8 @@ export function ContributionsDataCells({
         >
           <PopoverTrigger
             id={`contributions-day-${iso}`}
-            handle={contributionsPopoverHandle}
+            controller={popover}
             payload={label}
-            openOnHover={openOnHover}
-            delay={openOnHover ? 0 : undefined}
-            closeDelay={openOnHover ? 0 : undefined}
             render={
               <button
                 type="button"
@@ -65,17 +61,20 @@ export function ContributionsDataCells({
         </ContributionsCell>
       ))}
 
-      <Popover handle={contributionsPopoverHandle}>
-        {({ payload }) => (
-          <PopoverContent
-            variant="tooltip"
-            side="top"
-            align="center"
-            sideOffset={4}
-          >
-            {payload}
-          </PopoverContent>
-        )}
+      <Popover
+        controller={popover}
+        openOnHover={openOnHover}
+        delay={openOnHover ? 0 : undefined}
+        closeDelay={openOnHover ? 0 : undefined}
+      >
+        <PopoverContent<ReactNode>
+          variant="tooltip"
+          side="top"
+          align="center"
+          sideOffset={4}
+        >
+          {(state) => state.payload}
+        </PopoverContent>
       </Popover>
     </ol>
   );

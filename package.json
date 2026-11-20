@@ -20,7 +20,6 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@base-ui/react": "^1.8.0",
     "@maplibre/maplibre-gl-leaflet": "^0.1.4",
     "@opentelemetry/api": "^1.9.1",
     "@react-leaflet/core": "^3.0.0",

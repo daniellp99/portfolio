@@ -24,7 +24,6 @@ export function NavBar({
         render={
           <Link href={`mailto:${contactEmail}`} aria-label="Contact" />
         }
-        nativeButton={false}
       >
         Contact
       </Button>

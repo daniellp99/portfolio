@@ -38,7 +38,6 @@ export default function ProjectCardChrome({
               }
             />
           }
-          nativeButton={false}
         >
           <ViewTransition
             name={`project-title-${project.slug}`}

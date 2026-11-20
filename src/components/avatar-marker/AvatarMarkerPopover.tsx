@@ -27,11 +27,14 @@ export function AvatarMarkerPopover({
   const openOnHover = usePrefersFinePointer();
 
   return createPortal(
-    <Popover open={isActive} onOpenChange={setIsActive}>
+    <Popover
+      open={isActive}
+      onOpenChange={setIsActive}
+      openOnHover={openOnHover}
+      delay={openOnHover ? 0 : undefined}
+      closeDelay={openOnHover ? 0 : undefined}
+    >
       <PopoverTrigger
-        openOnHover={openOnHover}
-        delay={openOnHover ? 0 : undefined}
-        closeDelay={openOnHover ? 0 : undefined}
         render={
           <button
             type="button"

@@ -34,7 +34,7 @@ export default function ThemeToggle() {
         <PillTabs.Root
           value={activeScheme}
           onValueChange={(value) => {
-            if (!isColorScheme(value)) {
+            if (value === null || !isColorScheme(value)) {
               return;
             }
             const preference = themePreferenceForScheme(value, systemScheme);

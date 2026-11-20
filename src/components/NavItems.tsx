@@ -93,7 +93,10 @@ export default function NavItemsClient({
     commitTab(tab);
   }
 
-  function handleValueChange(value: string) {
+  function handleValueChange(value: string | null) {
+    if (value === null) {
+      return;
+    }
     const parsed = tabsTypeSchema.safeParse(value);
     if (!parsed.success) {
       const formData = new FormData();
@@ -126,11 +129,7 @@ export default function NavItemsClient({
         value={optimisticState.activeTab}
         onValueChange={handleValueChange}
       >
-        <PillTabs.List
-          size="default"
-          aria-label="Main grid views"
-          activateOnFocus
-        >
+        <PillTabs.List size="default" aria-label="Main grid views">
           {tabs.map((tabId) => (
             <PillTabs.Item
               key={tabId}

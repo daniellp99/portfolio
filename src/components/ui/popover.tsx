@@ -1,15 +1,23 @@
 "use client";
 
-import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
+import {
+  Popover as PopoverPrimitive,
+  PopoverContent as PopoverContentPrimitive,
+  PopoverDescription as PopoverDescriptionPrimitive,
+  PopoverTitle as PopoverTitlePrimitive,
+  PopoverTrigger as PopoverTriggerPrimitive,
+  type PopoverContentProps,
+  type PopoverContentState,
+} from "@ui-sdk/react/popover";
 import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
 const popoverContentVariants = cva(
   [
     "z-50 flex min-h-0 min-w-0 flex-col outline-hidden",
-    "origin-(--transform-origin) transition-[opacity,transform,width,height] [transition-duration:var(--default-transition-duration)] [transition-timing-function:var(--default-transition-timing-function)] data-instant:transition-none",
+    "origin-(--transform-origin) transition-[opacity,transform,width,height] [transition-duration:var(--default-transition-duration)] [transition-timing-function:var(--default-transition-timing-function)]",
     "data-starting-style:scale-95 data-starting-style:opacity-0",
     "data-ending-style:scale-95 data-ending-style:opacity-0",
     "**:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm",
@@ -18,7 +26,7 @@ const popoverContentVariants = cva(
     variants: {
       variant: {
         default:
-          "w-72 max-w-[min(100vw-2rem,var(--positioner-width))] gap-4 rounded-md bg-popover p-4 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10",
+          "w-72 max-w-[min(100vw-2rem,var(--anchor-width))] gap-4 rounded-md bg-popover p-4 text-sm text-popover-foreground shadow-md ring-1 ring-foreground/10",
         tooltip: [
           "relative w-fit max-w-xs gap-0 rounded-md border-0 bg-foreground px-3 py-1.5 text-xs text-background shadow-md ring-0 duration-100",
           "before:pointer-events-none before:absolute before:z-50 before:size-2.5 before:translate-y-[calc(-50%-2px)] before:rotate-45 before:rounded-[2px] before:bg-foreground before:content-['']",
@@ -37,76 +45,50 @@ const popoverContentVariants = cva(
   },
 );
 
-function Popover<Payload = unknown>(
-  props: PopoverPrimitive.Root.Props<Payload>,
-) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />;
+function Popover(props: ComponentProps<typeof PopoverPrimitive>) {
+  return <PopoverPrimitive data-slot="popover" {...props} />;
 }
 
-function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
-  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
+function PopoverTrigger({
+  ...props
+}: ComponentProps<typeof PopoverTriggerPrimitive>) {
+  return <PopoverTriggerPrimitive data-slot="popover-trigger" {...props} />;
 }
 
-const popoverViewportClassName = cn(
-  "relative isolate w-full min-w-0 overflow-hidden",
-  // fill-mode-forwards is animation-fill-mode, not a color token.
-  // eslint-disable-next-line shadcn/no-raw-colors -- Base UI viewport exit animation; `forwards` is fill-mode, not a palette color.
-  "**:data-previous:pointer-events-none **:data-previous:absolute **:data-previous:inset-0 **:data-previous:z-10 **:data-previous:fill-mode-forwards",
-  "**:data-previous:animate-out **:data-previous:fade-out-0",
-  "**:data-current:relative **:data-current:z-20",
-  "[&:has([data-previous])_[data-current]]:animate-in [&:has([data-previous])_[data-current]]:fade-in-0",
-  "[&[data-activation-direction*='left']_[data-current]]:slide-in-from-left-1",
-  "[&[data-activation-direction*='left']_[data-previous]]:slide-out-to-right-1",
-  "[&[data-activation-direction*='right']_[data-current]]:slide-in-from-right-1",
-  "[&[data-activation-direction*='right']_[data-previous]]:slide-out-to-left-1",
-  "[&[data-activation-direction*='up']_[data-current]]:slide-in-from-top-1",
-  "[&[data-activation-direction*='up']_[data-previous]]:slide-out-to-bottom-1",
-  "[&[data-activation-direction*='down']_[data-current]]:slide-in-from-bottom-1",
-  "[&[data-activation-direction*='down']_[data-previous]]:slide-out-to-top-1",
-);
+type PortfolioPopoverContentProps<Payload = unknown> = Omit<
+  ComponentProps<typeof PopoverContentPrimitive>,
+  "children"
+> &
+  PopoverContentProps &
+  VariantProps<typeof popoverContentVariants> & {
+    children?:
+      | ReactNode
+      | ((state: PopoverContentState<Payload>) => ReactNode);
+  };
 
-function PopoverContent({
+function PopoverContent<Payload = unknown>({
   className,
   variant = "default",
   align = "center",
   alignOffset = 0,
   side = "bottom",
   sideOffset = 4,
-  children,
   ...props
-}: PopoverPrimitive.Popup.Props &
-  Pick<
-    PopoverPrimitive.Positioner.Props,
-    "align" | "alignOffset" | "side" | "sideOffset"
-  > &
-  VariantProps<typeof popoverContentVariants>) {
+}: PortfolioPopoverContentProps<Payload>) {
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        className="isolate z-50 h-(--positioner-height,max-content) w-(--positioner-width,max-content) min-w-0 transition-[left,right,top,bottom] [transition-duration:var(--default-transition-duration)] [transition-timing-function:var(--default-transition-timing-function)] data-instant:transition-none"
-      >
-        <PopoverPrimitive.Popup
-          data-slot="popover-content"
-          className={cn(popoverContentVariants({ variant }), className)}
-          {...props}
-        >
-          <PopoverPrimitive.Viewport
-            data-slot="popover-viewport"
-            className={popoverViewportClassName}
-          >
-            {children}
-          </PopoverPrimitive.Viewport>
-        </PopoverPrimitive.Popup>
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverContentPrimitive<Payload>
+      data-slot="popover-content"
+      align={align}
+      alignOffset={alignOffset}
+      side={side}
+      sideOffset={sideOffset}
+      className={cn(popoverContentVariants({ variant }), className)}
+      {...props}
+    />
   );
 }
 
-function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
+function PopoverHeader({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="popover-header"
@@ -116,9 +98,12 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
+function PopoverTitle({
+  className,
+  ...props
+}: ComponentProps<typeof PopoverTitlePrimitive>) {
   return (
-    <PopoverPrimitive.Title
+    <PopoverTitlePrimitive
       data-slot="popover-title"
       className={cn("font-medium", className)}
       {...props}
@@ -129,9 +114,9 @@ function PopoverTitle({ className, ...props }: PopoverPrimitive.Title.Props) {
 function PopoverDescription({
   className,
   ...props
-}: PopoverPrimitive.Description.Props) {
+}: ComponentProps<typeof PopoverDescriptionPrimitive>) {
   return (
-    <PopoverPrimitive.Description
+    <PopoverDescriptionPrimitive
       data-slot="popover-description"
       className={cn("text-muted-foreground", className)}
       {...props}
