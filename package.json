@@ -45,7 +45,7 @@
     "react-grid-layout": "^2.2.4",
     "react-leaflet": "^5.0.0",
     "server-only": "^0.0.1",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "sugar-high": "^0.9.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^4.6.1"
