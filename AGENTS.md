@@ -32,6 +32,7 @@ content/       — static MDX + owner data
 - Client components import actions directly; never import `*-queries.ts`.
 - Raw `@/lib/content/*` imports only inside feature query files and tests.
 - After making changes, run `bun run lint` and fix all errors.
+- Before using ui-sdk (`@ui-sdk/react` / `@ui-sdk/core`), follow the ui-sdk skill if installed, and read `node_modules/@ui-sdk/react/docs/llms.txt`. To build a new component, also search `node_modules/@ui-sdk/react/docs/core.md` by heading, and read `rendering.md` next to it.
 
 See [CONTEXT.md](./CONTEXT.md) for domain-specific notes.
 
