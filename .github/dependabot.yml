@@ -1,0 +1,17 @@
+# Track Next security patches + sharp pins only (see docs/next-ai-security-plan.md P2).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-name: next
+      - dependency-name: eslint-config-next
+      - dependency-name: sharp
+    groups:
+      next-security:
+        patterns:
+          - next
+          - eslint-config-next
