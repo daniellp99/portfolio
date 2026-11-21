@@ -2,7 +2,7 @@
 
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { use } from "react";
+import { startTransition, use } from "react";
 import { browser } from "react-dom";
 
 import {
@@ -38,7 +38,9 @@ export default function ThemeToggle() {
               return;
             }
             const preference = themePreferenceForScheme(value, systemScheme);
-            setTheme(preference);
+            startTransition(() => {
+              setTheme(preference);
+            });
             capture("theme_selected", { theme: preference });
           }}
         >

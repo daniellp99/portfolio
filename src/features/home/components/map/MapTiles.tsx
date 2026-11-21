@@ -1,15 +1,17 @@
 "use client";
 
-import {
-  createElementObject,
-  createTileLayerComponent,
-  type LayerProps,
-} from "@react-leaflet/core";
+import { useLeafletContext } from "@react-leaflet/core";
 import { maplibreGL } from "@maplibre/maplibre-gl-leaflet";
 import { setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useTheme } from "next-themes";
-import { Activity } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useRef,
+  ViewTransition,
+} from "react";
+import { createPortal } from "react-dom";
 
 /** OpenFreeMap Positron / Dark — same lineage as CARTO light/dark, no API key. */
 const OPENFREEMAP_STYLES = {
@@ -21,31 +23,128 @@ const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 
 type MapLibreStyleLayerProps = {
   styleUrl: string;
-} & LayerProps;
+  active: boolean;
+};
 
-const MapLibreStyleLayer = createTileLayerComponent<
-  ReturnType<typeof maplibreGL>,
-  MapLibreStyleLayerProps
->(function createMapLibreStyleLayer({ styleUrl }, context) {
-  setWorkerUrl(MAPLIBRE_WORKER_URL);
-  const layer = maplibreGL({
-    style: styleUrl,
-    attributionControl: false,
-  });
-  return createElementObject(layer, context);
-});
+/**
+ * MapLibre is imperative (no React host) and paints to WebGL. Browser view-
+ * transition snapshots often omit canvas, so the visible dark↔light fade uses
+ * the shared `--duration-enter` / `--duration-exit` opacity recipe on a sized
+ * React host. Both themes stay mounted: Activity hide tears down GL and makes
+ * enter snapshots empty.
+ *
+ * `<ViewTransition enter/exit>` stays on the host for React VT wiring; theme
+ * updates are deferred so they run as Transitions.
+ */
+function MapLibreStyleLayer({ styleUrl, active }: MapLibreStyleLayerProps) {
+  const context = useLeafletContext();
+  const hostRef = useRef<HTMLDivElement>(null);
+  const tilePane = context.map.getPane("tilePane") ?? null;
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) {
+      return;
+    }
+
+    setWorkerUrl(MAPLIBRE_WORKER_URL);
+    const layer = maplibreGL({
+      style: styleUrl,
+      attributionControl: false,
+    });
+    const map = context.map;
+    map.addLayer(layer);
+
+    const mlContainer = layer.getContainer();
+    if (mlContainer.parentNode !== host) {
+      host.appendChild(mlContainer);
+    }
+
+    const observer = new MutationObserver(() => {
+      host.style.width = mlContainer.style.width;
+      host.style.height = mlContainer.style.height;
+      const nextTransform = mlContainer.style.transform;
+      if (
+        nextTransform &&
+        nextTransform !== "translate3d(0px, 0px, 0px)" &&
+        nextTransform !== "translate3d(0, 0, 0)"
+      ) {
+        host.style.transform = nextTransform;
+      }
+      observer.disconnect();
+      mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
+      observer.observe(mlContainer, {
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    });
+
+    host.style.width = mlContainer.style.width;
+    host.style.height = mlContainer.style.height;
+    host.style.transform = mlContainer.style.transform;
+    mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
+    observer.observe(mlContainer, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+
+    return () => {
+      observer.disconnect();
+      const pane = map.getPane("tilePane");
+      if (pane && mlContainer.parentNode !== pane) {
+        pane.appendChild(mlContainer);
+      }
+      map.removeLayer(layer);
+    };
+  }, [context.map, styleUrl]);
+
+  if (!tilePane) {
+    return null;
+  }
+
+  return createPortal(
+    <div
+      ref={hostRef}
+      className="map-tiles-fade-host pointer-events-none absolute top-0 left-0"
+      data-active={active ? "true" : "false"}
+      aria-hidden={!active}
+    />,
+    tilePane,
+  );
+}
+
+function ThemedMapTiles({
+  styleUrl,
+  active,
+}: {
+  styleUrl: string;
+  active: boolean;
+}) {
+  return (
+    <ViewTransition enter="fade-in" exit="fade-out" default="none">
+      <MapLibreStyleLayer styleUrl={styleUrl} active={active} />
+    </ViewTransition>
+  );
+}
 
 export default function MapTiles() {
   const { resolvedTheme } = useTheme();
+  // Theme updates from next-themes are not Transitions; defer so VT + opacity
+  // class updates run in a Transition.
+  const theme = useDeferredValue(
+    resolvedTheme === "dark" ? "dark" : "light",
+  );
 
   return (
     <>
-      <Activity mode={resolvedTheme === "dark" ? "visible" : "hidden"}>
-        <MapLibreStyleLayer styleUrl={OPENFREEMAP_STYLES.dark} />
-      </Activity>
-      <Activity mode={resolvedTheme === "dark" ? "hidden" : "visible"}>
-        <MapLibreStyleLayer styleUrl={OPENFREEMAP_STYLES.light} />
-      </Activity>
+      <ThemedMapTiles
+        styleUrl={OPENFREEMAP_STYLES.dark}
+        active={theme === "dark"}
+      />
+      <ThemedMapTiles
+        styleUrl={OPENFREEMAP_STYLES.light}
+        active={theme === "light"}
+      />
     </>
   );
 }
