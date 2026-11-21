@@ -23,7 +23,7 @@ export function SkillsMarquee({ children }: { children: ReactNode }) {
       )}
     >
       {children}
-      <span className="cancelDrag absolute right-4 bottom-4 z-10">
+      <span className="cancelDrag absolute right-6 bottom-6 z-10">
         <Button
           type="button"
           variant="outline"
