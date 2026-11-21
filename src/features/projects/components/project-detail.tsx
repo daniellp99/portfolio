@@ -8,6 +8,7 @@ import { ImageGrid } from "@/features/projects/components/image-grid";
 import PostHogProjectView from "@/features/projects/components/posthog-project-view";
 import { ProjectJsonLd } from "@/features/projects/components/project-json-ld";
 import { getProjectDetails } from "@/features/projects/projects-queries";
+import { GRID_SECTION_CLASS_NAME } from "@/lib/site/grid";
 
 const typesetSectionClassName = "typeset typeset-docs max-w-[37em] size-full";
 
@@ -156,7 +157,7 @@ export async function ProjectDetail({ slug }: { slug: string }) {
             </SlideSuspense>
           </section>
         </article>
-        <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
+        <section className={GRID_SECTION_CLASS_NAME}>
           <SlideSuspense fallback={<ProjectImageGridSkeleton />}>
             <ImageGrid slug={slug} images={project.images} />
           </SlideSuspense>
@@ -178,7 +179,7 @@ export function ProjectDetailSkeleton() {
           <ProjectMdxSkeleton />
         </section>
       </article>
-      <section className="mx-auto size-full max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]">
+      <section className={GRID_SECTION_CLASS_NAME}>
         <ProjectImageGridSkeleton />
       </section>
     </div>

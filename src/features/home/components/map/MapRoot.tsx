@@ -1,7 +1,6 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { usePathname } from "next/navigation";
 import { MapContainer } from "react-leaflet";
 
 import MapResizeSync from "@/features/home/components/map/MapResizeSync";
@@ -9,12 +8,8 @@ import MapResizeSync from "@/features/home/components/map/MapResizeSync";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
 export default function MapRoot({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
   return (
     <MapContainer
-      // Use the pathname as the key to force a re-render when the pathname changes
-      key={pathname}
       attributionControl={false}
       zoomControl={false}
       scrollWheelZoom={false}

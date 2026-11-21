@@ -1,5 +1,6 @@
 export {
   GRID_RESPONSIVE_STATIC_PROPS,
+  GRID_SECTION_CLASS_NAME,
   gridSectionInitialWidth,
 } from "./config";
 export {

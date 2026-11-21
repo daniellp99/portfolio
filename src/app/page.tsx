@@ -9,7 +9,9 @@ import {
 import { HomeJsonLd } from "@/features/owner/components/home-json-ld";
 import { getOwnerData } from "@/features/owner/owner-queries";
 import { MAIN_GRID_TABPANEL_ID } from "@/lib/site/constants";
+import { GRID_SECTION_CLASS_NAME } from "@/lib/site/grid";
 import { buildHomeMetadata } from "@/lib/site/metadata";
+import { cn } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const ownerData = getOwnerData();
@@ -25,7 +27,7 @@ export default function HomePage() {
         id={MAIN_GRID_TABPANEL_ID}
         role="tabpanel"
         aria-label="Portfolio grid"
-        className="group/main mx-auto block max-w-93.75 md:max-w-200 xl:max-w-300"
+        className={cn("group/main", GRID_SECTION_CLASS_NAME)}
       >
         <SlideSuspense fallback={<MainGridSkeleton />}>
           <MainGrid />

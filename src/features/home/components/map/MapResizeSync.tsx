@@ -29,6 +29,14 @@ export default function MapResizeSync() {
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      // View Transitions may reparent this node before Leaflet's map.remove().
+      // Detach with Element.remove() so parent.removeChild does not throw
+      // (X-back / soft-nav). Same cleanup MapSafeTeardown used to own alone.
+      try {
+        container.remove();
+      } catch {
+        /* already detached */
+      }
     };
   }, [map]);
 

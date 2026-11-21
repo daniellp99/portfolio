@@ -71,13 +71,21 @@ const GRID_RGL_MARGIN = {
 
 /**
  * Main / image grid section caps — keep in sync with
- * `max-w-[375px] md:max-w-[800px] xl:max-w-[1200px]` on home & project sections.
+ * {@link GRID_SECTION_CLASS_NAME} (spacing scale: 93.75 / 200 / 300 → 375 / 800 / 1200px).
  */
 export const GRID_SECTION_MAX_WIDTH = {
   base: 375,
   md: 800,
   xl: 1200,
 } as const;
+
+/**
+ * Shared width shell for home + project image grids so container measure /
+ * `rowHeightForContainerWidth` see the same capped width on both pages.
+ * Use `w-full` (not only `max-w-*`) under flex `place-items-center` parents.
+ */
+export const GRID_SECTION_CLASS_NAME =
+  "mx-auto block w-full max-w-93.75 md:max-w-200 xl:max-w-300";
 
 /** Tailwind `md` / `xl` min-widths for the section caps above. */
 const GRID_SECTION_VIEWPORT = {

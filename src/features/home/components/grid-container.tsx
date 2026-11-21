@@ -3,8 +3,14 @@
 import { type SetLayoutsOptions } from "@/features/home/home-actions";
 import { LayoutKey } from "@/lib/site/constants";
 import { gridSectionInitialWidth } from "@/lib/site/grid";
-import { ReactNode, useSyncExternalStore } from "react";
-import { useContainerWidth, type ResponsiveLayouts } from "react-grid-layout";
+import {
+  ReactNode,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import type { ResponsiveLayouts } from "react-grid-layout";
 
 import GridResponsive from "@/features/home/components/grid-responsive";
 
@@ -29,18 +35,35 @@ function GridContainerLayout({
   initialWidth: number;
   setLayoutsOptions: SetLayoutsOptions;
 }) {
-  const { width, containerRef, mounted } = useContainerWidth({
-    measureBeforeMount: true,
-    initialWidth,
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  // Seed from the viewport estimate; ResizeObserver keeps it in sync with the
+  // capped section (external DOM) — that sync is the Effect we do need.
+  const [width, setWidth] = useState(initialWidth);
+
+  useLayoutEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const update = () => {
+      const next = Math.round(node.getBoundingClientRect().width);
+      if (next > 0) {
+        setWidth((prev) => (prev === next ? prev : next));
+      }
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative w-full max-w-full">
       <GridResponsive
         layouts={layouts}
         layoutKey={layoutKey}
         width={width}
-        interactive={mounted}
+        interactive
         setLayoutsOptions={setLayoutsOptions}
       >
         {children}
@@ -68,6 +91,8 @@ export function GridContainer({
     allowedLayoutIds !== undefined || imageSrcs !== undefined
       ? { allowedLayoutIds, imageSrcs }
       : {};
+  // Client snapshot avoids a 1200px first paint when SSR lacked viewport CH.
+  // No window resize subscription: the section ResizeObserver covers that.
   const initialWidth = useSyncExternalStore(
     subscribeNoop,
     readViewportGridWidth,
@@ -76,6 +101,7 @@ export function GridContainer({
 
   return (
     <GridContainerLayout
+      key={initialWidth}
       layouts={layouts}
       layoutKey={layoutKey}
       initialWidth={initialWidth}
