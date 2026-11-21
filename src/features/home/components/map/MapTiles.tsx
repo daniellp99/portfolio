@@ -90,11 +90,23 @@ function MapLibreStyleLayer({ styleUrl, active }: MapLibreStyleLayerProps) {
 
     return () => {
       observer.disconnect();
-      const pane = map.getPane("tilePane");
-      if (pane && mlContainer.parentNode !== pane) {
-        pane.appendChild(mlContainer);
+      // View Transitions may reparent Leaflet/MapLibre nodes while this
+      // effect cleans up (X-back / soft nav). Avoid removeChild NotFoundError.
+      try {
+        const pane = map.getPane("tilePane");
+        if (
+          pane &&
+          mlContainer.parentNode &&
+          mlContainer.parentNode !== pane
+        ) {
+          pane.appendChild(mlContainer);
+        }
+        if (map.hasLayer(layer)) {
+          map.removeLayer(layer);
+        }
+      } catch {
+        /* DOM already detached by the transition */
       }
-      map.removeLayer(layer);
     };
   }, [context.map, styleUrl]);
 
