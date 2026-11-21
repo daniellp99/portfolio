@@ -33,6 +33,12 @@ content/       — static MDX + owner data
 - Raw `@/lib/content/*` imports only inside feature query files and tests.
 - After making changes, run `bun run lint` and fix all errors.
 
+## Testing / Instant navigation
+
+- Unit tests: `bun run test` (under `src/`).
+- Playwright `instant()` e2e (home → project prefetch lock): `bun run build:e2e` then `bun run test:e2e`. Requires `EXPOSE_TESTING_API=1` at build time (see `next.config.js`).
+- Agent Skill for future Link-grid prefetch work: `.agents/skills/next-partial-prefetching-optimizer`.
+
 See [CONTEXT.md](./CONTEXT.md) for domain-specific notes.
 
 <!-- BEGIN:nextjs-agent-rules -->

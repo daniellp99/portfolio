@@ -8,6 +8,9 @@ if (
   );
 }
 
+// Instant Navigation testing API for Playwright `instant()` (CI / local e2e only).
+const exposeTestingApi = process.env.EXPOSE_TESTING_API === "1";
+
 const nextConfig = {
   async rewrites() {
     return [
@@ -40,6 +43,7 @@ const nextConfig = {
     turbopackGc: true,
     turbopackLazyDynamicImports: true,
     turbopackPluginRuntimeStrategy: "workerThreads",
+    exposeTestingApiInProductionBuild: exposeTestingApi,
     optimizePackageImports: [
       "lucide-react",
       "date-fns",

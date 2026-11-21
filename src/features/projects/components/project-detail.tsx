@@ -105,7 +105,10 @@ function ProjectMdxSkeleton() {
 
 function ProjectImageGridSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-3.75 md:grid-cols-4 md:gap-4">
+    <div
+      data-testid="project-image-grid-skeleton"
+      className="grid grid-cols-2 gap-3.75 md:grid-cols-4 md:gap-4"
+    >
       <Skeleton
         variant="media"
         className="col-span-2 h-52 md:col-span-3 md:h-64"
@@ -136,11 +139,16 @@ export async function ProjectDetail({ slug }: { slug: string }) {
               share="text-morph"
               default="none"
             >
-              <h1 className="font-sans text-6xl font-bold tracking-tight">
+              <h1
+                data-testid="project-title"
+                className="font-sans text-6xl font-bold tracking-tight"
+              >
                 {project.name}
               </h1>
             </ViewTransition>
-            <p className="text-4xl text-pretty">{project.description}</p>
+            <p data-testid="project-description" className="text-4xl text-pretty">
+              {project.description}
+            </p>
           </section>
           <section className={typesetSectionClassName}>
             <SlideSuspense fallback={<ProjectMdxSkeleton />}>
