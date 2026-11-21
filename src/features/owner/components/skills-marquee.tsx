@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
  * Hover and focus-within still pause temporarily; this control is durable.
  * Icon-only: accessible name swaps Play/Pause — do not also set aria-pressed.
  * Corner inset + projectLink chrome match other home card controls
- * (e.g. project cards use absolute bottom-2 left-2).
+ * (project cards use absolute bottom-2 left-2).
  */
 export function SkillsMarquee({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false);
@@ -24,7 +24,7 @@ export function SkillsMarquee({ children }: { children: ReactNode }) {
       )}
     >
       {children}
-      <span className="cancelDrag absolute right-2 bottom-2 z-10">
+      <span className="cancelDrag absolute bottom-2 left-2 z-10">
         <Button
           type="button"
           variant="projectLink"
