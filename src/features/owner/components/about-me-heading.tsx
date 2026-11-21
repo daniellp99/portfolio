@@ -1,6 +1,35 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
+
+/**
+ * React 19 callback ref: focus when the heading mounts, after any in-flight
+ * ViewTransition finishes. Cleanup cancels a late focus if the node unmounts.
+ * (Callback refs replace mount useEffect for DOM-node side effects.)
+ */
+function focusHeadingAfterViewTransition(
+  el: HTMLHeadingElement | null,
+): void | (() => void) {
+  if (!el) return;
+
+  let cancelled = false;
+  const focusTitle = () => {
+    if (!cancelled) {
+      el.focus({ preventScroll: true });
+    }
+  };
+
+  const active = document.activeViewTransition;
+  if (active?.finished) {
+    void active.finished.finally(focusTitle);
+  } else {
+    focusTitle();
+  }
+
+  return () => {
+    cancelled = true;
+  };
+}
 
 /**
  * Home about title with post-navigation focus routing.
@@ -15,28 +44,9 @@ export function AboutMeHeading({
   children: ReactNode;
   className?: string;
 }) {
-  const ref = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const focusTitle = () => {
-      el.focus({ preventScroll: true });
-    };
-
-    const active = document.activeViewTransition;
-    if (active?.finished) {
-      void active.finished.finally(focusTitle);
-      return;
-    }
-
-    focusTitle();
-  }, []);
-
   return (
     <h1
-      ref={ref}
+      ref={focusHeadingAfterViewTransition}
       tabIndex={-1}
       data-testid="home-title"
       className={className}

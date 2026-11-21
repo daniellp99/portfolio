@@ -2,15 +2,15 @@
 
 import { useLeafletContext } from "@react-leaflet/core";
 import { maplibreGL } from "@maplibre/maplibre-gl-leaflet";
+import type { Map as LeafletMap } from "leaflet";
 import { setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useTheme } from "next-themes";
 import {
   useDeferredValue,
-  useEffect,
   useState,
-  useRef,
   ViewTransition,
+  type TransitionEvent,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -24,13 +24,83 @@ type ThemeMode = keyof typeof OPENFREEMAP_STYLES;
 
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
 
-/** Match `--duration-enter` / `--duration-exit` in globals.css. */
-const THEME_CROSSFADE_MS = 210;
-
 type MapLibreStyleLayerProps = {
   styleUrl: string;
   active: boolean;
+  /** Fires when the inactive host finishes its opacity fade (settle dual → single). */
+  onFadeSettled?: () => void;
 };
+
+/**
+ * Bind MapLibre GL to the portal host. React 19 callback-ref cleanup replaces
+ * useRef + useEffect: setup is tied to the node attaching, teardown to detach.
+ */
+function attachMapLibreLayer(
+  host: HTMLDivElement,
+  map: LeafletMap,
+  styleUrl: string,
+) {
+  setWorkerUrl(MAPLIBRE_WORKER_URL);
+  const layer = maplibreGL({
+    style: styleUrl,
+    attributionControl: false,
+  });
+  map.addLayer(layer);
+
+  const mlContainer = layer.getContainer();
+  if (mlContainer.parentNode !== host) {
+    host.appendChild(mlContainer);
+  }
+
+  const observer = new MutationObserver(() => {
+    host.style.width = mlContainer.style.width;
+    host.style.height = mlContainer.style.height;
+    const nextTransform = mlContainer.style.transform;
+    if (
+      nextTransform &&
+      nextTransform !== "translate3d(0px, 0px, 0px)" &&
+      nextTransform !== "translate3d(0, 0, 0)"
+    ) {
+      host.style.transform = nextTransform;
+    }
+    observer.disconnect();
+    mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
+    observer.observe(mlContainer, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+  });
+
+  host.style.width = mlContainer.style.width;
+  host.style.height = mlContainer.style.height;
+  host.style.transform = mlContainer.style.transform;
+  mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
+  observer.observe(mlContainer, {
+    attributes: true,
+    attributeFilter: ["style"],
+  });
+
+  return () => {
+    observer.disconnect();
+    // View Transitions may reparent Leaflet/MapLibre nodes while this
+    // cleans up (X-back / soft nav). Avoid removeChild NotFoundError.
+    try {
+      const pane = map.getPane("tilePane");
+      if (
+        pane &&
+        mlContainer.parentNode &&
+        mlContainer.parentNode !== pane
+      ) {
+        pane.appendChild(mlContainer);
+      }
+      if (map.hasLayer(layer)) {
+        map.removeLayer(layer);
+      }
+    } catch {
+      /* DOM already detached by the transition */
+    }
+  };
+}
 
 /**
  * MapLibre is imperative (no React host) and paints to WebGL. Browser view-
@@ -40,85 +110,20 @@ type MapLibreStyleLayerProps = {
  *
  * Steady state mounts only the active theme’s GL layer. During a theme switch
  * the outgoing layer stays mounted briefly (opacity 0) so the crossfade can
- * run, then unmounts — avoids keeping two WebGL contexts alive while the map
- * is visible.
+ * run, then unmounts on `transitionend` — avoids keeping two WebGL contexts
+ * alive while the map is visible.
  *
  * `<ViewTransition enter/exit>` stays on the host for React VT wiring; theme
  * updates are deferred so they run as Transitions.
  */
-function MapLibreStyleLayer({ styleUrl, active }: MapLibreStyleLayerProps) {
+function MapLibreStyleLayer({
+  styleUrl,
+  active,
+  onFadeSettled,
+}: MapLibreStyleLayerProps) {
   const context = useLeafletContext();
-  const hostRef = useRef<HTMLDivElement>(null);
   const tilePane = context.map.getPane("tilePane") ?? null;
-
-  useEffect(() => {
-    const host = hostRef.current;
-    if (!host) {
-      return;
-    }
-
-    setWorkerUrl(MAPLIBRE_WORKER_URL);
-    const layer = maplibreGL({
-      style: styleUrl,
-      attributionControl: false,
-    });
-    const map = context.map;
-    map.addLayer(layer);
-
-    const mlContainer = layer.getContainer();
-    if (mlContainer.parentNode !== host) {
-      host.appendChild(mlContainer);
-    }
-
-    const observer = new MutationObserver(() => {
-      host.style.width = mlContainer.style.width;
-      host.style.height = mlContainer.style.height;
-      const nextTransform = mlContainer.style.transform;
-      if (
-        nextTransform &&
-        nextTransform !== "translate3d(0px, 0px, 0px)" &&
-        nextTransform !== "translate3d(0, 0, 0)"
-      ) {
-        host.style.transform = nextTransform;
-      }
-      observer.disconnect();
-      mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
-      observer.observe(mlContainer, {
-        attributes: true,
-        attributeFilter: ["style"],
-      });
-    });
-
-    host.style.width = mlContainer.style.width;
-    host.style.height = mlContainer.style.height;
-    host.style.transform = mlContainer.style.transform;
-    mlContainer.style.transform = "translate3d(0px, 0px, 0px)";
-    observer.observe(mlContainer, {
-      attributes: true,
-      attributeFilter: ["style"],
-    });
-
-    return () => {
-      observer.disconnect();
-      // View Transitions may reparent Leaflet/MapLibre nodes while this
-      // effect cleans up (X-back / soft nav). Avoid removeChild NotFoundError.
-      try {
-        const pane = map.getPane("tilePane");
-        if (
-          pane &&
-          mlContainer.parentNode &&
-          mlContainer.parentNode !== pane
-        ) {
-          pane.appendChild(mlContainer);
-        }
-        if (map.hasLayer(layer)) {
-          map.removeLayer(layer);
-        }
-      } catch {
-        /* DOM already detached by the transition */
-      }
-    };
-  }, [context.map, styleUrl]);
+  const map = context.map;
 
   if (!tilePane) {
     return null;
@@ -126,7 +131,16 @@ function MapLibreStyleLayer({ styleUrl, active }: MapLibreStyleLayerProps) {
 
   return createPortal(
     <div
-      ref={hostRef}
+      ref={(host) => {
+        if (!host) return;
+        return attachMapLibreLayer(host, map, styleUrl);
+      }}
+      onTransitionEnd={(event: TransitionEvent<HTMLDivElement>) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.propertyName !== "opacity") return;
+        if (active) return;
+        onFadeSettled?.();
+      }}
       className="map-tiles-fade-host pointer-events-none absolute top-0 left-0"
       data-active={active ? "true" : "false"}
       aria-hidden={!active}
@@ -138,54 +152,30 @@ function MapLibreStyleLayer({ styleUrl, active }: MapLibreStyleLayerProps) {
 function ThemedMapTiles({
   styleUrl,
   active,
+  onFadeSettled,
 }: {
   styleUrl: string;
   active: boolean;
+  onFadeSettled?: () => void;
 }) {
   return (
     <ViewTransition enter="fade-in" exit="fade-out" default="none">
-      <MapLibreStyleLayer styleUrl={styleUrl} active={active} />
+      <MapLibreStyleLayer
+        styleUrl={styleUrl}
+        active={active}
+        onFadeSettled={onFadeSettled}
+      />
     </ViewTransition>
   );
 }
 
 /**
- * Keep at most two theme layers: the active one, plus a short-lived outgoing
- * layer for the opacity crossfade. Settles back to a single GL context.
+ * Drop a settled outgoing theme layer. Keeps the latest incoming mode so a
+ * stale transitionend cannot revive an older theme.
  */
-function useThemeLayerModes(theme: ThemeMode): ThemeMode[] {
-  const [layers, setLayers] = useState<ThemeMode[]>([theme]);
-  const [trackedTheme, setTrackedTheme] = useState(theme);
-
-  // Adjust during render when the deferred theme flips (React-recommended
-  // “store info from previous renders” pattern — avoids sync setState in effect).
-  if (theme !== trackedTheme) {
-    setTrackedTheme(theme);
-    setLayers((prev) => {
-      const from = prev[prev.length - 1] ?? theme;
-      return from === theme ? [theme] : [from, theme];
-    });
-  }
-
-  useEffect(() => {
-    if (layers.length < 2) {
-      return;
-    }
-
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    const holdMs = reducedMotion ? 0 : THEME_CROSSFADE_MS;
-    const id = window.setTimeout(() => {
-      setLayers([theme]);
-    }, holdMs);
-
-    return () => {
-      window.clearTimeout(id);
-    };
-  }, [theme, layers]);
-
-  return layers;
+function settleOutgoingLayers(prev: ThemeMode[]): ThemeMode[] {
+  if (prev.length < 2) return prev;
+  return [prev[prev.length - 1]!];
 }
 
 export default function MapTiles() {
@@ -195,7 +185,16 @@ export default function MapTiles() {
   const theme = useDeferredValue(
     resolvedTheme === "dark" ? "dark" : "light",
   ) satisfies ThemeMode;
-  const layers = useThemeLayerModes(theme);
+
+  // layers[0] may be a short-lived outgoing theme; last entry is always `theme`.
+  const [layers, setLayers] = useState<ThemeMode[]>([theme]);
+  const current = layers[layers.length - 1] ?? theme;
+
+  // Adjust during render when the deferred theme flips (React docs:
+  // “store information from previous renders” — no Effect).
+  if (theme !== current) {
+    setLayers([current, theme]);
+  }
 
   return (
     <>
@@ -204,6 +203,13 @@ export default function MapTiles() {
           key={mode}
           styleUrl={OPENFREEMAP_STYLES[mode]}
           active={mode === theme}
+          onFadeSettled={
+            mode !== theme
+              ? () => {
+                  setLayers(settleOutgoingLayers);
+                }
+              : undefined
+          }
         />
       ))}
     </>
