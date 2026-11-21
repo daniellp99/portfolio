@@ -68,7 +68,7 @@ export function ProjectDetailCover({
       {/* Covers are 1:1; aspect-video + object-cover was clipping the bottom. */}
       <div
         data-testid="project-cover"
-        className="relative aspect-square w-full max-w-md"
+        className="relative mx-auto aspect-square w-full max-w-md"
       >
         <Image
           className="rounded-lg object-scale-down object-center"
