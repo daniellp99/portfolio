@@ -6,6 +6,7 @@ import { SlideSuspense } from "@/components/SlideSuspense";
 import { CustomMDX } from "@/features/projects/components/mdx-remote";
 import { ImageGrid } from "@/features/projects/components/image-grid";
 import PostHogProjectView from "@/features/projects/components/posthog-project-view";
+import { ProjectDetailCover } from "@/features/projects/components/project-cover";
 import { ProjectJsonLd } from "@/features/projects/components/project-json-ld";
 import { ProjectTitleHeading } from "@/features/projects/components/project-title-heading";
 import { getProjectDetails } from "@/features/projects/projects-queries";
@@ -148,6 +149,11 @@ export async function ProjectDetail({ slug }: { slug: string }) {
             <p data-testid="project-description" className="text-4xl text-pretty">
               {project.description}
             </p>
+            <ProjectDetailCover
+              slug={slug}
+              coverImage={project.coverImage}
+              name={project.name}
+            />
           </section>
           <section className={typesetSectionClassName}>
             <SlideSuspense fallback={<ProjectMdxSkeleton />}>
@@ -155,7 +161,10 @@ export async function ProjectDetail({ slug }: { slug: string }) {
             </SlideSuspense>
           </section>
         </article>
-        <section className={GRID_SECTION_CLASS_NAME}>
+        <section
+          className={`${GRID_SECTION_CLASS_NAME} project-media-cv`}
+          aria-label="Project images"
+        >
           <SlideSuspense fallback={<ProjectImageGridSkeleton />}>
             <ImageGrid slug={slug} images={project.images} />
           </SlideSuspense>

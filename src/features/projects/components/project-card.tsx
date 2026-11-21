@@ -1,8 +1,7 @@
-import Image from "next/image";
-
 import { Skeleton } from "@/components/ui/skeleton";
 
 import ProjectCardChrome from "@/features/projects/components/project-card-chrome";
+import { ProjectCardCover } from "@/features/projects/components/project-cover";
 import { getProjectSummary } from "@/features/projects/projects-queries";
 import { MAIN_GRID_CARD_IMAGE_SIZES } from "@/lib/site/image-sizes";
 
@@ -21,15 +20,12 @@ export async function ProjectCard({
 
   return (
     <ProjectCardChrome project={project}>
-      <Image
-        className="rounded-lg object-scale-down object-top px-4"
-        alt={project.name}
+      <ProjectCardCover
+        slug={project.slug}
         src={`/${project.coverImage}`}
-        fill
-        loading={priority ? "eager" : "lazy"}
+        alt={project.name}
         sizes={MAIN_GRID_CARD_IMAGE_SIZES}
         priority={priority}
-        fetchPriority={priority ? "high" : undefined}
       />
     </ProjectCardChrome>
   );

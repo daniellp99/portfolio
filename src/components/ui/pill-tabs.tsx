@@ -151,7 +151,7 @@ function PillTabsList({
           ref={indicatorRef}
           aria-hidden="true"
           hidden
-          className="pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground transition-[transform,width,height] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none!"
+          className="pill-tabs-indicator pointer-events-none absolute top-0 left-0 z-0 rounded-4xl bg-foreground transition-[transform,width,height] [transition-duration:var(--duration-spring)] [transition-timing-function:var(--ease-spring)] motion-reduce:transition-none!"
         />
         {children}
       </TabsList>

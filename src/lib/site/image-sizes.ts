@@ -7,6 +7,10 @@
 export const MAIN_GRID_CARD_IMAGE_SIZES =
   "(max-width: 767px) 128px, (max-width: 1199px) 144px, 244px";
 
+/** Detail cover morph target (left column, capped at max-w-xl). */
+export const PROJECT_DETAIL_COVER_IMAGE_SIZES =
+  "(max-width: 639px) 100vw, 36rem";
+
 /**
  * `sizes` for project detail {@link ImageGrid}: MDX `width` is RGL column span,
  * so multi-column screenshots need larger intrinsic widths than {@link MAIN_GRID_CARD_IMAGE_SIZES}.

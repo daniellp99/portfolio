@@ -129,7 +129,6 @@ export default function NavItemsClient({
         <PillTabs.List
           size="default"
           aria-label="Main grid views"
-          activateOnFocus
         >
           {tabs.map((tabId) => (
             <PillTabs.Item

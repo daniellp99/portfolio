@@ -5,6 +5,8 @@ import { catchError } from "next/error";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+import { MapRenderGate } from "@/features/home/components/map/MapRenderGate";
+
 const MapCardIsland = dynamic(() => import("./MapCardIsland"), {
   ssr: false,
   loading() {
@@ -25,7 +27,9 @@ const MapCardErrorBoundary = catchError(function MapCardErrorFallback() {
 export function MapCard({ tooltip }: { tooltip: string }) {
   return (
     <MapCardErrorBoundary>
-      <MapCardIsland tooltip={tooltip} />
+      <MapRenderGate>
+        <MapCardIsland tooltip={tooltip} />
+      </MapRenderGate>
     </MapCardErrorBoundary>
   );
 }
