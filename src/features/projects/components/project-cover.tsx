@@ -65,12 +65,13 @@ export function ProjectDetailCover({
       share="morph"
       default="none"
     >
+      {/* Covers are 1:1; aspect-video + object-cover was clipping the bottom. */}
       <div
         data-testid="project-cover"
-        className="relative aspect-video w-full max-w-xl overflow-hidden rounded-lg"
+        className="relative aspect-square w-full max-w-md"
       >
         <Image
-          className="rounded-lg object-cover object-top"
+          className="rounded-lg object-scale-down object-top"
           alt={`${name} cover`}
           src={src}
           fill

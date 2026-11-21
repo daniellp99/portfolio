@@ -142,7 +142,7 @@ export async function ProjectDetail({ slug }: { slug: string }) {
               share="text-morph"
               default="none"
             >
-              <ProjectTitleHeading className="font-sans text-6xl font-bold tracking-tight outline-none focus:ring-2 focus:ring-ring">
+              <ProjectTitleHeading className="w-fit max-w-full font-sans text-6xl font-bold tracking-tight outline-none focus-visible:ring-2 focus-visible:ring-ring">
                 {project.name}
               </ProjectTitleHeading>
             </ViewTransition>

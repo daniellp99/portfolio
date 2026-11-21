@@ -525,12 +525,13 @@ pre code {
   animation-name: via-blur;
 }
 
-/* Cover morph: card ↔ detail aspect change without stretch distortion */
+/* Cover morph: contain so square covers aren't cropped while the group resizes */
 ::view-transition-old(.morph),
 ::view-transition-new(.morph) {
   height: 100%;
-  object-fit: cover;
-  object-position: top;
+  width: 100%;
+  object-fit: contain;
+  object-position: top center;
 }
 
 @keyframes via-blur {
@@ -541,6 +542,7 @@ pre code {
 
 ::view-transition-group(.text-morph) {
   animation-duration: var(--duration-move);
+  overflow: clip;
 }
 ::view-transition-old(.text-morph) {
   display: none;
@@ -549,6 +551,8 @@ pre code {
   animation: none;
   object-fit: none;
   object-position: left top;
+  width: fit-content;
+  height: fit-content;
 }
 
 ::view-transition-group(persistent-nav) {

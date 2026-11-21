@@ -7,9 +7,9 @@
 export const MAIN_GRID_CARD_IMAGE_SIZES =
   "(max-width: 767px) 128px, (max-width: 1199px) 144px, 244px";
 
-/** Detail cover morph target (left column, capped at max-w-xl). */
+/** Detail cover morph target (left column, square, capped at max-w-md). */
 export const PROJECT_DETAIL_COVER_IMAGE_SIZES =
-  "(max-width: 639px) 100vw, 36rem";
+  "(max-width: 639px) 100vw, 28rem";
 
 /**
  * `sizes` for project detail {@link ImageGrid}: MDX `width` is RGL column span,
