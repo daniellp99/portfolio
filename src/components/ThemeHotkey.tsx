@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import { startTransition, useEffect } from "react";
 
 import {
   type ColorScheme,
@@ -40,7 +40,9 @@ export function ThemeHotkey() {
         resolvedTheme === "dark" ? "dark" : "light";
       const system: ColorScheme = systemTheme === "dark" ? "dark" : "light";
       const nextTheme = nextThemePreference(resolved, system);
-      setTheme(nextTheme);
+      startTransition(() => {
+        setTheme(nextTheme);
+      });
       capture("theme_selected", { theme: nextTheme });
     }
 

@@ -429,6 +429,26 @@ pre code {
   animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
 }
 
+/* MapLibre WebGL hosts: live opacity fade (VT snapshots miss canvas) */
+.map-tiles-fade-host {
+  transition-property: opacity;
+}
+.map-tiles-fade-host[data-active="true"] {
+  opacity: 1;
+  transition-duration: var(--duration-enter);
+  transition-timing-function: ease-out;
+}
+.map-tiles-fade-host[data-active="false"] {
+  opacity: 0;
+  transition-duration: var(--duration-exit);
+  transition-timing-function: ease-in;
+}
+@media (prefers-reduced-motion: reduce) {
+  .map-tiles-fade-host {
+    transition-duration: 0s;
+  }
+}
+
 /* ViewTransition: NavBar center slot swap (Activity visible/hidden) */
 ::view-transition-old(.nav-center-swap) {
   animation:
