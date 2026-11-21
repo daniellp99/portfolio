@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useRef,
-  useSyncExternalStore,
-  type ReactNode,
-} from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -18,11 +13,7 @@ type GateFlags = {
   intersecting: boolean;
 };
 
-type HostStore = {
-  node: HTMLDivElement | null;
-  listeners: Set<() => void>;
-};
-
+/** Per-host mutable flags; WeakMap so teardown GC cleans them up. */
 const flagsByHost = new WeakMap<HTMLElement, GateFlags>();
 
 function getFlags(host: HTMLElement): GateFlags {
@@ -40,17 +31,6 @@ function supportsContentVisibility(): boolean {
     typeof CSS.supports === "function" &&
     CSS.supports("content-visibility", "auto")
   );
-}
-
-function isRenderActive(host: HTMLElement | null): boolean {
-  if (!host || typeof document === "undefined") {
-    return true;
-  }
-  if (document.visibilityState !== "visible") {
-    return false;
-  }
-  const flags = getFlags(host);
-  return !flags.skipped && flags.intersecting;
 }
 
 function subscribeMapGate(host: HTMLElement, onStoreChange: () => void) {
@@ -97,44 +77,30 @@ function subscribeMapGate(host: HTMLElement, onStoreChange: () => void) {
   };
 }
 
-function useHostNode(): [
-  HTMLDivElement | null,
-  (node: HTMLDivElement | null) => void,
-] {
-  const storeRef = useRef<HostStore | null>(null);
-  if (storeRef.current === null) {
-    storeRef.current = { node: null, listeners: new Set() };
+function isRenderActive(host: HTMLElement | null): boolean {
+  if (!host) {
+    return true;
   }
-  const store = storeRef.current;
+  if (document.visibilityState !== "visible") {
+    return false;
+  }
+  const { skipped, intersecting } = getFlags(host);
+  return !skipped && intersecting;
+}
 
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      store.listeners.add(onStoreChange);
-      return () => {
-        store.listeners.delete(onStoreChange);
-      };
-    },
-    [store],
-  );
-
-  const getSnapshot = useCallback(() => store.node, [store]);
-  const getServerSnapshot = useCallback(() => null, []);
-  const node = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-
-  const setHost = useCallback(
-    (next: HTMLDivElement | null) => {
-      if (store.node === next) {
-        return;
+function useMapRenderActive(host: HTMLElement | null): boolean {
+  // External store (CV / visibility / IO) — not an Effect.
+  // Compiler memoizes these closures when `host` is stable.
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      if (!host) {
+        return () => {};
       }
-      store.node = next;
-      Array.from(store.listeners).forEach((listener) => {
-        listener();
-      });
+      return subscribeMapGate(host, onStoreChange);
     },
-    [store],
+    () => isRenderActive(host),
+    () => true,
   );
-
-  return [node, setHost];
 }
 
 /**
@@ -149,26 +115,9 @@ export function MapRenderGate({
   children: ReactNode;
   className?: string;
 }) {
-  const [host, setHost] = useHostNode();
-
-  const subscribe = useCallback(
-    (onStoreChange: () => void) => {
-      if (!host) {
-        return () => {};
-      }
-      return subscribeMapGate(host, onStoreChange);
-    },
-    [host],
-  );
-
-  const getSnapshot = useCallback(() => isRenderActive(host), [host]);
-  const getServerSnapshot = useCallback(() => true, []);
-
-  const renderActive = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
+  // Callback ref → state: host is available for the external-store subscribe.
+  const [host, setHost] = useState<HTMLDivElement | null>(null);
+  const renderActive = useMapRenderActive(host);
 
   return (
     <div
