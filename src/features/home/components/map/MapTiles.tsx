@@ -9,7 +9,6 @@ import { useTheme } from "next-themes";
 import {
   useDeferredValue,
   useState,
-  ViewTransition,
   type TransitionEvent,
 } from "react";
 import { createPortal } from "react-dom";
@@ -113,8 +112,10 @@ function attachMapLibreLayer(
  * run, then unmounts on `transitionend` — avoids keeping two WebGL contexts
  * alive while the map is visible.
  *
- * `<ViewTransition enter/exit>` stays on the host for React VT wiring; theme
- * updates are deferred so they run as Transitions.
+ * No React `<ViewTransition enter/exit>` on these hosts: mounting a portal
+ * layer under fade-in makes the VT group morph from empty/offscreen geometry
+ * (canvas snapshots are unreliable). In-place fade is CSS opacity only;
+ * theme updates still run under startTransition + useDeferredValue.
  */
 function MapLibreStyleLayer({
   styleUrl,
@@ -149,26 +150,6 @@ function MapLibreStyleLayer({
   );
 }
 
-function ThemedMapTiles({
-  styleUrl,
-  active,
-  onFadeSettled,
-}: {
-  styleUrl: string;
-  active: boolean;
-  onFadeSettled?: () => void;
-}) {
-  return (
-    <ViewTransition enter="fade-in" exit="fade-out" default="none">
-      <MapLibreStyleLayer
-        styleUrl={styleUrl}
-        active={active}
-        onFadeSettled={onFadeSettled}
-      />
-    </ViewTransition>
-  );
-}
-
 /**
  * Drop a settled outgoing theme layer. Keeps the latest incoming mode so a
  * stale transitionend cannot revive an older theme.
@@ -180,8 +161,8 @@ function settleOutgoingLayers(prev: ThemeMode[]): ThemeMode[] {
 
 export default function MapTiles() {
   const { resolvedTheme } = useTheme();
-  // Theme updates from next-themes are not Transitions; defer so VT + opacity
-  // class updates run in a Transition.
+  // Theme updates from next-themes are not Transitions; defer so opacity
+  // host updates coalesce with the toggle’s startTransition.
   const theme = useDeferredValue(
     resolvedTheme === "dark" ? "dark" : "light",
   ) satisfies ThemeMode;
@@ -199,7 +180,7 @@ export default function MapTiles() {
   return (
     <>
       {layers.map((mode) => (
-        <ThemedMapTiles
+        <MapLibreStyleLayer
           key={mode}
           styleUrl={OPENFREEMAP_STYLES[mode]}
           active={mode === theme}
