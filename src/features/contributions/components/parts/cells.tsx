@@ -8,6 +8,8 @@ import { ContributionsCellTransition } from "@/features/contributions/components
 import { ContributionsDataCellsAsync } from "@/features/contributions/components/parts/data-cells-async";
 import { ContributionsErrorCells } from "@/features/contributions/components/parts/error-cells";
 import { ContributionsLoadingCells } from "@/features/contributions/components/parts/loading-cells";
+import { getClientCachedContributionsPromise } from "@/features/contributions/lib/contributions-promise-cache";
+import { isCurrentContributionsMonth } from "@/features/contributions/lib/contributions-month";
 import { CONTRIBUTIONS_PENDING_PULSE_CLASS } from "@/lib/site/constants";
 import { cn } from "@/lib/utils";
 
@@ -36,12 +38,20 @@ export function ContributionsCells({
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
   const { year, month, attempt } = useContributionsBoundary();
-  // Keep showing the previous month's promise until React commits the deferred
-  // update. Suspense must stay mounted across month changes — remounting it
-  // (via error-boundary / ViewTransition keys) forces LoadingCells even when
-  // `'use cache'` already has the month warm (new thenable per RSC render).
-  const deferredPromise = useDeferredValue(contributionsPromise);
-  const isStale = deferredPromise !== contributionsPromise;
+  // Reuse resolved thenables per month so `use()` does not suspend on revisit
+  // (server `'use cache'` still ships a new Promise identity each RSC pass).
+  // Attempt is part of the key so retries get a fresh thenable; bust the
+  // current month so server `updateTag` refresh is not masked by the client map.
+  const stablePromise = getClientCachedContributionsPromise(
+    `${cacheKey}:${attempt}`,
+    contributionsPromise,
+    { bust: isCurrentContributionsMonth(year, month) },
+  );
+  // Keep showing the previous month until React commits the deferred update.
+  // Suspense must stay mounted across month changes — remounting it forces
+  // LoadingCells even when the thenable is warm.
+  const deferredPromise = useDeferredValue(stablePromise);
+  const isStale = deferredPromise !== stablePromise;
 
   return (
     <section
@@ -57,15 +67,21 @@ export function ContributionsCells({
         year={year}
         month={month}
       >
-        <Suspense
-          fallback={<ContributionsLoadingCells year={year} month={month} />}
-        >
-          <ContributionsCellTransition>
+        {/*
+          React 19.3: VT wraps Suspense with update-only + default="none".
+          Cached (non-suspending) month swaps animate via typed `update`;
+          Suspense fallback → content uses the map's untyped default ("auto").
+          No enter/exit on this boundary — those choreograph cells→skeleton→cells.
+        */}
+        <ContributionsCellTransition>
+          <Suspense
+            fallback={<ContributionsLoadingCells year={year} month={month} />}
+          >
             <ContributionsDataCellsAsync
               contributionsPromise={deferredPromise}
             />
-          </ContributionsCellTransition>
-        </Suspense>
+          </Suspense>
+        </ContributionsCellTransition>
       </ContributionsCellsErrorBoundary>
     </section>
   );

@@ -82,7 +82,9 @@ export function ContributionsMonthCalendar({
     startTransition(() => {
       addTransitionType(intent === "next" ? "nav-forward" : "nav-back");
       // Caption advances immediately; description/count/cells stay stale + pulse
-      // until useDeferredValue / RSC catch up.
+      // until useDeferredValue / client thenable cache / RSC catch up.
+      // Do not key-remount this form when the server month catches up — that
+      // tears down the transition that keeps Suspense from flashing LoadingCells.
       setOptimisticState(next);
       formAction(formData);
     });
