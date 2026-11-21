@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 /**
  * Shared pause/play for the skills logo marquees (WCAG 2.2.2 / motion guide).
  * Hover and focus-within still pause temporarily; this control is durable.
- * Label swaps between Pause and Play — do not also set aria-pressed.
+ * Icon-only: accessible name swaps Play/Pause — do not also set aria-pressed.
+ * Inset clears the large item-card radius + overflow-hidden clip.
  */
 export function SkillsMarquee({ children }: { children: ReactNode }) {
   const [paused, setPaused] = useState(false);
@@ -22,25 +23,17 @@ export function SkillsMarquee({ children }: { children: ReactNode }) {
       )}
     >
       {children}
-      <Button
-        type="button"
-        variant="outline"
-        size="xs"
-        className="absolute right-1 bottom-1 z-10"
-        onClick={() => setPaused((value) => !value)}
-      >
-        {paused ? (
-          <>
-            <PlayIcon aria-hidden />
-            Play animation
-          </>
-        ) : (
-          <>
-            <PauseIcon aria-hidden />
-            Pause animation
-          </>
-        )}
-      </Button>
+      <span className="cancelDrag absolute right-4 bottom-4 z-10">
+        <Button
+          type="button"
+          variant="outline"
+          size="icon-sm"
+          aria-label={paused ? "Play animation" : "Pause animation"}
+          onClick={() => setPaused((value) => !value)}
+        >
+          {paused ? <PlayIcon aria-hidden /> : <PauseIcon aria-hidden />}
+        </Button>
+      </span>
     </div>
   );
 }
