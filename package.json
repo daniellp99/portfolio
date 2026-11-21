@@ -9,11 +9,13 @@
     "dev": "next dev --turbopack",
     "prebuild": "bun run copy:maplibre-worker",
     "build": "next build",
+    "build:e2e": "EXPOSE_TESTING_API=1 next build",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
     "knip": "knip",
-    "test": "bun test --conditions react-server",
+    "test": "bun test --conditions react-server src",
+    "test:e2e": "playwright test",
     "measure:project-listing": "bun run scripts/measure-project-listing.ts",
     "extract:stack-icons": "bun run scripts/extract-stack-icons.ts",
     "typecheck": "next typegen && tsc --noEmit",
@@ -51,6 +53,8 @@
     "zod": "^4.6.1"
   },
   "devDependencies": {
+    "@next/playwright": "16.4.5",
+    "@playwright/test": "^1.65.1",
     "@shadcn/lint": "^0.2.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/leaflet": "^1.9.22",

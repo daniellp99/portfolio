@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "next-partial-prefetching-optimizer": {
+      "source": "vercel/next.js",
+      "commit": "794836c3cbb750d1e34f99e210b39b7bdfbc4c58",
+      "sourceType": "github",
+      "skillPath": "skills/next-partial-prefetching-optimizer/SKILL.md",
+      "computedHash": "c14905fe96b7cae2af2d359edbfa6f07cc1fae5ff94709ed58092834677dc24d"
+    }
+  }
+}
