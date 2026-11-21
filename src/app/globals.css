@@ -440,7 +440,9 @@ pre code {
   animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
 }
 
-/* MapLibre WebGL hosts: live opacity fade (VT snapshots miss canvas) */
+/* MapLibre WebGL hosts: live opacity fade (VT snapshots miss canvas).
+   Inactive theme unmounts after the crossfade; @starting-style lets a
+   newly mounted active host fade in from 0 instead of popping opaque. */
 .map-tiles-fade-host {
   transition-property: opacity;
 }
@@ -453,6 +455,11 @@ pre code {
   opacity: 0;
   transition-duration: var(--duration-exit);
   transition-timing-function: ease-in;
+}
+@starting-style {
+  .map-tiles-fade-host[data-active="true"] {
+    opacity: 0;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .map-tiles-fade-host {

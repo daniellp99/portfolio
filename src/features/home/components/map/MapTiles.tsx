@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import {
   useDeferredValue,
   useEffect,
+  useState,
   useRef,
   ViewTransition,
 } from "react";
@@ -19,7 +20,12 @@ const OPENFREEMAP_STYLES = {
   dark: "https://tiles.openfreemap.org/styles/dark",
 } as const;
 
+type ThemeMode = keyof typeof OPENFREEMAP_STYLES;
+
 const MAPLIBRE_WORKER_URL = "/maplibre/maplibre-gl-worker.mjs";
+
+/** Match `--duration-enter` / `--duration-exit` in globals.css. */
+const THEME_CROSSFADE_MS = 210;
 
 type MapLibreStyleLayerProps = {
   styleUrl: string;
@@ -30,8 +36,12 @@ type MapLibreStyleLayerProps = {
  * MapLibre is imperative (no React host) and paints to WebGL. Browser view-
  * transition snapshots often omit canvas, so the visible dark↔light fade uses
  * the shared `--duration-enter` / `--duration-exit` opacity recipe on a sized
- * React host. Both themes stay mounted: Activity hide tears down GL and makes
- * enter snapshots empty.
+ * React host.
+ *
+ * Steady state mounts only the active theme’s GL layer. During a theme switch
+ * the outgoing layer stays mounted briefly (opacity 0) so the crossfade can
+ * run, then unmounts — avoids keeping two WebGL contexts alive while the map
+ * is visible.
  *
  * `<ViewTransition enter/exit>` stays on the host for React VT wiring; theme
  * updates are deferred so they run as Transitions.
@@ -139,24 +149,63 @@ function ThemedMapTiles({
   );
 }
 
+/**
+ * Keep at most two theme layers: the active one, plus a short-lived outgoing
+ * layer for the opacity crossfade. Settles back to a single GL context.
+ */
+function useThemeLayerModes(theme: ThemeMode): ThemeMode[] {
+  const [layers, setLayers] = useState<ThemeMode[]>([theme]);
+  const [trackedTheme, setTrackedTheme] = useState(theme);
+
+  // Adjust during render when the deferred theme flips (React-recommended
+  // “store info from previous renders” pattern — avoids sync setState in effect).
+  if (theme !== trackedTheme) {
+    setTrackedTheme(theme);
+    setLayers((prev) => {
+      const from = prev[prev.length - 1] ?? theme;
+      return from === theme ? [theme] : [from, theme];
+    });
+  }
+
+  useEffect(() => {
+    if (layers.length < 2) {
+      return;
+    }
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const holdMs = reducedMotion ? 0 : THEME_CROSSFADE_MS;
+    const id = window.setTimeout(() => {
+      setLayers([theme]);
+    }, holdMs);
+
+    return () => {
+      window.clearTimeout(id);
+    };
+  }, [theme, layers]);
+
+  return layers;
+}
+
 export default function MapTiles() {
   const { resolvedTheme } = useTheme();
   // Theme updates from next-themes are not Transitions; defer so VT + opacity
   // class updates run in a Transition.
   const theme = useDeferredValue(
     resolvedTheme === "dark" ? "dark" : "light",
-  );
+  ) satisfies ThemeMode;
+  const layers = useThemeLayerModes(theme);
 
   return (
     <>
-      <ThemedMapTiles
-        styleUrl={OPENFREEMAP_STYLES.dark}
-        active={theme === "dark"}
-      />
-      <ThemedMapTiles
-        styleUrl={OPENFREEMAP_STYLES.light}
-        active={theme === "light"}
-      />
+      {layers.map((mode) => (
+        <ThemedMapTiles
+          key={mode}
+          styleUrl={OPENFREEMAP_STYLES[mode]}
+          active={mode === theme}
+        />
+      ))}
     </>
   );
 }
