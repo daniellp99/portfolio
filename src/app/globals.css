@@ -16,6 +16,17 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* dark-mode: native UA chrome follows system until meta pins an override */
+  color-scheme: light dark;
+
+  &:has(> head > meta[name="color-scheme"][content="dark"]) {
+    color-scheme: dark;
+  }
+
+  &:has(> head > meta[name="color-scheme"][content="light"]) {
+    color-scheme: light;
+  }
+
   --background: oklch(96.744% 0.00143 285.225);
   --foreground: oklch(14.077% 0.0044 285.776);
   --card: oklch(100% 0.00011 271.152);
@@ -514,6 +525,15 @@ pre code {
   animation-name: via-blur;
 }
 
+/* Cover morph: contain so square covers aren't cropped while the group resizes */
+::view-transition-old(.morph),
+::view-transition-new(.morph) {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
 @keyframes via-blur {
   30% {
     filter: blur(3px);
@@ -522,6 +542,7 @@ pre code {
 
 ::view-transition-group(.text-morph) {
   animation-duration: var(--duration-move);
+  overflow: clip;
 }
 ::view-transition-old(.text-morph) {
   display: none;
@@ -530,6 +551,8 @@ pre code {
   animation: none;
   object-fit: none;
   object-position: left top;
+  width: fit-content;
+  height: fit-content;
 }
 
 ::view-transition-group(persistent-nav) {
@@ -589,4 +612,64 @@ pre code {
 .logo-marquee:focus-within .logo-marquee-track,
 .logo-marquee-paused .logo-marquee-track {
   animation-play-state: paused;
+}
+
+/* efficient-background-processing: skip map paint when far off-screen */
+.map-render-gate {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 280px;
+}
+
+/* defer-rendering-heavy-content: project screenshot grid is below the fold */
+.project-media-cv {
+  content-visibility: auto;
+  contain-intrinsic-size: auto none auto 720px;
+}
+
+/* color / accessibility: Forced Colors Mode borders where chrome is color/shadow-only */
+@media (forced-colors: active) {
+  .grid-item-card {
+    border-color: CanvasText;
+  }
+
+  .pill-tabs-indicator {
+    background-color: Highlight;
+  }
+
+  [data-slot="tabs-list"] [data-slot="tabs-trigger"][data-active] {
+    border: 2px solid Highlight;
+  }
+
+  .contrib-cell {
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+
+  .contrib-cell[data-outside] {
+    border-color: GrayText;
+  }
+
+  .contrib-cell[data-state="error"] {
+    border-color: Mark;
+  }
+
+  .contrib-cell[data-bucket="1"] {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+
+  .contrib-cell[data-bucket="2"] {
+    outline: 2px solid ButtonText;
+    outline-offset: -2px;
+  }
+
+  .contrib-cell[data-bucket="3"] {
+    outline: 3px solid ButtonText;
+    outline-offset: -3px;
+  }
+
+  .contrib-cell[data-bucket="4"] {
+    outline: 3px solid Highlight;
+    outline-offset: -3px;
+  }
 }

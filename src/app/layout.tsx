@@ -53,6 +53,14 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
+        {/* dark-mode / dark-mode-toggle: early canvas hint before paint */}
+        <meta name="color-scheme" content="light dark" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme');var m=document.querySelector('meta[name=\"color-scheme\"]');if(m)m.content=t==='dark'||t==='light'?t:'light dark'}catch(e){}",
+          }}
+        />
         <link
           rel="preconnect"
           href="https://tiles.openfreemap.org"
