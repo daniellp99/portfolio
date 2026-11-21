@@ -7,7 +7,10 @@ import MapTiles from "@/features/home/components/map/MapTiles";
 import MapZoomControls from "@/features/home/components/map/MapZoomControls";
 import { AVATAR_MARKER_ROOT_ID } from "@/lib/site/avatar-marker";
 
-/** Full map island — leaflet/maplibre stay behind `MapCard`'s dynamic import. */
+/**
+ * Full map island — leaflet/maplibre stay behind `MapCardClient`'s dynamic
+ * import. Must remain a client module (MapContainer + imperative GL).
+ */
 export default function MapCardIsland({ tooltip }: { tooltip: string }) {
   return (
     <MapRoot>
@@ -17,4 +20,3 @@ export default function MapCardIsland({ tooltip }: { tooltip: string }) {
     </MapRoot>
   );
 }
-

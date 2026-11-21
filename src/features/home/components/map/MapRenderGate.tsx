@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, useSyncExternalStore, type ReactNode } from "react";
+import {
+  Activity,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -104,9 +109,13 @@ function useMapRenderActive(host: HTMLElement | null): boolean {
 }
 
 /**
- * Unmounts MapLibre when the map card is skipped by content-visibility,
- * far off-screen (IntersectionObserver fallback), or the document tab is
- * hidden — efficient-background-processing without fighting MapCard deferral.
+ * Pauses MapLibre when the map card is skipped by content-visibility, far
+ * off-screen (IntersectionObserver fallback), or the document tab is hidden.
+ *
+ * Uses `<Activity>` instead of conditional unmount: Effects (GL bind) still
+ * tear down while paused, but React state (zoom level, theme settle) is
+ * preserved for the next visible pass. No ViewTransition here — remounting
+ * the WebGL host under enter/exit morphs from empty/offscreen geometry.
  */
 export function MapRenderGate({
   children,
@@ -125,7 +134,7 @@ export function MapRenderGate({
       className={cn("map-render-gate size-full", className)}
       data-map-render={renderActive ? "active" : "paused"}
     >
-      {renderActive ? children : null}
+      <Activity mode={renderActive ? "visible" : "hidden"}>{children}</Activity>
     </div>
   );
 }
