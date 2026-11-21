@@ -7,6 +7,7 @@ import { CustomMDX } from "@/features/projects/components/mdx-remote";
 import { ImageGrid } from "@/features/projects/components/image-grid";
 import PostHogProjectView from "@/features/projects/components/posthog-project-view";
 import { ProjectJsonLd } from "@/features/projects/components/project-json-ld";
+import { ProjectTitleHeading } from "@/features/projects/components/project-title-heading";
 import { getProjectDetails } from "@/features/projects/projects-queries";
 import { GRID_SECTION_CLASS_NAME } from "@/lib/site/grid";
 
@@ -140,12 +141,9 @@ export async function ProjectDetail({ slug }: { slug: string }) {
               share="text-morph"
               default="none"
             >
-              <h1
-                data-testid="project-title"
-                className="font-sans text-6xl font-bold tracking-tight"
-              >
+              <ProjectTitleHeading className="font-sans text-6xl font-bold tracking-tight outline-none focus:ring-2 focus:ring-ring">
                 {project.name}
-              </h1>
+              </ProjectTitleHeading>
             </ViewTransition>
             <p data-testid="project-description" className="text-4xl text-pretty">
               {project.description}

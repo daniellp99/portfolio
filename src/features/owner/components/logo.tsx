@@ -14,9 +14,7 @@ export function Logo() {
       alt={altText}
       width={80}
       height={80}
-      preload
       sizes="80px"
-      fetchPriority="high"
       quality={90}
       className="size-20 rounded-full border border-foreground bg-foreground"
     />
