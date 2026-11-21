@@ -127,9 +127,9 @@ function useHostNode(): [
         return;
       }
       store.node = next;
-      for (const listener of store.listeners) {
+      Array.from(store.listeners).forEach((listener) => {
         listener();
-      }
+      });
     },
     [store],
   );

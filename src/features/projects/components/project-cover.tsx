@@ -5,7 +5,7 @@ import { PROJECT_DETAIL_COVER_IMAGE_SIZES } from "@/lib/site/image-sizes";
 import { cn } from "@/lib/utils";
 
 /** Shared cover morph pair: home card ↔ project detail hero. */
-export function projectCoverTransitionName(slug: string) {
+function projectCoverTransitionName(slug: string) {
   return `project-cover-${slug}`;
 }
 
