@@ -4,6 +4,8 @@ import { catchError } from "next/error";
 import { Suspense, use, useDeferredValue } from "react";
 
 import { useContributionsBoundary } from "@/features/contributions/components/parts/boundary";
+import { getClientCachedContributionsPromise } from "@/features/contributions/lib/contributions-promise-cache";
+import { isCurrentContributionsMonth } from "@/features/contributions/lib/contributions-month";
 import { CONTRIBUTIONS_PENDING_PULSE_CLASS } from "@/lib/site/constants";
 import { cn } from "@/lib/utils";
 
@@ -32,11 +34,16 @@ export function ContributionsCount({
   cacheKey: string;
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
-  const { attempt } = useContributionsBoundary();
+  const { year, month, attempt } = useContributionsBoundary();
+  const stablePromise = getClientCachedContributionsPromise(
+    `${cacheKey}:${attempt}`,
+    contributionsPromise,
+    { bust: isCurrentContributionsMonth(year, month) },
+  );
   // Stale-while-revalidate: keep the previous count visible until the new
   // promise is ready (React shows prior UI while the deferred render suspends).
-  const deferredPromise = useDeferredValue(contributionsPromise);
-  const isStale = deferredPromise !== contributionsPromise;
+  const deferredPromise = useDeferredValue(stablePromise);
+  const isStale = deferredPromise !== stablePromise;
 
   return (
     <span

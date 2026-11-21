@@ -53,7 +53,6 @@ export function ContributionsCard({
         <CardFooter className="peer/contribution-calendar order-3 items-end justify-between px-2 pb-2">
           <Contributions.OpenProfileLink login={login} />
           <Contributions.MonthCalendar
-            key={cacheKey}
             initialState={monthFormInitialState}
             journeyStartAt={ownerData.journeyStartAt}
           />
