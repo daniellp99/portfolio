@@ -14,9 +14,8 @@ import type { ResponsiveLayouts } from "react-grid-layout";
 
 import GridResponsive from "@/features/home/components/grid-responsive";
 
-function subscribeViewportWidth(onStoreChange: () => void) {
-  window.addEventListener("resize", onStoreChange);
-  return () => window.removeEventListener("resize", onStoreChange);
+function subscribeNoop() {
+  return () => {};
 }
 
 function readViewportGridWidth(): number {
@@ -37,8 +36,9 @@ function GridContainerLayout({
   setLayoutsOptions: SetLayoutsOptions;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  // Seed from the viewport estimate; ResizeObserver keeps it in sync with the
+  // capped section (external DOM) — that sync is the Effect we do need.
   const [width, setWidth] = useState(initialWidth);
-  const [mounted, setMounted] = useState(false);
 
   useLayoutEffect(() => {
     const node = containerRef.current;
@@ -52,8 +52,6 @@ function GridContainerLayout({
     };
 
     update();
-    setMounted(true);
-
     const observer = new ResizeObserver(update);
     observer.observe(node);
     return () => observer.disconnect();
@@ -65,7 +63,7 @@ function GridContainerLayout({
         layouts={layouts}
         layoutKey={layoutKey}
         width={width}
-        interactive={mounted}
+        interactive
         setLayoutsOptions={setLayoutsOptions}
       >
         {children}
@@ -93,15 +91,14 @@ export function GridContainer({
     allowedLayoutIds !== undefined || imageSrcs !== undefined
       ? { allowedLayoutIds, imageSrcs }
       : {};
+  // Client snapshot avoids a 1200px first paint when SSR lacked viewport CH.
+  // No window resize subscription: the section ResizeObserver covers that.
   const initialWidth = useSyncExternalStore(
-    subscribeViewportWidth,
+    subscribeNoop,
     readViewportGridWidth,
     () => ssrInitialWidth,
   );
 
-  // Remount when the client viewport estimate differs from SSR so card
-  // heights are not stuck on the desktop (1200) formula inside a narrower
-  // section cap (home + project detail image grids).
   return (
     <GridContainerLayout
       key={initialWidth}

@@ -80,7 +80,7 @@ export const GRID_SECTION_MAX_WIDTH = {
 } as const;
 
 /**
- * Shared width shell for home + project image grids so `useContainerWidth` /
+ * Shared width shell for home + project image grids so container measure /
  * `rowHeightForContainerWidth` see the same capped width on both pages.
  * Use `w-full` (not only `max-w-*`) under flex `place-items-center` parents.
  */
