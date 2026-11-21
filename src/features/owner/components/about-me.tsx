@@ -1,5 +1,6 @@
 import { CardHeader } from "@/components/ui/card";
 
+import { AboutMeHeading } from "@/features/owner/components/about-me-heading";
 import { getOwnerData } from "@/features/owner/owner-queries";
 import { renderAboutMeCached } from "@/lib/content/render-about-me";
 
@@ -18,7 +19,9 @@ export async function AboutMe() {
     <CardHeader className="size-full content-center">
       <div className="text-xl leading-relaxed tracking-wide text-pretty antialiased">
         {beforeName}
-        <h1 className="inline font-sans text-4xl font-extrabold">{name}</h1>
+        <AboutMeHeading className="inline font-sans text-4xl font-extrabold outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          {name}
+        </AboutMeHeading>
         {afterName}
       </div>
     </CardHeader>
