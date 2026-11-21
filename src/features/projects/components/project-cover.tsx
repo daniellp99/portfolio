@@ -71,7 +71,7 @@ export function ProjectDetailCover({
         className="relative aspect-square w-full max-w-md"
       >
         <Image
-          className="rounded-lg object-scale-down object-top"
+          className="rounded-lg object-scale-down object-center"
           alt={`${name} cover`}
           src={src}
           fill
