@@ -14,13 +14,11 @@ const LayoutSchema = z.object({
   isResizable: z.boolean().optional(),
 });
 
-const LogicalLayoutsSchema = z
-  .object({
-    lg: z.array(LayoutSchema).optional(),
-    sm: z.array(LayoutSchema).optional(),
-    xs: z.array(LayoutSchema).optional(),
-  })
-  .strict();
+const LogicalLayoutsSchema = z.strictObject({
+  lg: z.array(LayoutSchema).optional(),
+  sm: z.array(LayoutSchema).optional(),
+  xs: z.array(LayoutSchema).optional(),
+});
 
 export const jsonToLogicalLayouts = jsonCodec(LogicalLayoutsSchema);
 

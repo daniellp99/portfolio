@@ -16,6 +16,9 @@ import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
+const THEME_COLOR_SCHEME_SCRIPT =
+  "try{var t=localStorage.getItem('theme');var m=document.querySelector('meta[name=\"color-scheme\"]');if(m)m.content=t==='dark'||t==='light'?t:'light dark'}catch(e){}";
+
 export const ensureStatic = "shell";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -55,8 +58,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              "try{var t=localStorage.getItem('theme');var m=document.querySelector('meta[name=\"color-scheme\"]');if(m)m.content=t==='dark'||t==='light'?t:'light dark'}catch(e){}",
+            __html: THEME_COLOR_SCHEME_SCRIPT,
           }}
         />
         <link

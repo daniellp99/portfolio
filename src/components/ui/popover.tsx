@@ -141,7 +141,6 @@ function PopoverDescription({
 export {
   Popover,
   PopoverContent,
-  popoverContentVariants,
   PopoverDescription,
   PopoverHeader,
   PopoverTitle,

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpRightIcon } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { capture } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 

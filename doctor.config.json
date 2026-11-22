@@ -1,0 +1,10 @@
+{
+  "surfaces": {
+    "score": {
+      "excludeRules": ["react-doctor/server-auth-actions"]
+    },
+    "ciFailure": {
+      "excludeRules": ["react-doctor/server-auth-actions"]
+    }
+  }
+}

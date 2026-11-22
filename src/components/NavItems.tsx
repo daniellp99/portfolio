@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { FieldError } from "@/components/ui/field";
-import { PillTabs } from "@/components/ui/pill-tabs";
+import { PillTabs } from "@/components/ui/pill-tabs-group";
 
 import {
   switchMainGridTabFormAction,
