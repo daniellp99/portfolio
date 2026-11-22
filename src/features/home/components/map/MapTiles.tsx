@@ -105,17 +105,22 @@ function attachMapLibreLayer(
  * MapLibre is imperative (no React host) and paints to WebGL. Browser view-
  * transition snapshots often omit canvas, so the visible dark↔light fade uses
  * the shared `--duration-enter` / `--duration-exit` opacity recipe on a sized
- * React host.
+ * React host (`data-active` + `@starting-style`).
  *
- * Steady state mounts only the active theme’s GL layer. During a theme switch
- * the outgoing layer stays mounted briefly (opacity 0) so the crossfade can
- * run, then unmounts on `transitionend` — avoids keeping two WebGL contexts
- * alive while the map is visible.
+ * ## Activity + ViewTransition (theme tiles) — intentionally not used
  *
- * No React `<ViewTransition enter/exit>` on these hosts: mounting a portal
- * layer under fade-in makes the VT group morph from empty/offscreen geometry
- * (canvas snapshots are unreliable). In-place fade is CSS opacity only;
- * theme updates still run under startTransition + useDeferredValue.
+ * Dual always-mounted dark/light layers kept two WebGL contexts alive while
+ * the map was visible. `<Activity mode="hidden">` on the inactive theme would
+ * tear down that layer’s Effects (GL bind), then remount on show — fine for
+ * state, but a theme crossfade needs both hosts painted briefly, and wrapping
+ * the remount in `<ViewTransition enter/exit>` reintroduces the offscreen /
+ * fly-in morph (#118). CSS opacity on a short dual→single settle keeps one
+ * steady-state GL context without spatial enter animation.
+ *
+ * Activity *is* used inside `MapCardIsland` (pause when off-screen / tab-hidden)
+ * after the dynamic chunk resolves — see `useMapVisibility`.
+ *
+ * Theme updates still run under startTransition + useDeferredValue.
  */
 function MapLibreStyleLayer({
   styleUrl,

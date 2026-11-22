@@ -76,42 +76,28 @@ export default function MapZoomControls() {
     map.setView(DEFAULT_CENTER, clamped, { animate: false });
   }
 
-  function handleZoomOut() {
-    zoomTo(zoomLevel - ZOOM_DELTA);
-  }
-  function handleZoomIn() {
-    zoomTo(zoomLevel + ZOOM_DELTA);
-  }
+  const atMin = zoomLevel === map.getMinZoom();
+  const atMax = zoomLevel === map.getMaxZoom();
 
   return (
     <div className="z-1000 flex justify-between self-end px-2 pb-2 [grid-area:'map']">
-      <span
-        className={cn(
-          "cancelDrag invisible",
-          zoomLevel !== map.getMinZoom() && "visible",
-        )}
-      >
+      <span className={cn("cancelDrag invisible", !atMin && "visible")}>
         <Button
           variant="projectLink"
           size="icon-lg"
           aria-label="Zoom out"
-          onClick={() => handleZoomOut()}
+          onClick={() => zoomTo(zoomLevel - ZOOM_DELTA)}
         >
           <MinusIcon className="size-6" />
         </Button>
       </span>
 
-      <span
-        className={cn(
-          "cancelDrag invisible",
-          zoomLevel !== map.getMaxZoom() && "visible",
-        )}
-      >
+      <span className={cn("cancelDrag invisible", !atMax && "visible")}>
         <Button
           variant="projectLink"
           size="icon-lg"
           aria-label="Zoom in"
-          onClick={() => handleZoomIn()}
+          onClick={() => zoomTo(zoomLevel + ZOOM_DELTA)}
         >
           <PlusIcon className="size-6" />
         </Button>

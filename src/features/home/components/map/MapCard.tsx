@@ -1,35 +1,13 @@
-"use client";
+import { MapCardClient } from "@/features/home/components/map/MapCardClient";
 
-import dynamic from "next/dynamic";
-import { catchError } from "next/error";
-
-import { Skeleton } from "@/components/ui/skeleton";
-
-import { MapRenderGate } from "@/features/home/components/map/MapRenderGate";
-
-const MapCardIsland = dynamic(() => import("./MapCardIsland"), {
-  ssr: false,
-  loading() {
-    return <MapCardSkeleton />;
-  },
-});
-
-export function MapCardSkeleton() {
-  return <Skeleton className="size-full" />;
-}
-
-/** Keep Leaflet/MapLibre teardown failures from taking down the whole page. */
-const MapCardErrorBoundary = catchError(function MapCardErrorFallback() {
-  return <MapCardSkeleton />;
-});
-
-/** Client-only map island: keeps maplibre/leaflet off the home render-dependent path. */
+/**
+ * Server shell for the map card (server-serialization: only `tooltip` crosses
+ * the RSC → client boundary). Leaflet/MapLibre stay in `MapCardClient`.
+ */
 export function MapCard({ tooltip }: { tooltip: string }) {
   return (
-    <MapCardErrorBoundary>
-      <MapRenderGate>
-        <MapCardIsland tooltip={tooltip} />
-      </MapRenderGate>
-    </MapCardErrorBoundary>
+    <div className="size-full" data-map-card="">
+      <MapCardClient tooltip={tooltip} />
+    </div>
   );
 }
