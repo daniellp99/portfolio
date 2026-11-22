@@ -14,7 +14,8 @@ import {
 import { getGithubContributionsForMonth } from "@/features/contributions/contributions-queries";
 import { getContributionsYearMonthFromCookies } from "@/features/contributions/lib/contributions-month";
 import { GridContainer } from "@/features/home/components/grid-container";
-import { MapCard, MapCardSkeleton } from "@/features/home/components/map";
+import { MapCard } from "@/features/home/components/map/MapCard";
+import { MapCardSkeleton } from "@/features/home/components/map/MapCardSkeleton";
 import { getLayouts } from "@/features/home/home-queries";
 import { AboutMe } from "@/features/owner/components/about-me";
 import { SkillsCard } from "@/features/owner/components/skills-card";

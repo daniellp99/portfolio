@@ -31,9 +31,6 @@ function MapResizeSync() {
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
-      // View Transitions may reparent this node before Leaflet's map.remove().
-      // Detach with Element.remove() so parent.removeChild does not throw
-      // (X-back / soft-nav).
       try {
         container.remove();
       } catch {
@@ -53,8 +50,6 @@ export default function MapRoot({ children }: { children: React.ReactNode }) {
       scrollWheelZoom={false}
       doubleClickZoom={false}
       dragging={false}
-      // Leaflet CSS zoom scales the MapLibre canvas then jumpTo-resyncs
-      // (visible end-snap). Zoom is animated via MapLibre easeTo instead.
       zoomAnimation={false}
       minZoom={1}
       zoomSnap={0.01}

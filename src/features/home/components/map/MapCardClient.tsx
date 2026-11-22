@@ -19,8 +19,9 @@ const MapCardErrorBoundary = catchError(function MapCardErrorFallback() {
 });
 
 /**
- * Smallest client boundary for the map: error boundary + pause gate + async
- * island. Heavy maplibre/leaflet stay behind `dynamic(..., { ssr: false })`.
+ * Smallest client entry (bundle-dynamic-imports): error boundary + visibility
+ * host + async MapLibre island. Literal `./MapCardIsland` path stays statically
+ * analyzable (bundle-analyzable-paths).
  */
 export function MapCardClient({ tooltip }: { tooltip: string }) {
   return (

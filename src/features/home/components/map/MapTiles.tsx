@@ -109,16 +109,16 @@ function attachMapLibreLayer(
  *
  * ## Activity + ViewTransition (theme tiles) — intentionally not used
  *
- * Dual always-mounted dark/light layers (pre-#118) kept two WebGL contexts
- * alive while the map was visible. `<Activity mode="hidden">` on the inactive
- * theme would tear down that layer’s Effects (GL bind), then remount on show —
- * fine for state, but a theme crossfade needs both hosts painted briefly, and
- * wrapping the remount in `<ViewTransition enter/exit>` reintroduces the
- * offscreen/fly-in morph (#118). CSS opacity on a short dual→single settle
- * keeps one steady-state GL context without spatial enter animation.
+ * Dual always-mounted dark/light layers kept two WebGL contexts alive while
+ * the map was visible. `<Activity mode="hidden">` on the inactive theme would
+ * tear down that layer’s Effects (GL bind), then remount on show — fine for
+ * state, but a theme crossfade needs both hosts painted briefly, and wrapping
+ * the remount in `<ViewTransition enter/exit>` reintroduces the offscreen /
+ * fly-in morph (#118). CSS opacity on a short dual→single settle keeps one
+ * steady-state GL context without spatial enter animation.
  *
- * Activity *is* used on `MapRenderGate` (pause when off-screen / tab-hidden)
- * where preserving zoom state matters and no theme crossfade is required.
+ * Activity *is* used inside `MapCardIsland` (pause when off-screen / tab-hidden)
+ * after the dynamic chunk resolves — see `useMapVisibility`.
  *
  * Theme updates still run under startTransition + useDeferredValue.
  */
