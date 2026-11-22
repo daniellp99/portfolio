@@ -24,7 +24,6 @@ export type ContributionHeatmapCell = {
   label: string;
 };
 
-/** month is 1–12 */
 export function monthGridCellCount(
   year: number,
   month: number,
@@ -40,7 +39,6 @@ export function monthGridCellCount(
   return eachDayOfInterval({ start: gridStart, end: gridEnd }).length;
 }
 
-/** month is 1–12 */
 export function getMonthHeatmapGridDates(
   year: number,
   month: number,

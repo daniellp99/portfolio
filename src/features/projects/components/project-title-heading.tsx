@@ -2,11 +2,6 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
-/**
- * Project detail title with post-navigation focus routing.
- * same-document-transitions: after ViewTransition, move focus to the new
- * view heading so keyboard/AT users get context (tabindex=-1 + focus).
- */
 export function ProjectTitleHeading({
   children,
   className,

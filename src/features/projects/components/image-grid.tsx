@@ -22,8 +22,6 @@ export async function ImageGrid({
   slug: string | undefined;
   images: Images;
 }) {
-  // Defer cookie/header layout reads until navigation so `<Link prefetch>`
-  // stays static (Next 16.4 `navigation()` + `ensureStatic = 'prefetch'`).
   await navigation();
   const [headerList, cookieStore] = await Promise.all([headers(), cookies()]);
 

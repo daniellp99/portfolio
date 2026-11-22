@@ -165,7 +165,6 @@ export function contributionsMonthCacheTag(
   return `github_contrib_${login}_${year}_${month}_${timeZone}`;
 }
 
-/** Stable React key for month-scoped contribution UI (not the Next cache tag). */
 export function contributionsMonthCacheKey(
   year: number,
   month: number,

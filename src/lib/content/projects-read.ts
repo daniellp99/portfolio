@@ -21,5 +21,4 @@ export function isProjectContentStrict(): boolean {
   return Boolean(process.env.CI) || process.env.NODE_ENV === "development";
 }
 
-// Type-only import to avoid a cycle at runtime.
 import type { ProjectDetails } from "./schemas";

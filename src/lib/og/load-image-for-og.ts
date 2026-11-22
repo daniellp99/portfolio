@@ -8,15 +8,7 @@ import sharp from "sharp";
 const DEFAULT_FIT = { w: 1200, h: 1200 } as const;
 
 type LoadImageForOgOptions = {
-  /**
-   * Resize to fit inside this box (px). Used when you do not pass `exactCover`.
-   */
   fitWithin?: { w: number; h: number };
-  /**
-   * Exact output width/height (cover crop in Sharp). Use the same values as the OG
-   * `img` width/height so the raster is not rescaled again by Satori (that pass was
-   * blurring a 720px asset drawn into a 360px box).
-   */
   exactCover?: { w: number; h: number };
 };
 
@@ -79,11 +71,6 @@ async function bufferToPngDataUrl(
   return toPngFitWithin(input, fit);
 }
 
-/**
- * Loads raster bytes for next/og img `src`. Local /public paths are read from disk
- * (avoids fetching the dev server during OG generation). Remote URLs use fetch.
- * Output is PNG so Satori/resvg reliably decodes it (WebP fetch paths were rendering empty).
- */
 export async function loadImageForOg(
   pathOrUrl: string,
   options?: LoadImageForOgOptions,

@@ -20,8 +20,6 @@ export function ContributionsDescription({
   month: number;
   children: ReactNode;
 }) {
-  // Stay on the previous month label until React commits the deferred update
-  // alongside count/cells (avoids caption/body disagreement without a skeleton).
   const deferredYear = useDeferredValue(year);
   const deferredMonth = useDeferredValue(month);
   const isStale = deferredYear !== year || deferredMonth !== month;

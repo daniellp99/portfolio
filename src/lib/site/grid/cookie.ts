@@ -14,7 +14,6 @@ import {
 } from "./config";
 import { BASE_ITEM_ORDER } from "./defaults";
 
-/** Options for compacting, expanding, and saving layout cookies. */
 export type LayoutPersistenceOptions = {
   allowedLayoutIds?: readonly string[];
   imageSrcs?: readonly string[];
@@ -61,7 +60,6 @@ function cloneLayout(layout: Layout): Layout {
   return out;
 }
 
-/** Independent lg/md or xs/xxs copies in one pass over items. */
 function cloneLayoutAliasPair(layout: Layout): [Layout, Layout] {
   const len = layout.length;
   const a: LayoutItem[] = new Array(len);
@@ -124,7 +122,6 @@ function buildSrcToIndexLookup(
   return lookup;
 }
 
-/** Filter, optional src→index remap, and compact in one pass. */
 function encodeLogicalBreakpoint(
   layout: Layout,
   allowedIds: readonly string[] | undefined,
@@ -259,7 +256,6 @@ export function cookieValueWithinLimit(
   return cookieName.length + value.length <= COOKIE_VALUE_MAX_LENGTH;
 }
 
-/** IDs persisted for the main grid cookie (base widgets + up to 3 projects). */
 export function mainGridAllowedLayoutIds(
   projectSlugs: readonly string[],
 ): readonly string[] {
@@ -288,7 +284,6 @@ export function imageSrcsFromImages<T extends { src: string }>(
   return out;
 }
 
-/** Overlay canonical breakpoint layouts onto a base object (client optimistic updates). */
 export function mergeCanonicalBreakpoints(
   base: ResponsiveLayouts,
   patch: ResponsiveLayouts,
@@ -302,7 +297,6 @@ export function mergeCanonicalBreakpoints(
   return next;
 }
 
-/** RGL updates md/xxs on drag; cookies store lg/xs. */
 export function collapseAliasBreakpointsToLogical(layouts: ResponsiveLayouts): {
   lg?: Layout;
   sm?: Layout;
@@ -374,10 +368,6 @@ export function expandFromCookie(
   return expandLogicalToResponsive(result.data, options.imageSrcs);
 }
 
-/**
- * Cookie read path: one pass over canonical keys (use cookie or fill from defaults).
- * Expanded layouts from `expandFromCookie` are reused without a second clone.
- */
 export function normalizeLayoutsFromCookie(
   decoded: ResponsiveLayouts,
   defaults: ResponsiveLayouts,

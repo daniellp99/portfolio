@@ -38,18 +38,11 @@ export function ContributionsCells({
   contributionsPromise: Promise<GithubContributionMonthResponse>;
 }) {
   const { year, month, attempt } = useContributionsBoundary();
-  // Reuse resolved thenables per month so `use()` does not suspend on revisit
-  // (server `'use cache'` still ships a new Promise identity each RSC pass).
-  // Attempt is part of the key so retries get a fresh thenable; bust the
-  // current month so server `updateTag` refresh is not masked by the client map.
   const stablePromise = getClientCachedContributionsPromise(
     `${cacheKey}:${attempt}`,
     contributionsPromise,
     { bust: isCurrentContributionsMonth(year, month) },
   );
-  // Keep showing the previous month until React commits the deferred update.
-  // Suspense must stay mounted across month changes — remounting it forces
-  // LoadingCells even when the thenable is warm.
   const deferredPromise = useDeferredValue(stablePromise);
   const isStale = deferredPromise !== stablePromise;
 
@@ -67,12 +60,6 @@ export function ContributionsCells({
         year={year}
         month={month}
       >
-        {/*
-          React 19.3: VT wraps Suspense with update-only + default="none".
-          Cached (non-suspending) month swaps animate via typed `update`;
-          Suspense fallback → content uses the map's untyped default ("auto").
-          No enter/exit on this boundary — those choreograph cells→skeleton→cells.
-        */}
         <ContributionsCellTransition>
           <Suspense
             fallback={<ContributionsLoadingCells year={year} month={month} />}

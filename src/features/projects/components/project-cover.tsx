@@ -4,12 +4,10 @@ import { ViewTransition } from "react";
 import { PROJECT_DETAIL_COVER_IMAGE_SIZES } from "@/lib/site/image-sizes";
 import { cn } from "@/lib/utils";
 
-/** Shared cover morph pair: home card ↔ project detail hero. */
 function projectCoverTransitionName(slug: string) {
   return `project-cover-${slug}`;
 }
 
-/** Card cover — positioned fill host so ViewTransition does not break `fill`. */
 export function ProjectCardCover({
   slug,
   src,
@@ -47,7 +45,6 @@ export function ProjectCardCover({
   );
 }
 
-/** Detail-page morph target for the home card cover. */
 export function ProjectDetailCover({
   slug,
   coverImage,
@@ -65,7 +62,6 @@ export function ProjectDetailCover({
       share="morph"
       default="none"
     >
-      {/* Covers are 1:1; aspect-video + object-cover was clipping the bottom. */}
       <div
         data-testid="project-cover"
         className="relative mx-auto aspect-square w-full max-w-md"

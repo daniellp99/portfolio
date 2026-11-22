@@ -10,13 +10,11 @@ export type AvatarMarkerDivIconOptions = {
   iconAnchor: [number, number];
 };
 
-/** Anchor at the pin tip (bottom point of the rotated square). */
 function avatarMarkerIconAnchor(size: number): [number, number] {
   const tipY = Math.round(size / 2 + size / Math.SQRT2);
   return [size / 2, tipY];
 }
 
-/** Empty mount node for Leaflet divIcon; React portals replace its contents. */
 export function getAvatarMarkerDivIconOptions(
   markerRootId: string = AVATAR_MARKER_ROOT_ID,
 ): AvatarMarkerDivIconOptions {

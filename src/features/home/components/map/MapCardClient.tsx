@@ -13,16 +13,10 @@ const MapCardIsland = dynamic(() => import("./MapCardIsland"), {
   },
 });
 
-/** Keep Leaflet/MapLibre teardown failures from taking down the whole page. */
 const MapCardErrorBoundary = catchError(function MapCardErrorFallback() {
   return <MapCardSkeleton />;
 });
 
-/**
- * Smallest client entry (bundle-dynamic-imports): error boundary + visibility
- * host + async MapLibre island. Literal `./MapCardIsland` path stays statically
- * analyzable (bundle-analyzable-paths).
- */
 export function MapCardClient({ tooltip }: { tooltip: string }) {
   return (
     <MapCardErrorBoundary>

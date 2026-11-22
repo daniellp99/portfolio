@@ -3,10 +3,6 @@ import { fromZonedTime } from "date-fns-tz";
 
 import { CONTRIBUTIONS_TZ } from "@/lib/site/constants";
 
-/**
- * Inclusive UTC instants for GitHub's contributionsCollection `from` / `to`,
- * from wall-clock month bounds in `timeZone`.
- */
 export function toIsoDateRangeForMonth(
   year: number,
   month: number,

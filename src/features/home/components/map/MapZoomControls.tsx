@@ -12,10 +12,9 @@ import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 import { cn } from "@/lib/utils";
 
 const ZOOM_DELTA = 1;
-/** Match Leaflet’s default zoom feel without CSS-transform desync. */
 const ZOOM_DURATION_MS = 250;
 
-/** MapLibre GL Leaflet uses zoom = LeafletZoom - 1. */
+/** maplibre-gl-leaflet: MapLibreZoom = LeafletZoom - 1 */
 function leafletZoomToMapLibre(zoom: number) {
   return zoom - 1;
 }
@@ -56,8 +55,6 @@ export default function MapZoomControls() {
     const [lat, lng] = DEFAULT_CENTER;
     const glMap = getMapLibreMap(map);
 
-    // Animate in MapLibre (real camera ease). Leaflet CSS zoomAnimation
-    // scales the GL canvas then jumpTo-resyncs — that end snap is the jump.
     if (glMap) {
       glMap.stop();
       glMap.easeTo({

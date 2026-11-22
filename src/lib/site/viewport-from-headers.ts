@@ -3,7 +3,6 @@ import { gridSectionInitialWidth } from "@/lib/site/grid";
 const MOBILE_UA_RE =
   /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i;
 
-/** Estimate viewport width from request headers (SSR / Lighthouse). */
 export function viewportWidthFromHeaders(headers: Headers): number {
   const clientHint = headers.get("sec-ch-viewport-width");
   if (clientHint) {

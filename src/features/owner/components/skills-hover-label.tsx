@@ -31,8 +31,7 @@ export function SkillsHoverLabel() {
       {displayTitle !== null ? (
         <span
           className={cn(
-            // Use duration 0 (not transition-none) under reduced motion so
-            // `transitionend` still fires and we can unmount after exit.
+            // duration 0 (not none) so transitionend still fires under reduced motion
             "origin-top inline-flex h-10 max-w-[90%] items-center justify-center truncate rounded-full border-2 border-border bg-foreground px-3 text-center text-sm font-bold text-background ring-border transition-spring motion-reduce:transition-spring-reduce",
             show
               ? "translate-y-0 opacity-100 starting:translate-y-[-0.25rem] starting:opacity-0"

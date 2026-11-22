@@ -6,7 +6,6 @@ import * as React from "react";
 export interface CardGrayscaleProps extends React.ComponentProps<"div"> {
   image?: string;
   children?: React.ReactNode;
-  /** Filter transition duration in seconds */
   duration?: number;
 }
 

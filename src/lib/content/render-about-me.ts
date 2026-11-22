@@ -7,7 +7,6 @@ export function formatExperienceYears(
   const start = new Date(journeyStartAtIso);
   if (Number.isNaN(start.getTime())) return null;
 
-  // Full-year difference (UTC) to avoid timezone off-by-one.
   let years = referenceDate.getUTCFullYear() - start.getUTCFullYear();
   const m = referenceDate.getUTCMonth() - start.getUTCMonth();
   if (m < 0 || (m === 0 && referenceDate.getUTCDate() < start.getUTCDate())) {
@@ -31,7 +30,6 @@ export function renderAboutMe(
     .replace("{experience}", experience ?? "some years");
 }
 
-/** Cached so metadata and prerendered shells can resolve `{experience}` safely. */
 export async function renderAboutMeCached(input: {
   aboutMe: string;
   name: string;

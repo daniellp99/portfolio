@@ -106,15 +106,10 @@ function useMapRenderActive(host: HTMLElement | null): boolean {
 
 const MapVisibilityContext = createContext(true);
 
-/** Whether MapLibre Effects should stay alive (rendering-content-visibility). */
 export function useMapVisibility(): boolean {
   return use(MapVisibilityContext);
 }
 
-/**
- * Always mounts children so `next/dynamic` can resolve. Activity pause is
- * applied inside the island via `useMapVisibility` (rendering-activity).
- */
 export function MapVisibilityHost({
   children,
   className,

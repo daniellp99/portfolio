@@ -29,10 +29,7 @@ function usePillTabsContext() {
   return context;
 }
 
-/** Matches production / pre-refactor pill chrome (h-11, px-px py-0, gap-1). */
 const pillTabsListVariants = cva(
-  // Override TabsList default padding/height; stretch so full-height items
-  // keep the sliding indicator vertically centered.
   "relative items-stretch rounded-4xl bg-card px-px py-0 text-secondary-foreground ring-2 ring-border",
   {
     variants: {
@@ -48,8 +45,6 @@ const pillTabsListVariants = cva(
 );
 
 const pillTabsItemVariants = cva(
-  // `h-full` + `py-0` override TabsTrigger's `h-[calc(100%-1px)]` / `py-1`,
-  // which otherwise leave the sliding indicator optically low in the list.
   "relative z-0 h-full rounded-4xl py-0 data-active:bg-transparent data-active:text-background data-active:shadow-none dark:data-active:border-transparent dark:data-active:bg-transparent",
   {
     variants: {
@@ -106,7 +101,6 @@ function syncIndicator(
     return;
   }
 
-  // Match former motion `inset-0` on the trigger: padding box, not border box.
   indicator.hidden = false;
   indicator.style.transform = `translate(${active.offsetLeft + active.clientLeft}px, ${active.offsetTop + active.clientTop}px)`;
   indicator.style.width = `${active.clientWidth}px`;
