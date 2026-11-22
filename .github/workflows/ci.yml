@@ -34,6 +34,9 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: React Doctor
+        run: bunx react-doctor@0.9.23 --yes --verbose --scope full --blocking warning --no-color
+
   e2e:
     runs-on: ubuntu-latest
     steps:
