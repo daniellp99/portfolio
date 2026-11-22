@@ -36,6 +36,10 @@ async function githubGraphql<T>(
     cache: "no-store",
   });
 
+  if (!res.ok) {
+    throw new Error(`GitHub GraphQL request failed (${res.status})`);
+  }
+
   const raw = await res.json();
   const parsed = githubContributionGraphqlResponseSchema.safeParse(raw);
   if (!parsed.success) {
@@ -49,10 +53,10 @@ async function githubGraphql<T>(
     errors?: Array<{ message?: string }>;
   };
 
-  if (!res.ok || json.errors?.length) {
+  if (json.errors?.length) {
     const message =
       json.errors
-        ?.map((e) => e.message)
+        .map((e) => e.message)
         .filter(Boolean)
         .join("; ") || `GitHub GraphQL request failed (${res.status})`;
     throw new Error(message);

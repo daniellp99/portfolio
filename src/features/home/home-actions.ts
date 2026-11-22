@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { after } from "next/server";
 import type { ResponsiveLayouts } from "react-grid-layout";
 
 import { getProjectSlugs } from "@/features/projects/projects-queries";
@@ -32,9 +33,11 @@ export async function setLayouts(
 
     if (!cookieValueWithinLimit(layoutKey, encoded)) {
       if (process.env.NODE_ENV === "development") {
-        console.warn(
-          `Skipping layout cookie "${layoutKey}": encoded length ${layoutKey.length + encoded.length} exceeds 4096`,
-        );
+        after(() => {
+          console.warn(
+            `Skipping layout cookie "${layoutKey}": encoded length ${layoutKey.length + encoded.length} exceeds 4096`,
+          );
+        });
       }
       return;
     }

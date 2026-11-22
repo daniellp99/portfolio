@@ -52,9 +52,9 @@ export function LogoCarousel({
 
   if (logos.length === 0) return null;
 
-  const track = logos.map((logo, idx) => (
+  const track = logos.map((logo) => (
     <LogoLink
-      key={`${direction}-${logo.title}-${idx}`}
+      key={logo.key}
       logo={logo}
       onHover={setHoveredTitle}
     />

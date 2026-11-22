@@ -9,7 +9,7 @@ import {
   type ColorScheme,
   themePreferenceForScheme,
 } from "@/components/theme-preference";
-import { PillTabs } from "@/components/ui/pill-tabs";
+import { PillTabs } from "@/components/ui/pill-tabs-group";
 
 import { capture } from "@/lib/analytics";
 

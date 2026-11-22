@@ -175,8 +175,4 @@ function PillTabsItem({
   );
 }
 
-export const PillTabs = {
-  Root: PillTabsRoot,
-  List: PillTabsList,
-  Item: PillTabsItem,
-};
+export { PillTabsItem, PillTabsList, PillTabsRoot };
