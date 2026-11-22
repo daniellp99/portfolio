@@ -96,11 +96,6 @@ export async function listProjectSlugs(
     .sort();
 }
 
-/**
- * Filesystem slug candidates whose front matter parses successfully.
- * Skips invalid entries in non-strict mode; throws in strict (CI/dev).
- * Returns slugs only — does not build summary objects.
- */
 export async function listValidProjectSlugs(
   paths: ContentPaths = createContentPaths(),
 ): Promise<string[]> {
@@ -235,7 +230,6 @@ export type ProjectSitemapEntry = {
   lastModified: Date;
 };
 
-/** Project listing for sitemap.xml (cover + MDX mtime). */
 export async function readProjectsForSitemap(
   paths: ContentPaths = createContentPaths(),
 ): Promise<ProjectSitemapEntry[]> {
@@ -248,9 +242,7 @@ export async function readProjectsForSitemap(
         try {
           const stat = await fs.stat(filePath);
           lastModified = stat.mtime;
-        } catch {
-          // Keep build-time fallback when the file disappears mid-read.
-        }
+        } catch {}
       }
       return {
         slug: summary.slug,

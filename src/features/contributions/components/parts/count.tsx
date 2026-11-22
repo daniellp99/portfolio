@@ -40,8 +40,6 @@ export function ContributionsCount({
     contributionsPromise,
     { bust: isCurrentContributionsMonth(year, month) },
   );
-  // Stale-while-revalidate: keep the previous count visible until the new
-  // promise is ready (React shows prior UI while the deferred render suspends).
   const deferredPromise = useDeferredValue(stablePromise);
   const isStale = deferredPromise !== stablePromise;
 

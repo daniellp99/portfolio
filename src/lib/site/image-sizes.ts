@@ -1,20 +1,9 @@
-/**
- * `sizes` for next/image fill on **single-column** main-grid project tiles
- * (2 cols &lt;768px, 4 cols ≥768px; containers max 375 / 800 / 1200px).
- *
- * Slot width ≈ column − 36px (`border-2` + `px-4` on the cover image).
- */
 export const MAIN_GRID_CARD_IMAGE_SIZES =
   "(max-width: 767px) 128px, (max-width: 1199px) 144px, 244px";
 
-/** Detail cover morph target (left column, square, capped at max-w-md). */
 export const PROJECT_DETAIL_COVER_IMAGE_SIZES =
   "(max-width: 639px) 100vw, 28rem";
 
-/**
- * `sizes` for project detail {@link ImageGrid}: MDX `width` is RGL column span,
- * so multi-column screenshots need larger intrinsic widths than {@link MAIN_GRID_CARD_IMAGE_SIZES}.
- */
 export function imageGridCardSizes(columnSpan: number): string {
   const span = Math.min(Math.max(Math.round(columnSpan), 1), 4);
 

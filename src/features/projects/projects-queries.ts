@@ -21,8 +21,6 @@ import type { ProjectDetails } from "@/lib/content/schemas";
 
 async function loadProjectSlugs(): Promise<string[]> {
   try {
-    // Cheap readdir + front-matter validation only (no summary objects).
-    // Skips invalid slugs in non-strict production so cards never notFound().
     return await listValidProjectSlugs();
   } catch (error) {
     if (error instanceof InvalidProjectFrontMatterError) {

@@ -35,7 +35,6 @@ import {
 import { gridInitialWidthFromHeaders } from "@/lib/site/viewport-from-headers";
 
 async function ContributionsCardLoader() {
-  // Request-time: default month uses wall-clock "now" when the cookie is absent.
   await connection();
   const cookieStore = await cookies();
   const ownerData = getOwnerData();
@@ -119,7 +118,6 @@ export async function MainGrid() {
   );
 }
 
-/** Default desktop estimate — no request headers, so the shell stays prerenderable. */
 const SKELETON_VIEWPORT_WIDTH = 1350;
 
 export async function MainGridSkeleton() {

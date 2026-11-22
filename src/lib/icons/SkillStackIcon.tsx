@@ -6,7 +6,6 @@ type SkillStackIconVariant = "light" | "dark";
 
 export type SkillStackIconProps = {
   name: SkillIconKey;
-  /** Fixed variant. Omit to follow the active color theme via CSS. */
   variant?: SkillStackIconVariant;
   className?: string;
 };

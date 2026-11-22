@@ -7,11 +7,6 @@ import { colorSchemeMetaContent } from "@/components/theme-preference";
 
 const META_NAME = "color-scheme";
 
-/**
- * Keeps `<meta name="color-scheme">` in sync with next-themes after hydration.
- * FOUC priming lives in the layout head script; this covers runtime toggles
- * and cross-tab `storage` updates (next-themes already re-reads theme).
- */
 export function ColorSchemeMetaSync() {
   const { theme } = useTheme();
 

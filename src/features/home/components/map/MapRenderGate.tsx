@@ -5,10 +5,6 @@ import type { ReactNode } from "react";
 import { MapVisibilityHost } from "@/features/home/components/map/map-visibility";
 import { cn } from "@/lib/utils";
 
-/**
- * Visibility host for the map card (rendering-content-visibility). Children
- * always mount; `<Activity>` pause lives inside the dynamic island.
- */
 export function MapRenderGate({
   children,
   className,

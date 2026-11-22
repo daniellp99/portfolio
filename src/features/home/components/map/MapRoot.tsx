@@ -6,7 +6,6 @@ import { MapContainer, useMap } from "react-leaflet";
 
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/site/constants";
 
-/** Keep Leaflet’s view box in sync with the card size; safe VT teardown. */
 function MapResizeSync() {
   const map = useMap();
 
@@ -33,9 +32,7 @@ function MapResizeSync() {
       observer.disconnect();
       try {
         container.remove();
-      } catch {
-        /* already detached */
-      }
+      } catch {}
     };
   }, [map]);
 

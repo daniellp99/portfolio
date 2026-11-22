@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-/** Shared Open Graph shape for marketing-style pages (home, root). */
 export function openGraphWebsiteFragment(input: {
   url: string;
   siteName: string;
@@ -19,7 +18,6 @@ export function openGraphWebsiteFragment(input: {
   };
 }
 
-/** Open Graph for a single project article. */
 export function openGraphArticleFragment(input: {
   url: string;
   siteName: string;

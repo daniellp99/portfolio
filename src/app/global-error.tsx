@@ -25,9 +25,7 @@ function resolveDocumentTheme(): boolean {
     const stored = localStorage.getItem(THEME_STORAGE_KEY);
     if (stored === "dark") return true;
     if (stored === "light") return false;
-  } catch {
-    /* ignore */
-  }
+  } catch {}
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
 

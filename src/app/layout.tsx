@@ -16,7 +16,6 @@ import { buildRootLayoutMetadata } from "@/lib/site/metadata";
 
 import "./globals.css";
 
-/** Keep App Shells static; cookie/header work stays behind Suspense. */
 export const ensureStatic = "shell";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,7 +52,6 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
-        {/* dark-mode / dark-mode-toggle: early canvas hint before paint */}
         <meta name="color-scheme" content="light dark" />
         <script
           dangerouslySetInnerHTML={{

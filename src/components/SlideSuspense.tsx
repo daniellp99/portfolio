@@ -1,9 +1,5 @@
 import { Suspense, ViewTransition, type ReactNode } from "react";
 
-/**
- * Shared Suspense + View Transition enter/exit shell used across route
- * and feature loading boundaries.
- */
 export function SlideSuspense({
   fallback,
   children,

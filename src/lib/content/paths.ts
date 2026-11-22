@@ -13,14 +13,12 @@ export function isENOENT(error: unknown): boolean {
   );
 }
 
-/** Production layout: `<cwd>/src/content/...` */
 export function createContentPaths(cwd: string = process.cwd()): ContentPaths {
   return {
     projectsDir: path.join(cwd, "src/content/projects"),
   };
 }
 
-/** Flat fixture dir: `<dir>/projects/*.mdx` */
 export function createFixtureContentPaths(fixtureDir: string): ContentPaths {
   return {
     projectsDir: path.join(fixtureDir, "projects"),

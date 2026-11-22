@@ -1,4 +1,3 @@
-/** Keys on `ResponsiveLayouts` / cookie payloads; aligned with RGL `Responsive` breakpoints. */
 export const CANONICAL_LAYOUT_BREAKPOINT_KEYS = [
   "lg",
   "md",
@@ -13,7 +12,6 @@ export const LOGICAL_LAYOUT_BREAKPOINT_KEYS = [
   "xs",
 ] as const satisfies readonly LogicalLayoutBreakpoint[];
 
-/** Slot tables and Y scaling use lg/sm/xs only; md mirrors lg, xxs mirrors xs in outputs. */
 export type LogicalLayoutBreakpoint = "lg" | "sm" | "xs";
 
 export const SCALE_Y: Record<LogicalLayoutBreakpoint, number> = {
@@ -22,10 +20,6 @@ export const SCALE_Y: Record<LogicalLayoutBreakpoint, number> = {
   xs: 1,
 };
 
-/**
- * Fallback when width is unknown. Prefer {@link rowHeightForContainerWidth}:
- * a fixed rowHeight cannot keep colWidth-matching squares at every breakpoint.
- */
 const GRID_ROW_HEIGHT = 75;
 
 export const MAIN_GRID_PROJECT_SLOT_COUNT = 3;
@@ -46,7 +40,6 @@ const GRID_RGL_COLS = {
   xxs: 2,
 } as const;
 
-/** Include `lg` so RGL does not fall back to the first map entry (xxs). */
 const GRID_RGL_CONTAINER_PADDING = {
   xxs: [15, 15],
   xs: [15, 15],
@@ -69,31 +62,20 @@ const GRID_RGL_MARGIN = {
   readonly [number, number]
 >;
 
-/**
- * Main / image grid section caps — keep in sync with
- * {@link GRID_SECTION_CLASS_NAME} (spacing scale: 93.75 / 200 / 300 → 375 / 800 / 1200px).
- */
 export const GRID_SECTION_MAX_WIDTH = {
   base: 375,
   md: 800,
   xl: 1200,
 } as const;
 
-/**
- * Shared width shell for home + project image grids so container measure /
- * `rowHeightForContainerWidth` see the same capped width on both pages.
- * Use `w-full` (not only `max-w-*`) under flex `place-items-center` parents.
- */
 export const GRID_SECTION_CLASS_NAME =
   "mx-auto block w-full max-w-93.75 md:max-w-200 xl:max-w-300";
 
-/** Tailwind `md` / `xl` min-widths for the section caps above. */
 const GRID_SECTION_VIEWPORT = {
   md: 768,
   xl: 1280,
 } as const;
 
-/** Section max width for a viewport, before `min()` with the viewport itself. */
 export function gridSectionMaxWidth(viewportWidth: number): number {
   if (viewportWidth >= GRID_SECTION_VIEWPORT.xl) {
     return GRID_SECTION_MAX_WIDTH.xl;
@@ -104,12 +86,10 @@ export function gridSectionMaxWidth(viewportWidth: number): number {
   return GRID_SECTION_MAX_WIDTH.base;
 }
 
-/** Estimated container width for RGL `initialWidth` (matches capped section width). */
 export function gridSectionInitialWidth(viewportWidth: number): number {
   return Math.min(viewportWidth, gridSectionMaxWidth(viewportWidth));
 }
 
-/** Props shared by `GridContainer` / RGL `Responsive` (single source vs slot math). */
 export const GRID_RESPONSIVE_STATIC_PROPS = {
   breakpoints: GRID_RGL_BREAKPOINTS,
   cols: GRID_RGL_COLS,

@@ -18,7 +18,6 @@ function getServerSnapshot() {
   return false;
 }
 
-/** True when the device likely has hover-capable fine pointer (e.g. desktop mouse). */
 export function usePrefersFinePointer() {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

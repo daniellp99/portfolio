@@ -23,7 +23,6 @@ describe("themePreferenceForScheme", () => {
   });
 
   it("keeps a dark pin expressible when OS later matches (pick light to leave)", () => {
-    // Stored dark, OS now dark: selecting light must pin light, not auto-clear.
     expect(themePreferenceForScheme("light", "dark")).toBe("light");
   });
 });

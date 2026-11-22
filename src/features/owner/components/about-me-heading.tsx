@@ -2,11 +2,6 @@
 
 import type { ReactNode } from "react";
 
-/**
- * React 19 callback ref: focus when the heading mounts, after any in-flight
- * ViewTransition finishes. Cleanup cancels a late focus if the node unmounts.
- * (Callback refs replace mount useEffect for DOM-node side effects.)
- */
 function focusHeadingAfterViewTransition(
   el: HTMLHeadingElement | null,
 ): void | (() => void) {
@@ -31,12 +26,6 @@ function focusHeadingAfterViewTransition(
   };
 }
 
-/**
- * Home about title with post-navigation focus routing.
- * same-document-transitions: after ViewTransition (e.g. project → home),
- * move focus to the list/home heading so keyboard/AT users get context
- * (tabindex=-1 + focus). Mirrors ProjectTitleHeading on the detail route.
- */
 export function AboutMeHeading({
   children,
   className,
